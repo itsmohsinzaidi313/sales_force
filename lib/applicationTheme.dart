@@ -1,0 +1,195 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:logger/logger.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sales_force/config.dart';
+
+class AppTheme {
+  static Logger _log = Config.log;
+
+  static RaisedButton rectangleRaisedButton(
+      {Color color = Colors.white,
+      String text,
+      double fontSize = 18,
+      Function onPressed}) {
+    return new RaisedButton(
+        color: Colors.blue,
+        onPressed: onPressed,
+        child: AppTheme.text(text: text, fontSize: fontSize, color: color));
+  }
+
+  static RaisedButton roundRaisedButton(
+      {Color color = Colors.white,
+      String text,
+      double fontSize = 18,
+      Function onPressed,
+      double borderRadius = 30.0}) {
+    return new RaisedButton(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius)),
+      color: Colors.blue,
+      child: Text(
+        text,
+        style: TextStyle(color: color, fontSize: fontSize),
+      ),
+      onPressed: onPressed,
+    );
+  }
+
+  static AppBar appBar({String title = 'NoTitle'}) {
+    return AppBar(
+      title: Text(title),
+    );
+  }
+
+  static Widget card({Widget child}) {
+    return Card(
+        child: Padding(
+      padding: EdgeInsets.all(8.0),
+      child: child,
+    ));
+  }
+
+  static TextStyle textStyle(
+      {double fontSize = 18,
+      FontWeight fontWeight = FontWeight.normal,
+      Color color = Colors.black}) {
+    return TextStyle(fontSize: fontSize, fontWeight: fontWeight, color: color);
+  }
+
+  static Text text(
+      {String text,
+      double fontSize = 15,
+      FontWeight fontWeight = FontWeight.normal,
+      Color color = Colors.black}) {
+    return Text(
+      text,
+      style:
+          textStyle(fontSize: fontSize, fontWeight: fontWeight, color: color),
+    );
+  }
+
+  static void showAlertDialog(BuildContext context,
+      {String title,
+      FontWeight fontWeight,
+      double fontSize,
+      Widget content,
+      Function onPressed}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Container(
+                  child: Text(title,
+                      style: textStyle(
+                          fontWeight: fontWeight, fontSize: fontSize))),
+              content: content,
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('OK'),
+                  onPressed: onPressed,
+                )
+              ],
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ));
+  }
+
+  static ProgressDialog showProgressDialog(BuildContext context,
+      {String text, bool isDismissible = true}) {
+    ProgressDialog progressDialog = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: isDismissible);
+    progressDialog.style(message: text);
+    return progressDialog;
+  }
+
+  static Future<DateTime> datePicker(BuildContext context) async {
+    DateTime dateTime = DateTime.now();
+    return showDatePicker(
+        context: context,
+        initialDate: dateTime,
+        firstDate: dateTime,
+        lastDate:
+            new DateTime(dateTime.year + 1, dateTime.month, dateTime.day));
+  }
+
+  static Widget imageButton(String imagePath, double scale,
+      {Function onPressed}) {
+    try {
+      return GestureDetector(
+        onTap: onPressed,
+        child: Image.asset(
+          imagePath,
+          scale: scale,
+        ),
+      );
+    } catch (e) {
+      _log.e('ERROR ON AppTheme imageButton', [e]);
+      return Text('error');
+    }
+  }
+
+  static void showDialogBox(BuildContext context,
+      {String title, String message, List<FlatButton> buttons}) {
+    showDialog(
+        context: context,
+        builder: (value) => AlertDialog(
+              title:
+                  text(text: title, fontWeight: FontWeight.bold, fontSize: 20),
+              content: text(text: message),
+              actions: buttons,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ));
+  }
+
+  static void showAlertDialogOK(BuildContext context,
+      {String title, String message, Function onOK}) {
+    showDialog(
+        context: context,
+        builder: (value) => AlertDialog(
+              title:
+                  text(text: title, fontWeight: FontWeight.bold, fontSize: 20),
+              content: text(text: message),
+              actions: [
+                FlatButton(
+                    child: text(text: 'OK', color: Colors.blue),
+                    onPressed: onOK),
+              ],
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ));
+  }
+
+  static void showAlertDialogYN(BuildContext context,
+      {String title, String message, Function onYes, Function onNo}) {
+    showDialog(
+        context: context,
+        builder: (value) => AlertDialog(
+            title: text(text: title, fontWeight: FontWeight.bold, fontSize: 20),
+            content: text(text: message),
+            actions: [
+              FlatButton(
+                  child: text(text: 'Yes', color: Colors.blue),
+                  onPressed: onYes),
+              FlatButton(
+                  child: text(text: 'No', color: Colors.blue), onPressed: onNo)
+            ],
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8))));
+  }
+
+  static void showPleaseWait(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (value) => AlertDialog(
+              title: text(
+                  text: 'Please Wait',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+              content: Center(
+                child: SpinKitRotatingCircle(),
+              ),
+            ));
+  }
+}
