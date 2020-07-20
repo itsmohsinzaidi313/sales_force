@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sales_force/applicationTheme.dart';
-import 'package:sales_force/config.dart';
 import 'package:sales_force/library.dart';
 import 'package:sales_force/objects/cart.dart';
 import 'package:sales_force/objects/category.dart';
@@ -98,64 +97,71 @@ class _StateItemsMenu extends State<ItemsMenu>
           },
         ));
   }
+
   List<Widget> productsView(String tabTitle) {
     List<Widget> widgets = [];
     for (int i = 0; i < products.length; i++) {
-      if (products[i].product_category_id == getCategoryId(tabTitle))
-        widgets.add(Container(
-          child: Column(
-            children: <Widget>[
-              Card(
-                margin: EdgeInsets.all(15.0),
-                elevation: 10.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(5.0),
-                ),
-                child: Padding(
-                    padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                    child: Column(
-                      children: <Widget>[
-                        Center(
-                          child: Stack(
-                            alignment: Alignment(1, 1),
-                            children: <Widget>[
-                              Container(
-                                width: 200,
-                                height: 200,
-                                child: Image.network(
-                                  products[i].getNetworkImage(),
-                                  fit: BoxFit.scaleDown,
+      String unitPrice = getProductPrice(
+          format.customer.customerGroupId, products[i].product_id);
+      if (double.parse(unitPrice) >= 0.01) {
+        if (products[i].product_category_id == getCategoryId(tabTitle))
+          widgets.add(Container(
+            child: Column(
+              children: <Widget>[
+                Card(
+                  margin: EdgeInsets.all(15.0),
+                  elevation: 10.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(5.0),
+                  ),
+                  child: Padding(
+                      padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                      child: Column(
+                        children: <Widget>[
+                          Center(
+                            child: Stack(
+                              alignment: Alignment(1, 1),
+                              children: <Widget>[
+                                Container(
+                                  width: 200,
+                                  height: 200,
+                                  child: Image.network(
+                                    products[i].getNetworkImage(),
+                                    fit: BoxFit.scaleDown,
+                                  ),
                                 ),
-                              ),
-                              AppTheme.imageButton('images/shopping_cart.png', 30,
-                                  onPressed: () {
-                                myCart.add(
-                                    products[i],
-                                    getProductPrice(format.customer.customerGroupId,
-                                        products[i].product_id));
-                                setState(() {
-                                  double _ = myCart.getAmountBeforeDiscount();
-                                });
-                              }),
-                            ],
+                                AppTheme.imageButton(
+                                    'images/shopping_cart.png', 30,
+                                    onPressed: () {
+                                  myCart.add(
+                                      products[i],
+                                      getProductPrice(
+                                          format.customer.customerGroupId,
+                                          products[i].product_id));
+                                  setState(() {
+                                    double _ = myCart.getAmountBeforeDiscount();
+                                  });
+                                }),
+                              ],
+                            ),
                           ),
-                        ),
-                        Center(
-                            child: AppTheme.text(
-                                text: products[i].product_title.toUpperCase(),
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        Center(
-                            child: AppTheme.text(
-                                text:
-                                    'RS: ${getProductPrice(format.customer.customerGroupId, products[i].product_id)}',
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-
-                      ],
-                    )),
-              ),
-            ],
-          ),
-        ));
+                          Center(
+                              child: AppTheme.text(
+                                  text: products[i].product_title.toUpperCase(),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold)),
+                          Center(
+                              child: AppTheme.text(
+                                  text: 'RS: $unitPrice',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      )),
+                ),
+              ],
+            ),
+          ));
+      }
     }
     return widgets;
   }
@@ -176,31 +182,34 @@ class _StateItemsMenu extends State<ItemsMenu>
     Product product = new Product();
 
     products.forEach((element) {
-      if(element.product_id == productId)
-        product = element;
+      if (element.product_id == productId) product = element;
     });
     for (ProductPrices value in productPrices) {
       if (customerGroupId == value.customer_group_id &&
           productId == value.product_id) {
         if (format.paymentMode == 'CASH') {
-          if(product.discount_type.toUpperCase() == 'P') {
-            double price = double.parse(value.cash_price) * (double.parse(product.discount) / 100);
+          if (product.discount_type.toUpperCase() == 'P') {
+            double price = double.parse(value.cash_price) *
+                (double.parse(product.discount) / 100);
             return price.toString();
-          } else if(product.discount_type.toUpperCase() == 'A') {
-            double price = double.parse(value.cash_price) - double.parse(product.discount);
+          } else if (product.discount_type.toUpperCase() == 'A') {
+            double price =
+                double.parse(value.cash_price) - double.parse(product.discount);
             return price.toString();
-          } else if(product.discount_type.toUpperCase() == 'N') {
+          } else if (product.discount_type.toUpperCase() == 'N') {
             double price = double.parse(value.cash_price);
             return price.toString();
           }
         } else if (format.paymentMode == 'CREDIT') {
-          if(product.discount_type.toUpperCase() == 'P') {
-            double price = double.parse(value.credit_price) * (double.parse(product.discount) / 100);
+          if (product.discount_type.toUpperCase() == 'P') {
+            double price = double.parse(value.credit_price) *
+                (double.parse(product.discount) / 100);
             return price.toString();
-          } else if(product.discount_type.toUpperCase() == 'A') {
-            double price = double.parse(value.credit_price) - double.parse(product.discount);
+          } else if (product.discount_type.toUpperCase() == 'A') {
+            double price = double.parse(value.credit_price) -
+                double.parse(product.discount);
             return price.toString();
-          } else if(product.discount_type.toUpperCase() == 'N') {
+          } else if (product.discount_type.toUpperCase() == 'N') {
             double price = double.parse(value.credit_price);
             return price.toString();
           }
@@ -234,6 +243,7 @@ class _StateItemsMenu extends State<ItemsMenu>
       ),
     );
   }
+
   slideUpPanelBody() {
     return TabBarView(
       controller: _tabController,
@@ -250,7 +260,7 @@ class _StateItemsMenu extends State<ItemsMenu>
         crossAxisCount: 2,
         children: productsView(label),
       );
-    } catch(e) {
+    } catch (e) {
       print(e);
       return Text('No Widget');
     }
@@ -289,12 +299,15 @@ class _StateItemsMenu extends State<ItemsMenu>
               child: AppTheme.roundRaisedButton(
                   text: 'Checkout',
                   onPressed: () {
-                    double creditLimit = double.parse(format.customer.creditLimit);
+                    double creditLimit =
+                        double.parse(format.customer.creditLimit);
                     double orderAmount = myCart.getAmountAfterDiscount();
-                    if(orderAmount > creditLimit) {
+                    if (orderAmount > creditLimit) {
                       AppTheme.showAlertDialogOK(context,
                           title: 'Warning',
-                          message: 'Your order amount is exceeding credit limit of Rs:${format.customer.creditLimit} allowed.', onOK: () => Navigator.pop(context));
+                          message:
+                              'Your order amount is exceeding credit limit of Rs:${format.customer.creditLimit} allowed.',
+                          onOK: () => Navigator.pop(context));
                     } else {
                       int qty = myCart.products.length;
                       if (qty >= 1) {
@@ -302,7 +315,7 @@ class _StateItemsMenu extends State<ItemsMenu>
                             context,
                             new MaterialPageRoute(
                                 builder: (context) =>
-                                new FinalOrder(cart: myCart)));
+                                    new FinalOrder(cart: myCart)));
                       } else {
                         AppTheme.showAlertDialog(context,
                             title: 'Attention',
@@ -331,7 +344,7 @@ class _StateItemsMenu extends State<ItemsMenu>
               Expanded(
                   child: AppTheme.text(
                 text: 'ItemName:${product.product_title}\n'
-                    'Unit Price: ${product.product_carton_price}\n'
+                    'Unit Price: ${product.product_pack_per_carton}\n'
                     'Quantity: ${product.quantity}\n'
                     'Amount: ${product.getPrice()}',
               )),
@@ -342,9 +355,9 @@ class _StateItemsMenu extends State<ItemsMenu>
                       onPressed: () {
                         myCart.add(product, product.product_carton_price);
                         setState(() {
-                          product.product_carton_price;
-                          product.quantity;
-                          product.getPrice();
+//                          product.product_carton_price;
+//                          product.quantity;
+//                          product.getPrice();
                         });
                       }),
                   AppTheme.roundRaisedButton(
@@ -352,9 +365,10 @@ class _StateItemsMenu extends State<ItemsMenu>
                       onPressed: () {
                         myCart.remove(product);
                         setState(() {
-                          product.product_carton_price;
-                          product.quantity.toString();
-                          product.getPrice();
+                            myCart.cleanCart();
+//                          product.product_carton_price;
+//                          product.quantity.toString();
+//                          product.getPrice();
                         });
                       })
                 ],
@@ -371,7 +385,6 @@ class _StateItemsMenu extends State<ItemsMenu>
 class MenuFormat {
   String paymentMode;
   Customer customer;
-
   MenuFormat({this.paymentMode, this.customer});
 }
 
@@ -415,19 +428,18 @@ class FinalOrder extends StatelessWidget {
                     child: AppTheme.text(
                         text: 'Discount:', fontSize: titleFontSize)),
                 AppTheme.text(
-                    text: '${cart.getDiscount()}',
+                    text: '${cart.getDiscount()}', fontSize: titleFontSize)
+              ]),
+              SizedBox(height: rowSpacing),
+              Row(children: <Widget>[
+                Expanded(
+                    child: AppTheme.text(
+                        text: 'Discounted Amount:', fontSize: titleFontSize)),
+                AppTheme.text(
+                    text: 'Rs:${cart.getDiscountedAmount()}',
                     fontSize: titleFontSize)
               ]),
               SizedBox(height: rowSpacing),
-                  Row(children: <Widget>[
-                    Expanded(
-                        child: AppTheme.text(
-                            text: 'Discounted Amount:', fontSize: titleFontSize)),
-                    AppTheme.text(
-                        text: 'Rs:${cart.getDiscountedAmount()}',
-                        fontSize: titleFontSize)
-                  ]),
-                  SizedBox(height: rowSpacing),
               Row(children: <Widget>[
                 Expanded(
                     child: AppTheme.text(
