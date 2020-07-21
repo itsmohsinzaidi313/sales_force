@@ -116,7 +116,7 @@ class Product {
     this.quantity++;
   }
 
-  remove() {
+  less() {
     int difference = this.quantity - 1;
     if (difference >= 0) {
       quantity--;

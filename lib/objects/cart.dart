@@ -87,16 +87,26 @@ class Cart {
     return _discountType;
   }
 
-  void remove(Product product) {
+  void less(Product product) {
     if (products.length > 0) {
       for (int i = 0; i < products.length; i++) {
         String prodId = products[i].product_id;
         if (prodId == product.product_id) {
-        int productQty = products[i].quantity;
+          int productQty = products[i].quantity;
           if ((productQty - product.quantity) >= 0) {
-            products[i].remove();
+            products[i].less();
           }
           break;
+        }
+      }
+    }
+  }
+
+  void remove(Product product) {
+    if (products.length > 0) {
+      for (int i = 0; i < products.length; i++) {
+        if (products[i].product_id == product.product_id) {
+          products.removeAt(i);
         }
       }
     }

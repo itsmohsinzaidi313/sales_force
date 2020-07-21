@@ -355,24 +355,24 @@ class _StateItemsMenu extends State<ItemsMenu>
                       onPressed: () {
                         myCart.add(product, product.product_carton_price);
                         setState(() {
-//                          product.product_carton_price;
-//                          product.quantity;
-//                          product.getPrice();
+//                              product.product_carton_price;
+//                              product.quantity;
+//                              product.getPrice();
                         });
                       }),
                   AppTheme.roundRaisedButton(
                       text: '-',
                       onPressed: () {
-                        myCart.remove(product);
+                        myCart.less(product);
                         setState(() {
-                            myCart.cleanCart();
-//                          product.product_carton_price;
-//                          product.quantity.toString();
-//                          product.getPrice();
+                          myCart.cleanCart();
+                          //                          product.product_carton_price;
+                          //                          product.quantity.toString();
+                          //                          product.getPrice();
                         });
                       })
                 ],
-              )
+              ),
             ],
           ),
         )));
