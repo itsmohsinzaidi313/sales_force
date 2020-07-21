@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
-import 'package:sales_force/JsonDataModels/sync_api.dart';
+import 'package:sales_force/Json_data_models/sync_api.dart';
 import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 import 'package:sales_force/objects/category.dart';
 import 'package:sales_force/objects/category_permissions.dart';

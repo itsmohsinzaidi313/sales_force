@@ -1,60 +1,68 @@
+import 'package:logger/logger.dart';
 import 'package:sales_force/objects/category.dart';
 import 'package:sales_force/objects/category_permissions.dart';
 import 'package:sales_force/objects/customer.dart';
 import 'package:sales_force/objects/customer_group.dart';
-import 'package:sales_force/objects/dataLists.dart';
+import 'package:sales_force/objects/data_lists.dart';
 import 'package:sales_force/objects/invoice.dart';
 import 'package:sales_force/objects/product.dart';
+import 'package:sales_force/objects/product_foc.dart';
 import 'package:sales_force/objects/product_prices.dart';
 import 'package:sales_force/objects/user.dart';
 import 'package:sales_force/objects/user_type.dart';
+import 'package:sales_force/shared/config.dart';
 
 class ApiInstall {
   final String status;
   final String message;
   final Map data;
+  final Logger _log = Config.log;
 
-  //final Map<String, dynamic> users;
   ApiInstall({this.status, this.message, this.data}) {
     try {
       getUserTypesList(data['user_types']);
     } catch (e) {
-      print(e);
+      _log.e(e);
     }
     try {
       getUsersList(data['users']);
     } catch (e) {
-      print(e);
+      _log.e(e);
     }
     try {
       getCategoriesList(data['categories']);
     } catch (e) {
-      print(e);
+      _log.e(e);
     }
     try {
       getProductsList(data['products']);
     } catch (e) {
-      print(e);
+      _log.e(e);
     }
     try {
       getInvoicesList(data['invoices']);
     } catch (e) {
-      print('>>>ERROR ON getInvoicesList\n$e');
+      _log.e('>>>ERROR ON getInvoicesList\n$e');
     }
     try {
       getCustomerGroupList(data['customer_groups']);
     } catch (e) {
-      print('>>>ERROR ON getInvoicesList\n$e');
+      _log.e('>>>ERROR ON getInvoicesList\n$e');
     }
     try {
       getProductPricesList(data['pcg_prices']);
     } catch (e) {
-      print('>>>ERROR ON getInvoicesList\n$e');
+      _log.e('>>>ERROR ON getInvoicesList\n$e');
     }
     try {
       getCustomersList(data['customers']);
     } catch (e) {
-      print('>>>ERROR ON getCustomers\n$e');
+      _log.e('>>>ERROR ON getCustomers\n$e');
+    }
+    try {
+      getProductFoc(data['foc_slab']);
+    } catch (e) {
+      _log.e('>>>ERROR ON getProductFoc');
     }
   }
 
@@ -196,31 +204,16 @@ class ApiInstall {
           product_image: e['product_image']));
     });
   }
-}
 
-class Data {
-  final String status;
-  final String message;
-
-  Data({this.status, this.message});
-}
-
-class Status {
-  final String status;
-
-  Status({this.status});
-
-  factory Status.fromJson(Map<String, dynamic> json) {
-    return new Status(status: json['status']);
-  }
-}
-
-class Message {
-  final String message;
-
-  Message({this.message});
-
-  factory Message.fromJson(Map<String, dynamic> json) {
-    return new Message(message: json['message']);
+  void getProductFoc(List<dynamic> i) {
+    DataLists.listProductFoc = [];
+    i.forEach((element) {
+      new ProductFoc(
+        element['product_id'],
+        element['start'],
+        element['end'],
+        element['quantity']
+      );
+    });
   }
 }

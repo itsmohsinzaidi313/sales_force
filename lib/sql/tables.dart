@@ -31,6 +31,8 @@ class TablesV1{
 
   static String SYNC_APIS = 'CREATE TABLE sync_apis(id integer primary key, server_id integer, module text, operation text, url text, createdon text, is_used integer)';
 
+  static String PRODUCT_FOC = 'CREATE TABLE product_foc(id integer primary key, product_id integer, start integer, end integer, quantity integer)';
+
   static String DROP_USERS = 'DROP TABLE IF EXISTS users';
   static String DROP_USERSTYPES = 'DROP TABLE IF EXISTS users_types';
   static String DROP_CATEGORIES = 'DROP TABLE IF EXISTS categories';
@@ -47,5 +49,6 @@ class TablesV1{
   static String DROP_PAID_INVOICES = 'DROP TABLE IF EXISTS paid_invoices';
   static String DROP_CATEGORY_PERMISSIONS = 'DROP TABLE IF EXISTS category_permissions';
   static String DROP_SYNC_APIS = 'DROP TABLE IF EXISTS sync_apis';
+  static String DROP_PRODUCT_FOC = 'DROP TABLE IF EXISTS product_foc';
 }
 

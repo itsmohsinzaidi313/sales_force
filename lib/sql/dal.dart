@@ -10,6 +10,7 @@ import 'package:sales_force/objects/customer_group.dart';
 import 'package:sales_force/objects/invoice.dart';
 import 'package:sales_force/objects/json_elements.dart';
 import 'package:sales_force/objects/product.dart';
+import 'package:sales_force/objects/product_foc.dart';
 import 'package:sales_force/objects/product_prices.dart';
 import 'package:sales_force/objects/user.dart';
 import 'package:sales_force/services/service_control.dart';
@@ -29,6 +30,7 @@ class DAL {
   static List<String> staticCategoryNames;
   static List<CustomerGroup> staticCustomerGroups;
   static List<ProductPrices> staticProductPrices;
+  static List<ProductFoc> staticProductFoc;
   static ServiceControl serviceCtrl;
   static User currentUser;
   static String userId;
@@ -66,6 +68,7 @@ class DAL {
     getUsers();
     getProducts();
     getProductPrices();
+    getProductFoc();
     loadUserSpecificResources();
   }
 
@@ -198,7 +201,7 @@ class DAL {
         getInvoices();
       });
     } catch (e) {
-      _log.e('ERROR ON DAL LOADING USERS', [e]);
+      _log.wtf('ERROR ON DAL LOADING USERS', [e]);
     }
   }
 
@@ -212,35 +215,31 @@ class DAL {
         staticUsers = getUsersList(users);
         _log.v('USERS LOADED');
         _log.v('TOTAL USERS :' + staticUsers.length.toString());
-      });
+      })
+      .catchError((onError) => _log.wtf('ERROR ON DAL getUsersList', [onError]));
     } catch (e) {
-      _log.e('ERROR ON DAL LOADING USERS', [e]);
+      _log.wtf('ERROR ON DAL getUsers', [e]);
     }
   }
 
   List<User> getUsersList(List<dynamic> i) {
-    try {
-      List<User> listUsers = [];
-      i.forEach((e) {
-        listUsers.add(new User(
-            user_id: e['user_id'],
-            user_type_id: e['user_type_id'],
-            distributor_id: e['distributor_id'],
-            firstname: e['user_first_name'],
-            lastname: e['user_last_name'],
-            email: e['user_email_address'],
-            password: e['user_password'],
-            phoneNumber: e['user_phone_number'],
-            mobile: e['user_mobile'],
-            user_status: e['user_status'],
-            createdon: e['createdon'],
-            modifiedon: e['modifiedon']));
-      });
-      return listUsers;
-    } catch (e) {
-      _log.e('ERROR IN DAL', [e]);
-      return null;
-    }
+    List<User> listUsers = [];
+    i.forEach((e) {
+      listUsers.add(new User(
+          user_id: e['user_id'],
+          user_type_id: e['user_type_id'],
+          distributor_id: e['distributor_id'],
+          firstname: e['user_first_name'],
+          lastname: e['user_last_name'],
+          email: e['user_email_address'],
+          password: e['user_password'],
+          phoneNumber: e['user_phone_number'],
+          mobile: e['user_mobile'],
+          user_status: e['user_status'],
+          createdon: e['createdon'],
+          modifiedon: e['modifiedon']));
+    });
+    return listUsers;
   }
 
   void getCategories() {
@@ -257,26 +256,22 @@ class DAL {
         _log.v('TOTAL CATEGORIES :' + staticCategories.length.toString());
       });
     } catch (e) {
-      _log.e('ERROR ON DAL getCategories', [e]);
+      _log.wtf('ERROR ON DAL getCategories', [e]);
     }
   }
 
   List<Category> getCategoriesList(List<dynamic> i) {
-    try {
-      List<Category> listCategories = [];
-      i.forEach((e) {
-        listCategories.add(new Category(
-            product_category_id: e['product_category_id'],
-            user_id: e['user_id'],
-            product_category_title: e['product_category_title'],
-            product_category_image: e['product_category_image'],
-            createdon: e['createdon'],
-            modifiedon: e['modifiedon']));
-      });
-      return listCategories;
-    } catch (e) {
-      return null;
-    }
+    List<Category> listCategories = [];
+    i.forEach((e) {
+      listCategories.add(new Category(
+          product_category_id: e['product_category_id'],
+          user_id: e['user_id'],
+          product_category_title: e['product_category_title'],
+          product_category_image: e['product_category_image'],
+          createdon: e['createdon'],
+          modifiedon: e['modifiedon']));
+    });
+    return listCategories;
   }
 
   Future<void> getCategoryNames() async {
@@ -292,7 +287,7 @@ class DAL {
         });
       _log.v('DAL CATEGORY NAMES LOADED');
     } catch (e) {
-      _log.e('ERROR ON DAL getCategoryNames', [e]);
+      _log.wtf('ERROR ON DAL getCategoryNames', [e]);
     }
   }
 
@@ -308,81 +303,96 @@ class DAL {
         _log.v('TOTAL PRODUCTS :' + staticProducts.length.toString());
       });
     } catch (e) {
-      _log.e('ERROR ON DAL getProducts');
+      _log.wtf('ERROR ON DAL getProducts');
     }
   }
 
   List<Product> getProductsList(List<dynamic> i) {
-    try {
-      List<Product> listProduct = [];
-      i.forEach((e) {
-        listProduct.add(new Product(
-            product_id: e['product_id'],
-            product_category_id: e['product_category_id'],
-            product_type_id: e['product_type_id'],
-            user_id: e['user_id'],
-            product_title: e['product_title'],
-            product_pack_price: e['product_pack_price'],
-            product_pack_per_carton: e['product_packs_per_carton'],
-            product_carton_price: e['product_carton_price'],
-            product_price_per_liter: e['product_price_per_liter'],
-            discount_type: e['discount_type'],
-            discount: e['discount'],
-            isActive: e['isActive'],
-            createdon: e['createdon'],
-            modifiedon: e['modifiedon'],
-            product_image: e['product_image']));
-      });
-      return listProduct;
-    } catch (e) {
-      _log.e('ERROR IN DAL', [e]);
-      return null;
-    }
+    List<Product> listProduct = [];
+    i.forEach((e) {
+      listProduct.add(new Product(
+          product_id: e['product_id'],
+          product_category_id: e['product_category_id'],
+          product_type_id: e['product_type_id'],
+          user_id: e['user_id'],
+          product_title: e['product_title'],
+          product_pack_price: e['product_pack_price'],
+          product_pack_per_carton: e['product_packs_per_carton'],
+          product_carton_price: e['product_carton_price'],
+          product_price_per_liter: e['product_price_per_liter'],
+          discount_type: e['discount_type'],
+          discount: e['discount'],
+          isActive: e['isActive'],
+          createdon: e['createdon'],
+          modifiedon: e['modifiedon'],
+          product_image: e['product_image']));
+    });
+    return listProduct;
   }
 
   void getInvoices() {
     try {
       _log.v('DAL LOADING INVOICES');
-      List invoices = [];
       Future<dynamic> future = db.rawQuery(
           "${Select.selectInvoices} where user_id = ${DAL.currentUser.user_id} order by invoice_date desc");
-      future.then((value) {
-        invoices = value;
-        staticInvoices = getInvoicesList(invoices);
-        _log.v('DAL INVOICES LOADED');
-        _log.v('TOTAL INVOICES :' + staticInvoices.length.toString());
-      });
+      future
+          .then((value) => staticInvoices = getInvoicesList(value))
+          .catchError(
+              (onError) => _log.wtf('ERROR ON DAL getInvoicesList', [onError]))
+          .whenComplete(() => _log.v('DAL INVOICES LOADED'));
+      _log.v('TOTAL INVOICES :' + staticInvoices.length.toString());
     } catch (e) {
-      _log.e('ERROR ON DAL getInvoices', [e]);
-      _log.e('ERROR IN DAL', [e]);
+      _log.wtf('ERROR ON DAL getInvoices', [e]);
     }
   }
 
   getInvoicesList(List<dynamic> i) {
+    List<Invoice> listInvoice = [];
+    i.forEach((e) {
+      listInvoice.add(new Invoice(
+          invoice_id: e['invoice_id'],
+          order_id: e['order_id'],
+          customer_id: e['customer_id'],
+          user_id: e['user_id'],
+          invoice_number: e['invoice_number'],
+          invoice_date: e['invoice_date'],
+          invoice_amount: e['invoice_amount'],
+          invoice_discount: e['invoice_discount'],
+          invoice_total_amount: e['invoice_total_amount'],
+          invoice_paid_amount: e['invoice_paid_amount'],
+          invoice_balance: e['invoice_balance'],
+          invoice_status: e['invoice_status'],
+          createdon: e['createdon'],
+          modifiedon: e['modifiedon']));
+    });
+    return listInvoice;
+  }
+
+  void getProductFoc() {
     try {
-      List<Invoice> listInvoice = [];
-      i.forEach((e) {
-        listInvoice.add(new Invoice(
-            invoice_id: e['invoice_id'],
-            order_id: e['order_id'],
-            customer_id: e['customer_id'],
-            user_id: e['user_id'],
-            invoice_number: e['invoice_number'],
-            invoice_date: e['invoice_date'],
-            invoice_amount: e['invoice_amount'],
-            invoice_discount: e['invoice_discount'],
-            invoice_total_amount: e['invoice_total_amount'],
-            invoice_paid_amount: e['invoice_paid_amount'],
-            invoice_balance: e['invoice_balance'],
-            invoice_status: e['invoice_status'],
-            createdon: e['createdon'],
-            modifiedon: e['modifiedon']));
-      });
-      return listInvoice;
+      _log.v('DAL LOADING PRODUCT FOC');
+      Future<List<Map<String, dynamic>>> future =
+          db.rawQuery(Select.selectProductFoc);
+      future
+          .then((value) => staticProductFoc = getProductFocList(value))
+          .catchError((onError) =>
+              _log.wtf('ERROR ON DAL getProductFocList', [onError]))
+          .whenComplete(() => _log.v('DAL PRODUCT FOC LOADED'));
     } catch (e) {
-      _log.e('ERROR ON DAL getInvoicesList', [e]);
-      return null;
+      _log.wtf([
+        'ERROR ON DAL getProductFoc',
+        [e]
+      ]);
     }
+  }
+
+  List<ProductFoc> getProductFocList(List<dynamic> i) {
+    List<ProductFoc> list = [];
+    i.forEach((element) {
+      list.add(new ProductFoc(element['product_id'], element['start'],
+          element['end'], element['quantity']));
+    });
+    return list;
   }
 
   storeInvoice(JSONInvoice invoice) {
@@ -515,7 +525,7 @@ class DAL {
   }
 
   getLastMaxVisitId() async {
-    String query = 'select ifnull(max(id),0) + 1 as id from visits';
+    String query = 'select ifNull(max(id),0) + 1 as id from visits';
     List<Map<String, dynamic>> id = await db.rawQuery(query);
     return id[0]['id'].toString();
   }

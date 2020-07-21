@@ -1,9 +1,10 @@
 import 'package:logger/logger.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
-import 'package:sales_force/objects/dataLists.dart';
+import 'package:sales_force/objects/data_lists.dart';
 import 'package:sales_force/sql/insert_queries.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 
 class ImportToDB {
   Database db;
@@ -40,6 +41,7 @@ class ImportToDB {
     importProductPrices();
     importCustomers();
     importCategoryPermissions();
+    importProductFoc();
     _log.v('EXIT initInstall');
   }
 
@@ -176,7 +178,6 @@ class ImportToDB {
 
   void importSyncApi() {
     try {
-      int counter = 0;
       if (DataLists.listSyncPackets != null &&
           DataLists.listSyncPackets.isNotEmpty)
         DataLists.listSyncPackets.forEach((e) async {
@@ -186,6 +187,19 @@ class ImportToDB {
         });
     } catch (e) {
       _log.e('ERROR ON importSyncApi', [e]);
+    }
+  }
+
+  void importProductFoc() {
+    try {
+      if(DataLists.listProductFoc != null &&
+      DataLists.listProductFoc.isNotEmpty)
+        DataLists.listProductFoc.forEach((element) {
+          String query = Insert.insertProductFoc;
+          db.rawInsert(query, [element.productId, element.start, element.end, element.quantity]);
+        });
+    } catch (e) {
+      _log.e('ERROR ON importProductFoc', [e]);
     }
   }
 }

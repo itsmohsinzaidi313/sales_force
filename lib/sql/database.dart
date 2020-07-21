@@ -111,6 +111,7 @@ class Install {
       db.execute(TablesV1.VISITS);
       db.execute(TablesV1.CATEGORY_PERMISSIONS);
       db.execute(TablesV1.SYNC_APIS);
+      db.execute(TablesV1.PRODUCT_FOC);
       _log.v('EXIT createTablesV1');
     } catch (e) {
       _log.e('ERROR ON createTablesV1', [e]);
@@ -136,6 +137,7 @@ class Install {
       db.execute(TablesV1.DROP_VISITS);
       db.execute(TablesV1.DROP_CATEGORY_PERMISSIONS);
       db.execute(TablesV1.DROP_SYNC_APIS);
+      db.execute(TablesV1.DROP_PRODUCT_FOC);
       _log.v('EXIT dropAllTables');
     } catch (e) {
       _log.e('ERROR ON dropAllTables', [e]);
@@ -160,6 +162,7 @@ class Install {
       db.delete('visits');
       db.delete('category_permissions');
       db.delete('sync_links');
+      db.delete('product_foc');
       _log.v('EXIT deleteAllTables');
     } catch (e) {
       _log.e('ERROR ON deleteAllTables', [e]);
@@ -223,6 +226,8 @@ class Reinstall {
         _log.v('PRODUCT PRICES DELETED');
         db.delete('sync_apis');
         _log.v('SYNC APIS DELETED');
+        db.delete('product_foc');
+        _log.v('PRODUCT FOC DELETED');
         ImportToDB('INSTALLAPI');
         DAL.staticDal = new DAL(email: DAL.currentUser.email);
       }

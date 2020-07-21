@@ -5,7 +5,7 @@ import 'package:sqflite/sqlite_api.dart';
 
 class Config {
   static int DATABASE_BASE_VERSION;
-  static int DATABASE_VERSION = 23;
+  static const int DATABASE_VERSION = 24;
   static String DATABASE_NAME = 'SaleForce.db';
   static Database DATABASE;
   static String DATABASES_PATH;
@@ -27,7 +27,7 @@ class Config {
   static double deviceDisplayWidth;
   static double deviceDisplayHeight;
 
-  static Logger log = new Logger(printer: PrettyPrinter(
+  static final Logger log = new Logger(printer: PrettyPrinter(
       colors: true,
       errorMethodCount: 1,
       printEmojis: true,

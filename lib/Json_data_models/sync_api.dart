@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
-import 'package:sales_force/objects/dataLists.dart';
+import 'package:sales_force/objects/data_lists.dart';
 import 'package:sales_force/objects/sync_packet.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/import_data.dart';

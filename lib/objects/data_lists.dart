@@ -1,4 +1,5 @@
 import 'package:sales_force/objects/product.dart';
+import 'package:sales_force/objects/product_foc.dart';
 import 'package:sales_force/objects/product_prices.dart';
 import 'package:sales_force/objects/sync_packet.dart';
 import 'package:sales_force/objects/user.dart';
@@ -21,6 +22,7 @@ class DataLists {
   static List<Customer> listCustomer;
   static List<CategoryPermissions> listCategoryPermissions;
   static List<SyncPacket> listSyncPackets;
+  static List<ProductFoc> listProductFoc;
 
   DataLists(
       {listUserTypes,
@@ -32,5 +34,6 @@ class DataLists {
       listPCGPrices,
       listCustomer,
       listCategoryPermissions,
-      listSyncPackets});
+      listSyncPackets,
+      listProductFoc});
 }

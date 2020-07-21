@@ -50,6 +50,8 @@ class Insert {
   static String insertSyncApi =
       'INSERT INTO sync_apis(server_id, module, operation, url, createdon) VALUES(?,?,?,?,?)';
 
+  static String insertProductFoc = 'INSERT INTO product_foc(product_id, start, end, quantity) VALUES(?,?,?,?)';
+
 //  static String insertInvoiceIfNotExists(Invoice invoice) {
 //    return "INSERT INTO invoices(invoice_id, order_id, customer_id, user_id, invoice_number, invoice_date, invoice_amount, invoice_discount, invoice_total_amount, invoice_paid_amount, invoice_balance, invoice_status, createdon, modifiedon) select invoice_id, order_id, customer_id, user_id, invoice_number, invoice_date, invoice_amount, invoice_discount, invoice_total_amount, invoice_paid_amount, invoice_balance, invoice_status, createdon, modifiedon from (select '${invoice.invoice_id}' as invoice_id, '${invoice.order_id}' as order_id, '${invoice.customer_id}' as customer_id, '${invoice.user_id}' as  user_id, '${invoice.invoice_number}' as invoice_number, '${invoice.invoice_date}' as invoice_date, '${invoice.invoice_amount}' as invoice_amount, '${invoice.invoice_discount}' as invoice_discount, '${invoice.invoice_total_amount}' as invoice_total_amount, '${invoice.invoice_paid_amount}' as invoice_paid_amount, '${invoice.invoice_balance}' as invoice_balance, '${invoice.invoice_status}' as invoice_status, '${invoice.createdon}' as createdon, '${invoice.modifiedon}' as modifiedon) t WHERE NOT EXISTS (SELECT 1 from invoices where invoices.invoice_number = t.invoice_number); select last_insert_rowid() as id;";
 //  }

@@ -35,4 +35,6 @@ class Select {
   static String selectSyncApis = 'select id, server_id, module, operation, url, createdon from sync_apis';
 
   static String selectVisits = 'select createdon, is_upload, pair_id from visits ';
+
+  static String selectProductFoc = 'select product_id, start, end, quantity';
 }
