@@ -178,6 +178,7 @@ class ImportToDB {
 
   void importSyncApi() {
     try {
+      _log.v('ENTRY ON importSyncApi');
       if (DataLists.listSyncPackets != null &&
           DataLists.listSyncPackets.isNotEmpty)
         DataLists.listSyncPackets.forEach((e) async {
@@ -192,12 +193,19 @@ class ImportToDB {
 
   void importProductFoc() {
     try {
-      if(DataLists.listProductFoc != null &&
-      DataLists.listProductFoc.isNotEmpty)
+      _log.v('ENTRY ON importProduct');
+      if (DataLists.listProductFoc != null &&
+          DataLists.listProductFoc.isNotEmpty)
         DataLists.listProductFoc.forEach((element) {
           String query = Insert.insertProductFoc;
-          db.rawInsert(query, [element.productId, element.start, element.end, element.quantity]);
+          db.rawInsert(query, [
+            element.productId,
+            element.start,
+            element.end,
+            element.quantity
+          ]);
         });
+      _log.v('EXIT ON importProduct');
     } catch (e) {
       _log.e('ERROR ON importProductFoc', [e]);
     }

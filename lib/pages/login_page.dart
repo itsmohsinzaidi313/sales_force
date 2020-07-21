@@ -191,7 +191,7 @@ class _LoginState extends State<Login> {
           progressDialog.show();
 
           Library.validateUser(username, key).then((value) {
-            print('>>>>$value');
+//            print('>>>>$value');
             progressDialog.hide();
             if (value) {
               DAL.staticDal = new DAL(email: username);
@@ -226,9 +226,11 @@ class _LoginState extends State<Login> {
     });
   }
 
-  static const List<String> choices = [Download, Update];
+  static const List<String> choices = [Download, /*Update*/
+  ];
   static const String Download = 'Download';
-  static const String Update = 'Update';
+
+//  static const String Update = 'Update';
 
   void choiceAction(String choice) {
     if (choice == Download) {
@@ -242,7 +244,7 @@ class _LoginState extends State<Login> {
               onOK: () => Navigator.pop(context));
         }
       });
-    } else if (choice == Update) {
+    } /*else if (choice == Update) {
       Library.hasServerAccess().then((value) {
         if (value) {
           progressDialog.show();
@@ -255,7 +257,7 @@ class _LoginState extends State<Login> {
               onOK: () => Navigator.pop(context));
         }
       });
-    }
+    }*/
   }
 
   download() {

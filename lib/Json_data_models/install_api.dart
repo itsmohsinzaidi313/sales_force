@@ -62,7 +62,7 @@ class ApiInstall {
     try {
       getProductFoc(data['foc_slab']);
     } catch (e) {
-      _log.e('>>>ERROR ON getProductFoc');
+      _log.e('>>>ERROR ON getProductFoc', [e]);
     }
   }
 
@@ -207,13 +207,10 @@ class ApiInstall {
 
   void getProductFoc(List<dynamic> i) {
     DataLists.listProductFoc = [];
-    i.forEach((element) {
-      new ProductFoc(
-        element['product_id'],
-        element['start'],
-        element['end'],
-        element['quantity']
-      );
-    });
+    if (i != null)
+      i.forEach((element) {
+        new ProductFoc(element['product_id'], element['start'], element['end'],
+            element['quantity']);
+      });
   }
 }

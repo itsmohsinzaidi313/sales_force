@@ -26,15 +26,21 @@ class Select {
 
   static String selectOrderDetail = 'select master_id as order_id, product_category_id, product_id, order_product_total_packs, order_product_price_per_pack, order_product_discount_per_pack, order_product_discounted_pack_price, order_product_total_discount, order_product_total_price from order_detail ';
 
-  static String selectOrderMasterDetail = 'select a.product_title, b.order_product_total_packs, b.order_product_price_per_pack from products a left join order_detail b on b.product_id = a.product_id ';
+  static String selectOrderMasterDetail =
+      'select a.product_title, b.order_product_total_packs, b.order_product_price_per_pack from products a left join order_detail b on b.product_id = a.product_id ';
 
-  static String selectInvoiceForPost = 'select id as android_payment_id, payment_user_id, payment_order_id, payment_invoice_id, payment_customer_id, payment_amount, payment_mode, payment_cheque_no, payment_clearing_date, payment_bank_name, date_added from paid_invoices ';
+  static String selectInvoiceForPost =
+      'select id as android_payment_id, payment_user_id, payment_order_id, payment_invoice_id, payment_customer_id, payment_amount, payment_mode, payment_cheque_no, payment_clearing_date, payment_bank_name, date_added from paid_invoices ';
 
-  static String selectVisitJson = 'select id as order_taken_android_id, customer_id as order_taken_customer_id, user_id as order_taken_visit_admin_users_id_parcosf, lat as order_taken_visit_lat, long as order_taken_visit_long, isorder as order_taken_visit_isorder, createdon as order_taken_visit_createdon from visits ';
+  static String selectVisitJson =
+      'select id as order_taken_android_id, customer_id as order_taken_customer_id, user_id as order_taken_visit_admin_users_id_parcosf, lat as order_taken_visit_lat, long as order_taken_visit_long, isorder as order_taken_visit_isorder, createdon as order_taken_visit_createdon from visits ';
 
-  static String selectSyncApis = 'select id, server_id, module, operation, url, createdon from sync_apis';
+  static String selectSyncApis =
+      'select id, server_id, module, operation, url, createdon from sync_apis';
 
-  static String selectVisits = 'select createdon, is_upload, pair_id from visits ';
+  static String selectVisits =
+      'select createdon, is_upload, pair_id from visits ';
 
-  static String selectProductFoc = 'select product_id, start, end, quantity';
+  static String selectProductFoc =
+      'select product_id, start, end, quantity from product_foc';
 }

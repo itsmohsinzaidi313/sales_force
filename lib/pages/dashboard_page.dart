@@ -4,16 +4,15 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/application_theme.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 import 'package:sales_force/objects/visit.dart';
 import 'package:sales_force/pages/pick_customer_page.dart';
 import 'package:sales_force/pages/settings_page.dart';
 import 'package:sales_force/pages/view_visits_page.dart';
-import 'package:sales_force/services/service_control.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/select_queries.dart';
+
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/application_theme.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 
 class Dashboard extends StatefulWidget {
   static String email;
@@ -62,7 +61,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     double buttonLabelFontSize = 14.0;
     progressDialog = AppTheme.showProgressDialog(context);
-    initServices();
+//    initServices();
     return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
@@ -298,32 +297,26 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                 ),
-//                RaisedButton(
-//                  onPressed: () {
-//                    Library.getDatabase().then((value) => value
-//                        .rawQuery("select * from product_prices where customer_group_id = '5' and product_id = '1'", [])
-//                        .then((value) => (value.forEach((element) {
-//                              print(element);
-//                            }))));
-////                  print('Height ${Config.deviceDisplayHeight}');
-////                  print('Width ${Config.deviceDisplayWidth}');
-//                  },
-//                  child: AppTheme.text(text: 'Query'),
-//                ),
+                RaisedButton(
+                  onPressed: () {
+                    Library.getDatabase()
+                        .then((value) => value
+                            .rawQuery(Select.selectProductFoc)
+                            .then((value) => value.forEach((element) {
+                                  print(element);
+                                })))
+                        .whenComplete(() => print('end'));
+//                  print('Height ${Config.deviceDisplayHeight}');
+//                  print('Width ${Config.deviceDisplayWidth}');
+                  },
+                  child: AppTheme.text(text: 'Query'),
+                ),
               ],
             ),
           ),
         ));
   }
 
-  initServices() async {
-    if (DAL.serviceCtrl == null) DAL.serviceCtrl = new ServiceControl();
-    DAL.serviceCtrl.invoiceService.start();
-    DAL.serviceCtrl.locationService.start();
-    DAL.serviceCtrl.orderService.start();
-    DAL.serviceCtrl.visitService.start();
-    DAL.serviceCtrl.syncService.start();
-  }
 
   static const String settings = 'Settings';
   static const String logout = 'Logout';

@@ -199,10 +199,21 @@ class DAL {
         getCustomer();
         getCategoryNames();
         getInvoices();
+        initServices();
       });
     } catch (e) {
       _log.wtf('ERROR ON DAL LOADING USERS', [e]);
     }
+  }
+
+  initServices() async {
+    if (DAL.serviceCtrl == null) DAL.serviceCtrl = new ServiceControl();
+    DAL.serviceCtrl.invoiceService.start();
+    DAL.serviceCtrl.locationService.start();
+    DAL.serviceCtrl.orderService.start();
+    DAL.serviceCtrl.visitService.start();
+    DAL.serviceCtrl.syncService.start();
+    _log.v('ALL SERVICES STARTED');
   }
 
   void getUsers() {
@@ -379,10 +390,7 @@ class DAL {
               _log.wtf('ERROR ON DAL getProductFocList', [onError]))
           .whenComplete(() => _log.v('DAL PRODUCT FOC LOADED'));
     } catch (e) {
-      _log.wtf([
-        'ERROR ON DAL getProductFoc',
-        [e]
-      ]);
+      _log.wtf('ERROR ON DAL getProductFoc', [e]);
     }
   }
 
@@ -549,16 +557,16 @@ class DAL {
         '0',
         paidId
       ];
-      List<String> values2 = [
-        customer.customerId,
-        currentUser.user_id,
-        location2.latitude.toString(),
-        location2.longitude.toString(),
-        '0',
-        Library.getDateTime(),
-        '0',
-        paidId
-      ];
+//      List<String> values2 = [
+//        customer.customerId,
+//        currentUser.user_id,
+//        location2.latitude.toString(),
+//        location2.longitude.toString(),
+//        '0',
+//        Library.getDateTime(),
+//        '0',
+//        paidId
+//      ];
       id = await db.rawInsert(Insert.insertVisit, values1);
       //id = await db.rawInsert(Insert.insertVisit, values2);
       return id;
