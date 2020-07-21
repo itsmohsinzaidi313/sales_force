@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:sales_force/library.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 import 'package:sales_force/objects/dataLists.dart';
-import 'package:sales_force/objects/syncPacket.dart';
+import 'package:sales_force/objects/sync_packet.dart';
 import 'package:sales_force/sql/dal.dart';
-import 'package:sales_force/sql/importData.dart';
+import 'package:sales_force/sql/import_data.dart';
 
-import '../config.dart';
+import '../shared/config.dart';
 
 class ApiSync {
   Logger log = Config.log;

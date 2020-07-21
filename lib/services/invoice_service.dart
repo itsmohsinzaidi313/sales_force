@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:sales_force/library.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 import 'package:sales_force/services/common.dart';
 import 'package:sales_force/sql/dal.dart';
-import 'package:sales_force/sql/selectQueries.dart';
+import 'package:sales_force/sql/select_queries.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../config.dart';
+import '../shared/config.dart';
 
 class SPostInvoice extends ServiceCommon {
   @override

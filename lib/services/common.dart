@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:logger/logger.dart';
 
-import '../config.dart';
+import '../shared/config.dart';
 
 abstract class ServiceCommon {
   String name;

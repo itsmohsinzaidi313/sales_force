@@ -1,4 +1,4 @@
-import 'package:sales_force/objects/categoryPermissions.dart';
+import 'package:sales_force/objects/category_permissions.dart';
 
 class Category {
   String product_category_id;

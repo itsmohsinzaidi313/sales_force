@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sales_force/applicationTheme.dart';
-import 'package:sales_force/objects/jsonElements.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/application_theme.dart';
+import 'package:sales_force/objects/json_elements.dart';
 import 'package:sales_force/sql/dal.dart';
 
-import '../library.dart';
+import '../shared/library.dart';
 
 //region CASHPAYMENT
 class CashPaymentFinal extends StatefulWidget {

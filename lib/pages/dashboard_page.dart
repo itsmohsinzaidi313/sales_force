@@ -4,16 +4,16 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:sales_force/applicationTheme.dart';
-import 'package:sales_force/config.dart';
-import 'package:sales_force/library.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/application_theme.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 import 'package:sales_force/objects/visit.dart';
-import 'package:sales_force/pages/pickCustomer.dart';
+import 'package:sales_force/pages/pick_customer_page.dart';
 import 'package:sales_force/pages/settings_page.dart';
-import 'package:sales_force/pages/viewVisits.dart';
-import 'package:sales_force/services/serviceControl.dart';
+import 'package:sales_force/pages/view_visits_page.dart';
+import 'package:sales_force/services/service_control.dart';
 import 'package:sales_force/sql/dal.dart';
-import 'package:sales_force/sql/selectQueries.dart';
+import 'package:sales_force/sql/select_queries.dart';
 
 class Dashboard extends StatefulWidget {
   static String email;

@@ -1,14 +1,14 @@
 import 'package:logger/logger.dart';
-import 'package:sales_force/library.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 import 'package:sales_force/objects/category.dart';
-import 'package:sales_force/objects/categoryPermissions.dart';
+import 'package:sales_force/objects/category_permissions.dart';
 import 'package:sales_force/objects/customer.dart';
 import 'package:sales_force/objects/product.dart';
-import 'package:sales_force/objects/productPrices.dart';
+import 'package:sales_force/objects/product_prices.dart';
 import 'package:sales_force/objects/user.dart';
-import 'package:sales_force/sql/insertQueries.dart';
+import 'package:sales_force/sql/insert_queries.dart';
 import 'package:sqflite/sqflite.dart';
-import '../config.dart';
+import '../shared/config.dart';
 
 class Update {
   static Logger _log = Config.log;

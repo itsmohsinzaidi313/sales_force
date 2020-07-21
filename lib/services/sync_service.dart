@@ -2,25 +2,25 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
-import 'package:sales_force/JsonDataModels/syncApi.dart';
-import 'package:sales_force/library.dart';
+import 'package:sales_force/JsonDataModels/sync_api.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 import 'package:sales_force/objects/category.dart';
-import 'package:sales_force/objects/categoryPermissions.dart';
+import 'package:sales_force/objects/category_permissions.dart';
 import 'package:sales_force/objects/customer.dart';
 import 'package:sales_force/objects/invoice.dart';
 import 'package:sales_force/objects/product.dart';
-import 'package:sales_force/objects/productPrices.dart';
-import 'package:sales_force/objects/syncPacket.dart';
+import 'package:sales_force/objects/product_prices.dart';
+import 'package:sales_force/objects/sync_packet.dart';
 import 'package:sales_force/objects/user.dart';
 import 'package:sales_force/services/common.dart';
-import 'package:sales_force/sql/customQueries.dart';
+import 'package:sales_force/sql/custom_queries.dart';
 import 'package:sales_force/sql/dal.dart';
-import 'package:sales_force/sql/insertQueries.dart';
-import 'package:sales_force/sql/selectQueries.dart';
-import 'package:sales_force/sql/updateQueries.dart';
+import 'package:sales_force/sql/insert_queries.dart';
+import 'package:sales_force/sql/select_queries.dart';
+import 'package:sales_force/sql/update_queries.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../config.dart';
+import '../shared/config.dart';
 
 class SSyncService extends ServiceCommon {
   Database db;

@@ -1,13 +1,13 @@
 import 'package:sales_force/objects/product.dart';
-import 'package:sales_force/objects/productPrices.dart';
-import 'package:sales_force/objects/syncPacket.dart';
+import 'package:sales_force/objects/product_prices.dart';
+import 'package:sales_force/objects/sync_packet.dart';
 import 'package:sales_force/objects/user.dart';
-import 'package:sales_force/objects/userType.dart';
+import 'package:sales_force/objects/user_type.dart';
 
 import 'category.dart';
-import 'categoryPermissions.dart';
+import 'category_permissions.dart';
 import 'customer.dart';
-import 'customerGroup.dart';
+import 'customer_group.dart';
 import 'invoice.dart';
 
 class DataLists {

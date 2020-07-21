@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sales_force/objects/customer.dart';
 import 'package:sales_force/objects/invoice.dart';
-import 'package:sales_force/objects/jsonElements.dart';
-import 'package:sales_force/pages/invoicePayment.dart';
+import 'package:sales_force/objects/json_elements.dart';
+import 'package:sales_force/pages/invoice_payment_page.dart';
 import 'package:sales_force/sql/dal.dart';
 
-import '../applicationTheme.dart';
+import '../shared/application_theme.dart';
 
 class Invoices extends StatefulWidget {
   @override

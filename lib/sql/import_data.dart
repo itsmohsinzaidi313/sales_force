@@ -1,8 +1,8 @@
 import 'package:logger/logger.dart';
-import 'package:sales_force/config.dart';
-import 'package:sales_force/library.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 import 'package:sales_force/objects/dataLists.dart';
-import 'package:sales_force/sql/insertQueries.dart';
+import 'package:sales_force/sql/insert_queries.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ImportToDB {

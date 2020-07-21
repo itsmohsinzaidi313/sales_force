@@ -10,14 +10,14 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
-import 'package:sales_force/JsonDataModels/installApi.dart';
-import 'package:sales_force/config.dart';
+import 'package:sales_force/JsonDataModels/install_api.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
 import 'package:sales_force/objects/user.dart';
-import 'package:sales_force/pages/dashboard.dart';
+import 'package:sales_force/pages/dashboard_page.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/database.dart';
-import 'package:sales_force/sql/importData.dart';
-import 'package:sales_force/sql/selectQueries.dart';
+import 'package:sales_force/sql/import_data.dart';
+import 'package:sales_force/sql/select_queries.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Library {

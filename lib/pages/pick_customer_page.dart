@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:sales_force/applicationTheme.dart';
-import 'package:sales_force/config.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/application_theme.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
 import 'package:sales_force/objects/customer.dart';
 import 'package:sales_force/objects/visit.dart';
-import 'package:sales_force/pages/itemsMenu.dart';
-import 'package:sales_force/pages/viewSales.dart';
+import 'package:sales_force/pages/items_menu_page.dart';
+import 'package:sales_force/pages/view_sales_page.dart';
 import 'package:sales_force/sql/dal.dart';
-import 'package:sales_force/sql/selectQueries.dart';
+import 'package:sales_force/sql/select_queries.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../library.dart';
+import '../shared/library.dart';
 
 class PickCustomer extends StatefulWidget {
   String loadFor;

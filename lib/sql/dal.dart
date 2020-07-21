@@ -6,19 +6,19 @@ import 'package:path/path.dart';
 import 'package:sales_force/objects/cart.dart';
 import 'package:sales_force/objects/category.dart';
 import 'package:sales_force/objects/customer.dart';
-import 'package:sales_force/objects/customerGroup.dart';
+import 'package:sales_force/objects/customer_group.dart';
 import 'package:sales_force/objects/invoice.dart';
-import 'package:sales_force/objects/jsonElements.dart';
+import 'package:sales_force/objects/json_elements.dart';
 import 'package:sales_force/objects/product.dart';
-import 'package:sales_force/objects/productPrices.dart';
+import 'package:sales_force/objects/product_prices.dart';
 import 'package:sales_force/objects/user.dart';
-import 'package:sales_force/services/serviceControl.dart';
-import 'package:sales_force/sql/selectQueries.dart';
+import 'package:sales_force/services/service_control.dart';
+import 'package:sales_force/sql/select_queries.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../config.dart';
-import '../library.dart';
-import 'insertQueries.dart';
+import '../shared/config.dart';
+import '../shared/library.dart';
+import 'insert_queries.dart';
 
 class DAL {
   static List<Product> staticProducts;

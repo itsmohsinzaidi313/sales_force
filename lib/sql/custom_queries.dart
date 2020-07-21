@@ -1,5 +1,5 @@
 import 'package:logger/logger.dart';
-import 'package:sales_force/config.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
 import 'package:sales_force/objects/category.dart';
 import 'package:sales_force/objects/customer.dart';
 import 'package:sales_force/objects/invoice.dart';

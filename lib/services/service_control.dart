@@ -1,12 +1,12 @@
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
-import 'package:sales_force/config.dart';
-import 'package:sales_force/library.dart';
-import 'package:sales_force/services/invoiceService.dart';
-import 'package:sales_force/services/locationService.dart';
-import 'package:sales_force/services/ordersService.dart';
-import 'package:sales_force/services/syncService.dart';
-import 'package:sales_force/services/visitService.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
+import 'package:sales_force/services/invoice_service.dart';
+import 'package:sales_force/services/location_service.dart';
+import 'package:sales_force/services/orders_service.dart';
+import 'package:sales_force/services/sync_service.dart';
+import 'package:sales_force/services/visit_service.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ServiceControl {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:sales_force/config.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
 
 class AppTheme {
   static Logger _log = Config.log;

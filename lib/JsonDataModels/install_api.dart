@@ -1,13 +1,13 @@
 import 'package:sales_force/objects/category.dart';
-import 'package:sales_force/objects/categoryPermissions.dart';
+import 'package:sales_force/objects/category_permissions.dart';
 import 'package:sales_force/objects/customer.dart';
-import 'package:sales_force/objects/customerGroup.dart';
+import 'package:sales_force/objects/customer_group.dart';
 import 'package:sales_force/objects/dataLists.dart';
 import 'package:sales_force/objects/invoice.dart';
 import 'package:sales_force/objects/product.dart';
-import 'package:sales_force/objects/productPrices.dart';
+import 'package:sales_force/objects/product_prices.dart';
 import 'package:sales_force/objects/user.dart';
-import 'package:sales_force/objects/userType.dart';
+import 'package:sales_force/objects/user_type.dart';
 
 class ApiInstall {
   final String status;

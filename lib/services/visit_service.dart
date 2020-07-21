@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:sales_force/services/common.dart';
 import 'package:sales_force/sql/dal.dart';
-import 'package:sales_force/sql/selectQueries.dart';
+import 'package:sales_force/sql/select_queries.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../config.dart';
-import '../library.dart';
+import '../shared/config.dart';
+import '../shared/library.dart';
 
 class SPostVisit extends ServiceCommon {
   Database db;
