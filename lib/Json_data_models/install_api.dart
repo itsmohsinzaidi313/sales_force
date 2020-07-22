@@ -59,11 +59,6 @@ class ApiInstall {
     } catch (e) {
       _log.e('>>>ERROR ON getCustomers\n$e');
     }
-    try {
-      getProductFoc(data['foc_slab']);
-    } catch (e) {
-      _log.e('>>>ERROR ON getProductFoc', [e]);
-    }
   }
 
   getCustomersList(List<dynamic> i) {
@@ -185,6 +180,7 @@ class ApiInstall {
 
   void getProductsList(List<dynamic> i) {
     DataLists.listProduct = [];
+    DataLists.listProductFoc = [];
     i.forEach((e) {
       DataLists.listProduct.add(new Product(
           product_id: e['product_id'],
@@ -202,15 +198,22 @@ class ApiInstall {
           createdon: e['createdon'],
           modifiedon: e['modifiedon'],
           product_image: e['product_image']));
+      try {
+        getProductFoc(e['foc_slab']);
+      } catch (e) {
+        _log.e('>>>ERROR ON getProductFoc', [e]);
+      }
     });
   }
 
   void getProductFoc(List<dynamic> i) {
-    DataLists.listProductFoc = [];
     if (i != null)
       i.forEach((element) {
-        new ProductFoc(element['product_id'], element['start'], element['end'],
-            element['quantity']);
+        DataLists.listProductFoc.add(new ProductFoc(
+            int.parse(element['product_id']),
+            int.parse(element['start']),
+            int.parse(element['end']),
+            int.parse(element['quantity'])));
       });
   }
 }

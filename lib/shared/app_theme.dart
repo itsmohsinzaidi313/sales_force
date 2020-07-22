@@ -4,9 +4,67 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class AppTheme {
   static Logger _log = Config.log;
+  static const Color appThemeColor = Color.fromARGB(255, 196, 16, 1);
+
+  static ProgressDialog showProgressDialog(BuildContext context,
+      {String text = '', bool isDismissible = true}) {
+    final spinKit = new SpinKitFadingCube(
+      itemBuilder: (context, index) => DecoratedBox(
+        decoration: BoxDecoration(color: AppTheme.appThemeColor),
+      ),
+    );
+    ProgressDialog progressDialog = ProgressDialog(context,
+        type: ProgressDialogType.Normal,
+        isDismissible: false,
+        customBody: Container(
+          height: 250,
+          width: 100,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                spinKit,
+                SizedBox(
+                  height: 30,
+                ),
+                AppTheme.text(text: 'Loading...')
+              ]),
+        ));
+    return progressDialog;
+  }
+
+  static Future<DateTime> datePicker(BuildContext context) async {
+    DateTime dateTime = DateTime.now();
+    return showDatePicker(
+        context: context,
+        initialDate: dateTime,
+        firstDate: dateTime,
+        lastDate:
+            new DateTime(dateTime.year + 1, dateTime.month, dateTime.day));
+  }
+
+  static Future<TimeOfDay> timePicker(BuildContext context) async {
+    return showTimePicker(context: context, initialTime: TimeOfDay.now());
+  }
+
+  static Widget autoTextSizeWidget(String text,
+      {double fontSize,
+      FontWeight fontWeight,
+      double minFontSize = 16,
+      double maxFontSize = 16,
+      Color fontColor}) {
+    return AutoSizeText(
+      text,
+      style: TextStyle(
+          fontSize: fontSize, fontWeight: fontWeight, color: fontColor),
+      minFontSize: minFontSize,
+      maxFontSize: maxFontSize,
+    );
+  }
 
   static RaisedButton rectangleRaisedButton(
       {Color color = Colors.white,
@@ -93,24 +151,6 @@ class AppTheme {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
             ));
-  }
-
-  static ProgressDialog showProgressDialog(BuildContext context,
-      {String text, bool isDismissible = true}) {
-    ProgressDialog progressDialog = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: isDismissible);
-    progressDialog.style(message: text);
-    return progressDialog;
-  }
-
-  static Future<DateTime> datePicker(BuildContext context) async {
-    DateTime dateTime = DateTime.now();
-    return showDatePicker(
-        context: context,
-        initialDate: dateTime,
-        firstDate: dateTime,
-        lastDate:
-            new DateTime(dateTime.year + 1, dateTime.month, dateTime.day));
   }
 
   static Widget imageButton(String imagePath, double scale,

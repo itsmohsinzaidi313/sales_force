@@ -226,8 +226,8 @@ class DAL {
         staticUsers = getUsersList(users);
         _log.v('USERS LOADED');
         _log.v('TOTAL USERS :' + staticUsers.length.toString());
-      })
-      .catchError((onError) => _log.wtf('ERROR ON DAL getUsersList', [onError]));
+      }).catchError(
+          (onError) => _log.wtf('ERROR ON DAL getUsersList', [onError]));
     } catch (e) {
       _log.wtf('ERROR ON DAL getUsers', [e]);
     }
@@ -345,13 +345,16 @@ class DAL {
     try {
       _log.v('DAL LOADING INVOICES');
       Future<dynamic> future = db.rawQuery(
-          "${Select.selectInvoices} where user_id = ${DAL.currentUser.user_id} order by invoice_date desc");
+          "${Select.selectInvoices} where user_id = ${DAL.currentUser
+              .user_id} order by invoice_date desc");
       future
           .then((value) => staticInvoices = getInvoicesList(value))
           .catchError(
               (onError) => _log.wtf('ERROR ON DAL getInvoicesList', [onError]))
-          .whenComplete(() => _log.v('DAL INVOICES LOADED'));
-      _log.v('TOTAL INVOICES :' + staticInvoices.length.toString());
+          .whenComplete(() {
+        _log.v('DAL INVOICES LOADED');
+        _log.v('TOTAL INVOICES :' + staticInvoices.length.toString());
+      });
     } catch (e) {
       _log.wtf('ERROR ON DAL getInvoices', [e]);
     }
@@ -514,7 +517,6 @@ class DAL {
       _log.v('EXIT addOrder');
     } catch (e) {
       _log.e('ERROR ON addOrder', [e]);
-      _log.v('$e');
     }
   }
 

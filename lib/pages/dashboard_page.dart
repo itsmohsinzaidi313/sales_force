@@ -7,11 +7,12 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sales_force/objects/visit.dart';
 import 'package:sales_force/pages/pick_customer_page.dart';
 import 'package:sales_force/pages/settings_page.dart';
+import 'package:sales_force/pages/sql_view_page.dart';
 import 'package:sales_force/pages/view_visits_page.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/select_queries.dart';
 
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/application_theme.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
 import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 
 class Dashboard extends StatefulWidget {
@@ -298,25 +299,28 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
                 RaisedButton(
+                  color: Colors.white,
                   onPressed: () {
-                    Library.getDatabase()
-                        .then((value) => value
-                            .rawQuery(Select.selectProductFoc)
-                            .then((value) => value.forEach((element) {
-                                  print(element);
-                                })))
-                        .whenComplete(() => print('end'));
+//                    Library.getDatabase()
+//                        .then((value) => value
+//                            .rawQuery('PRAGMA table_info(invoices)')
+//                            .then((value) => value.forEach((element) {
+//                                  print("${element['name']}\n");
+//                                })))
+//                        .catchError((onError) => print(onError))
+//                        .whenComplete(() => print('end'));
 //                  print('Height ${Config.deviceDisplayHeight}');
 //                  print('Width ${Config.deviceDisplayWidth}');
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext context) => new SqlView()));
                   },
-                  child: AppTheme.text(text: 'Query'),
+                  child: AppTheme.text(text: 'SQL'),
                 ),
               ],
             ),
           ),
         ));
   }
-
 
   static const String settings = 'Settings';
   static const String logout = 'Logout';
