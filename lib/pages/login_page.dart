@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -243,6 +244,17 @@ class _LoginState extends State<Login> {
               message: 'Please connect to internet',
               onOK: () => Navigator.pop(context));
         }
+      }).catchError((onError) {
+        if (onError is SocketException)
+          AppTheme.showAlertDialogOK(context,
+              title: 'Attention',
+              message: 'Please connect to internet',
+              onOK: () => Navigator.pop(context));
+        else
+          AppTheme.showAlertDialogOK(context,
+              title: 'Attention',
+              message: 'An error has occured.\n${onError.toString()}',
+              onOK: () => Navigator.pop(context));
       });
     } /*else if (choice == Update) {
       Library.hasServerAccess().then((value) {

@@ -19,6 +19,7 @@ class Product {
   String purchasedQuantity;
   String product_image;
   int quantity;
+  int focQuantity;
   List<dynamic> _customerGroupPrices;
 
   Product(
@@ -37,8 +38,10 @@ class Product {
       this.createdon,
       this.modifiedon,
       this.purchasedQuantity,
-      this.product_image}) {
-    quantity = 1;
+      this.product_image,
+      this.focQuantity}) {
+    this.quantity = 1;
+    this.focQuantity = 0;
   }
 
   Product.withProduct({Product product}) {
@@ -58,6 +61,7 @@ class Product {
     this.modifiedon = product.modifiedon;
     this.purchasedQuantity = product.purchasedQuantity;
     this.quantity = product.quantity;
+    this.focQuantity = product.focQuantity;
   }
 
   Product.withMap(List<dynamic> i) {
@@ -123,8 +127,23 @@ class Product {
     }
   }
 
+  addFoc() {
+    this.focQuantity++;
+  }
+
+  lessFoc() {
+    int difference = this.focQuantity - 1;
+    if (difference >= 0) {
+      focQuantity--;
+    }
+  }
+
   setQuantity(int quantity) {
     this.quantity = quantity;
+  }
+
+  setFocQuantity(int focQuantity) {
+    this.focQuantity = focQuantity;
   }
 
   getPrice() {

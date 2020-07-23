@@ -1,16 +1,16 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 import 'package:sales_force/objects/cart.dart';
 import 'package:sales_force/objects/category.dart';
 import 'package:sales_force/objects/customer.dart';
+import 'package:sales_force/objects/menu_format.dart';
 import 'package:sales_force/objects/product.dart';
 import 'package:sales_force/objects/product_prices.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
+import 'final_order_page.dart';
 
 class ItemsMenu extends StatefulWidget {
   MenuFormat format;
@@ -279,10 +279,8 @@ class _StateItemsMenu extends State<ItemsMenu>
                   color: Colors.white))),
       Expanded(
           child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          children: getCartItemsWidgets(),
-        ),
+            padding: const EdgeInsets.all(8.0),
+        child: ListView(children: getCartItemsWidgets()),
       )),
       Container(
           color: Colors.blue[400],
@@ -343,35 +341,61 @@ class _StateItemsMenu extends State<ItemsMenu>
             children: <Widget>[
               Expanded(
                   child: AppTheme.text(
-                text: 'ItemName:${product.product_title}\n'
-                    'Unit Price: ${product.product_pack_per_carton}\n'
-                    'Quantity: ${product.quantity}\n'
-                    'Amount: ${product.getPrice()}',
-              )),
-              Column(
-                children: <Widget>[
-                  AppTheme.roundRaisedButton(
-                      text: '+',
-                      onPressed: () {
-                        myCart.add(product, product.product_carton_price);
-                        setState(() {
+                    text: 'ItemName:${product.product_title}\n'
+                        'Unit Price: ${product.product_pack_price}\n'
+                        'Quantity: ${product.quantity}\n'
+                        'FOC Qty: ${product.focQuantity}\n'
+                        'Amount: ${product.getPrice()}',
+                  )),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Column(
+                  children: <Widget>[
+                    AppTheme.text(text: 'FOC'),
+                    AppTheme.roundRaisedButton(
+                        text: '+',
+                        onPressed: () {
+                          setState(() => product.focQuantity++);
+                        }),
+                    AppTheme.roundRaisedButton(
+                        text: '-',
+                        onPressed: () {
+                          setState(() {
+                            myCart.cleanCart();
+                            if (product.focQuantity >= 1) product.focQuantity--;
+                          });
+                        })
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Column(
+                  children: <Widget>[
+                    AppTheme.text(text: 'Quantity'),
+                    AppTheme.roundRaisedButton(
+                        text: '+',
+                        onPressed: () {
+                          myCart.add(product, product.product_carton_price);
+                          setState(() {
 //                              product.product_carton_price;
 //                              product.quantity;
 //                              product.getPrice();
-                        });
-                      }),
-                  AppTheme.roundRaisedButton(
-                      text: '-',
-                      onPressed: () {
-                        myCart.less(product);
-                        setState(() {
-                          myCart.cleanCart();
-                          //                          product.product_carton_price;
-                          //                          product.quantity.toString();
-                          //                          product.getPrice();
-                        });
-                      })
-                ],
+                          });
+                        }),
+                    AppTheme.roundRaisedButton(
+                        text: '-',
+                        onPressed: () {
+                          myCart.less(product);
+                          setState(() {
+                            myCart.cleanCart();
+                            //                          product.product_carton_price;
+                            //                          product.quantity.toString();
+                            //                          product.getPrice();
+                          });
+                        })
+                  ],
+                ),
               ),
             ],
           ),
@@ -382,90 +406,6 @@ class _StateItemsMenu extends State<ItemsMenu>
   }
 }
 
-class MenuFormat {
-  String paymentMode;
-  Customer customer;
-  MenuFormat({this.paymentMode, this.customer});
-}
 
-class FinalOrder extends StatelessWidget {
-  Cart cart;
-  final double titleFontSize = 18;
-  final double rowSpacing = 8.0;
 
-  FinalOrder({this.cart});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Confirm Order')),
-      body: Container(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            AppTheme.card(
-                child: Column(children: <Widget>[
-              Row(children: <Widget>[
-                Expanded(
-                    child: AppTheme.text(
-                        text: 'Customer:', fontSize: titleFontSize)),
-                AppTheme.text(
-                    text: '${cart.customer.getName().toString().toUpperCase()}',
-                    fontSize: titleFontSize)
-              ]),
-              SizedBox(height: rowSpacing),
-              Row(children: <Widget>[
-                Expanded(
-                    child: AppTheme.text(
-                        text: 'Order Amount', fontSize: titleFontSize)),
-                AppTheme.text(
-                    text: 'Rs:${cart.getAmountBeforeDiscount()}',
-                    fontSize: titleFontSize)
-              ]),
-              SizedBox(height: rowSpacing),
-              Row(children: <Widget>[
-                Expanded(
-                    child: AppTheme.text(
-                        text: 'Discount:', fontSize: titleFontSize)),
-                AppTheme.text(
-                    text: '${cart.getDiscount()}', fontSize: titleFontSize)
-              ]),
-              SizedBox(height: rowSpacing),
-              Row(children: <Widget>[
-                Expanded(
-                    child: AppTheme.text(
-                        text: 'Discounted Amount:', fontSize: titleFontSize)),
-                AppTheme.text(
-                    text: 'Rs:${cart.getDiscountedAmount()}',
-                    fontSize: titleFontSize)
-              ]),
-              SizedBox(height: rowSpacing),
-              Row(children: <Widget>[
-                Expanded(
-                    child: AppTheme.text(
-                        text: 'Receivable:',
-                        fontSize: titleFontSize,
-                        fontWeight: FontWeight.bold)),
-                AppTheme.text(
-                    text: 'Rs:${cart.getAmountAfterDiscount()}',
-                    fontSize: titleFontSize,
-                    fontWeight: FontWeight.bold)
-              ]),
-            ])),
-            Center(
-                child: AppTheme.roundRaisedButton(
-                    text: 'Take Order',
-                    onPressed: () {
-                      DAL.staticDal.addOrder(cart);
-                      AppTheme.showAlertDialog(context,
-                          title: 'Success',
-                          content: Text('Order Saved'),
-                          onPressed: () =>
-                              Library.resetViewToDashBoard(context));
-                    }))
-          ],
-        ),
-      ),
-    );
-  }
-}

@@ -41,17 +41,24 @@ class Library {
   }
 
   static Future<bool> hasServerAccess() async {
-    final result = await InternetAddress.lookup(Config.serverAddress).timeout(Duration(seconds: 5), onTimeout: () => null);
-    if(result !=  null) {
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        //log.v('GAINED SERVER ACCESS');
-        return true;
+    try {
+      final result = await InternetAddress.lookup(Config.serverAddress)
+          .timeout(Duration(seconds: 5), onTimeout: () => null)
+          .catchError((onError) => null);
+      if (result != null) {
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          //log.v('GAINED SERVER ACCESS');
+          return true;
+        } else {
+          //log.v('LOST SERVER ACCESS');
+          return false;
+        }
       } else {
-        //log.v('LOST SERVER ACCESS');
+        _log.w('SERVER OFFLINE');
         return false;
       }
-    } else {
-      _log.w('SERVER OFFLINE');
+    } catch (e) {
+      _log.e('ERROR ON LIBRARY hasServerAccess', [e]);
       return false;
     }
   }
