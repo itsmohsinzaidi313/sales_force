@@ -5,7 +5,7 @@ import 'package:sqflite/sqlite_api.dart';
 
 class Config {
   static int DATABASE_BASE_VERSION;
-  static const int DATABASE_VERSION = 24;
+  static const int DATABASE_VERSION = 26;
   static String DATABASE_NAME = 'SaleForce.db';
   static Database DATABASE;
   static String DATABASES_PATH;
@@ -14,8 +14,8 @@ class Config {
   static String serverAddress = '72.52.142.19';
   static String apiPrefix = 'http://72.52.142.19/ddf-pvt-ltd/webservice/';
   static String installAPILink = apiPrefix + 'api.php?action=install';
-  static String putInvoiceAPILink =
-      apiPrefix + 'api.php?action=put&module=invoice_payment&user=${DAL.currentUser.user_id}';
+  static String putInvoiceAPILink = apiPrefix +
+      'api.php?action=put&module=invoice_payment&user=${DAL.currentUser.user_id}';
 
   static String putOrderVisitAPILink =
       apiPrefix + 'api.php?action=put&module=visit_order&user=${DAL.currentUser.user_id}';

@@ -385,9 +385,8 @@ class DAL {
   void getProductFoc() {
     try {
       _log.v('DAL LOADING PRODUCT FOC');
-      Future<List<Map<String, dynamic>>> future =
-          db.rawQuery(Select.selectProductFoc);
-      future
+          db
+          .rawQuery(Select.selectProductFoc)
           .then((value) => staticProductFoc = getProductFocList(value))
           .catchError((onError) =>
               _log.wtf('ERROR ON DAL getProductFocList', [onError]))
@@ -475,7 +474,8 @@ class DAL {
         products.add(new Product(
             product_title: e['product_title'],
             purchasedQuantity: e['order_product_total_packs'],
-            product_pack_price: e['order_product_price_per_pack']));
+            product_pack_price: e['order_product_price_per_pack'],
+            focQuantity: int.parse(e['order_product_free_qty'])));
       });
       //_log.v('DAL EXIT getDetailSalesRecord');
       return products;
@@ -505,6 +505,7 @@ class DAL {
           e.product_category_id,
           e.product_id,
           e.quantity.toString(),
+          e.focQuantity.toString(),
           e.product_pack_price,
           '0',
           '0',

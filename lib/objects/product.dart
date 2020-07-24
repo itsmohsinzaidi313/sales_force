@@ -19,7 +19,8 @@ class Product {
   String purchasedQuantity;
   String product_image;
   int quantity;
-  int focQuantity;
+  int focQuantity = 0;
+  bool focOverride = false;
   List<dynamic> _customerGroupPrices;
 
   Product(
@@ -41,7 +42,6 @@ class Product {
       this.product_image,
       this.focQuantity}) {
     this.quantity = 1;
-    this.focQuantity = 0;
   }
 
   Product.withProduct({Product product}) {

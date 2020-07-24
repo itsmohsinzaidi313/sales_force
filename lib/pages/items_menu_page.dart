@@ -6,6 +6,7 @@ import 'package:sales_force/objects/category.dart';
 import 'package:sales_force/objects/customer.dart';
 import 'package:sales_force/objects/menu_format.dart';
 import 'package:sales_force/objects/product.dart';
+import 'package:sales_force/objects/product_foc.dart';
 import 'package:sales_force/objects/product_prices.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -38,6 +39,7 @@ class _StateItemsMenu extends State<ItemsMenu>
   List<Category> categories = [];
   List<Product> products = [];
   List<ProductPrices> productPrices = [];
+  List<ProductFoc> listProductFoc = [];
 
   initTabs() {
     tabs = [];
@@ -46,6 +48,7 @@ class _StateItemsMenu extends State<ItemsMenu>
     if (products.length == 0) products.addAll(DAL.staticProducts);
     if (productPrices.length == 0)
       productPrices.addAll(DAL.staticProductPrices);
+    if (listProductFoc.length == 0) listProductFoc.addAll(DAL.staticProductFoc);
     for (Category value1 in categories) {
       tabs.add(new Tab(
         text: value1.product_category_title.toUpperCase(),
@@ -334,75 +337,92 @@ class _StateItemsMenu extends State<ItemsMenu>
           AppTheme.card(child: AppTheme.text(text: 'No Items In Your Cart')));
     } else {
       myCart.products.forEach((product) {
+        if (!product.focOverride)
+          product.focQuantity =
+              getFocQuantity(int.parse(product.product_id), product.quantity);
         widgets.add(AppTheme.card(
             child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                  child: AppTheme.text(
-                    text: 'ItemName:${product.product_title}\n'
-                        'Unit Price: ${product.product_pack_price}\n'
-                        'Quantity: ${product.quantity}\n'
-                        'FOC Qty: ${product.focQuantity}\n'
-                        'Amount: ${product.getPrice()}',
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Column(
-                  children: <Widget>[
-                    AppTheme.text(text: 'FOC'),
-                    AppTheme.roundRaisedButton(
-                        text: '+',
-                        onPressed: () {
-                          setState(() => product.focQuantity++);
-                        }),
-                    AppTheme.roundRaisedButton(
-                        text: '-',
-                        onPressed: () {
-                          setState(() {
-                            myCart.cleanCart();
-                            if (product.focQuantity >= 1) product.focQuantity--;
-                          });
-                        })
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Column(
-                  children: <Widget>[
-                    AppTheme.text(text: 'Quantity'),
-                    AppTheme.roundRaisedButton(
-                        text: '+',
-                        onPressed: () {
-                          myCart.add(product, product.product_carton_price);
-                          setState(() {
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      child: AppTheme.text(
+                        text: 'ItemName:${product.product_title}\n'
+                            'Unit Price: ${product.product_pack_price}\n'
+                            'Quantity: ${product.quantity}\n'
+                            'FOC Qty: ${product.focQuantity}\n'
+                            'Amount: ${product.getPrice()}',
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      children: <Widget>[
+                        AppTheme.text(text: 'FOC'),
+                        AppTheme.roundRaisedButton(
+                            text: '+',
+                            onPressed: () {
+                              product.focOverride = true;
+                              setState(() => product.focQuantity++);
+                            }),
+                        AppTheme.roundRaisedButton(
+                            text: '-',
+                            onPressed: () {
+                              setState(() {
+                                product.focOverride = true;
+                                myCart.cleanCart();
+                                if (product.focQuantity >= 1) product
+                                    .focQuantity--;
+                              });
+                            })
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Column(
+                      children: <Widget>[
+                        AppTheme.text(text: 'Quantity'),
+                        AppTheme.roundRaisedButton(
+                            text: '+',
+                            onPressed: () {
+                              myCart.add(product, product.product_carton_price);
+                              setState(() {
 //                              product.product_carton_price;
 //                              product.quantity;
 //                              product.getPrice();
-                          });
-                        }),
-                    AppTheme.roundRaisedButton(
-                        text: '-',
-                        onPressed: () {
-                          myCart.less(product);
-                          setState(() {
-                            myCart.cleanCart();
-                            //                          product.product_carton_price;
-                            //                          product.quantity.toString();
-                            //                          product.getPrice();
-                          });
-                        })
-                  ],
-                ),
+                              });
+                            }),
+                        AppTheme.roundRaisedButton(
+                            text: '-',
+                            onPressed: () {
+                              myCart.less(product);
+                              setState(() {
+                                myCart.cleanCart();
+                                //                          product.product_carton_price;
+                                //                          product.quantity.toString();
+                                //                          product.getPrice();
+                              });
+                            })
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        )));
+            )));
       });
     }
     return widgets;
+  }
+
+  int getFocQuantity(int productId, int quantity) {
+    int focQuantity = 0;
+    listProductFoc.forEach((element) {
+      if (productId == element.productId && quantity >= element.start &&
+          quantity <= element.end) {
+        focQuantity = element.quantity;
+      }
+    });
+    return focQuantity;
   }
 }
 

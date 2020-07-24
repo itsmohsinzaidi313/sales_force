@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
 import 'package:sales_force/objects/customer.dart';
 import 'package:sales_force/objects/product.dart';
 import 'package:sales_force/sql/dal.dart';
+
+import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
 
 class ViewSales extends StatefulWidget {
   Customer customer;
@@ -43,10 +44,16 @@ class _ViewSalesState extends State<ViewSales> {
 
     record.forEach((e) {
       Icon icon;
-      if(e['order_status'] == '1')
-        icon = Icon(Icons.check, color: Colors.green,);
+      if (e['order_status'] == '1')
+        icon = Icon(
+          Icons.check,
+          color: Colors.green,
+        );
       else
-        icon = Icon(Icons.close, color: Colors.red,);
+        icon = Icon(
+          Icons.close,
+          color: Colors.red,
+        );
 
       widgets.add(GestureDetector(
         onTap: () {
@@ -80,15 +87,18 @@ class _ViewSalesState extends State<ViewSales> {
 //                      style: AppTheme.textStyle(fontSize: 24)), subtitle: Text('${e['order_total']}',
 //                      style: AppTheme.textStyle(fontSize: 18))),
 //                ),
-                ListTile(title: Text('Date:',
-                    style: AppTheme.textStyle(fontSize: 24)),
+                ListTile(
+                  title: Text('Date:', style: AppTheme.textStyle(fontSize: 24)),
                   subtitle: Text('${e['createdon']}',
                       style: AppTheme.textStyle(fontSize: 18)),
-                trailing: Icon(Icons.info, color: Colors.grey),),
-                ListTile(title: Text('Receivable:',
-                    style: AppTheme.textStyle(fontSize: 24)), subtitle: Text('${e['order_total']}',
-                    style: AppTheme.textStyle(fontSize: 18)),
-                trailing: icon,
+                  trailing: Icon(Icons.info, color: Colors.grey),
+                ),
+                ListTile(
+                  title: Text('Receivable:',
+                      style: AppTheme.textStyle(fontSize: 24)),
+                  subtitle: Text('${e['order_total']}',
+                      style: AppTheme.textStyle(fontSize: 18)),
+                  trailing: icon,
 //                Row(children: <Widget>[
 //                  Expanded(
 //                      child: ),
@@ -119,7 +129,6 @@ class _ViewSalesState extends State<ViewSales> {
 //                      style: AppTheme.textStyle(fontSize: 24))
 //                ]),
 
-
 //                Row(children: <Widget>[
 //                  Expanded(
 //                      child: Text('Receivable:',
@@ -134,13 +143,23 @@ class _ViewSalesState extends State<ViewSales> {
 //                  Text('${e['order_status']}',
 //                      style: AppTheme.textStyle(fontSize: 24))
 //                ]),
-                )],
+                )
+              ],
             ),
           ),
         ),
       ));
     });
-    if (widgets.length == 0) widgets.add(Card(child: Padding(padding: EdgeInsets.all(30.0), child: AppTheme.text(text: 'No Data Found.', fontSize: 20, fontWeight: FontWeight.bold),),));
+    if (widgets.length == 0)
+      widgets.add(Card(
+        child: Padding(
+          padding: EdgeInsets.all(30.0),
+          child: AppTheme.text(
+              text: 'No Data Found.',
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
+        ),
+      ));
     return widgets;
   }
 }
@@ -158,6 +177,7 @@ class ViewSaleDetail extends StatefulWidget {
 class _ViewSaleDetailState extends State<ViewSaleDetail> {
   List<Product> detailRecord;
   double cardElementTextSize = 24;
+
   _ViewSaleDetailState({this.detailRecord});
 
   @override
@@ -173,6 +193,7 @@ class _ViewSaleDetailState extends State<ViewSaleDetail> {
       ),
     );
   }
+
   //region LIST VIEW CODE
   List<Widget> getProductsWidget() {
     List<Widget> widgets = [];
@@ -214,6 +235,17 @@ class _ViewSaleDetailState extends State<ViewSaleDetail> {
                         fontSize: cardElementTextSize),
                   ],
                 ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: AppTheme.text(
+                            text: 'FOC Quantity:',
+                            fontSize: cardElementTextSize)),
+                    AppTheme.text(
+                        text: '${value.focQuantity}',
+                        fontSize: cardElementTextSize),
+                  ],
+                ),
                 Row(children: <Widget>[
                   Expanded(
                       child: AppTheme.text(
@@ -241,6 +273,7 @@ class _ViewSaleDetailState extends State<ViewSaleDetail> {
       children: getProductsWidget(),
     );
   }
+
   //endregion
 
   //region GRID VIEW CODE
@@ -250,36 +283,42 @@ class _ViewSaleDetailState extends State<ViewSaleDetail> {
       children: getGridViewWidgets(products),
     );
   }
+
   List<Widget> getGridViewWidgets(List<Product> products) {
     List<Widget> list = [];
     products.forEach((element) {
-      list.add(
-        Card(
-          margin: EdgeInsets.all(8.0),
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
+      list.add(Card(
+        margin: EdgeInsets.all(8.0),
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
             children: <Widget>[
-              Expanded(child: Image.network(element.getNetworkImage(), fit: BoxFit.scaleDown)),
+              Expanded(
+                  child: Image.network(element.getNetworkImage(),
+                      fit: BoxFit.scaleDown)),
               SizedBox(height: 8.0),
-              AppTheme.text(text: element.product_title, fontWeight: FontWeight.bold),
-              AppTheme.text(text: element.product_pack_price, fontWeight: FontWeight.bold),
-              AppTheme.text(text: element.purchasedQuantity, fontWeight: FontWeight.bold),
+              AppTheme.text(
+                  text: element.product_title, fontWeight: FontWeight.bold),
+              AppTheme.text(
+                  text: element.product_pack_price,
+                  fontWeight: FontWeight.bold),
+              AppTheme.text(
+                  text: element.purchasedQuantity, fontWeight: FontWeight.bold),
             ],
+          ),
         ),
-          ),)
-      );
+      ));
     });
-    if(list.length == 0)
-      list.add(
-        Container(
-          child: Column(children: <Widget>[
-            Center(child: AppTheme.text(text: 'No items to display.'),)
-          ]),
-        )
-      );
+    if (list.length == 0)
+      list.add(Container(
+        child: Column(children: <Widget>[
+          Center(
+            child: AppTheme.text(text: 'No items to display.'),
+          )
+        ]),
+      ));
     return list;
   }
-  //endregion
+//endregion
 }

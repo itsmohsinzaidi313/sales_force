@@ -36,7 +36,7 @@ class Insert {
       'INSERT INTO order_master(user_id, customer_id, order_amount, order_discount, order_total, order_status, order_delivery_date, createdon) VALUES(?,?,?,?,?,?,?,?)';
 
   static String insertOrderDetail =
-      'INSERT INTO order_detail(master_id, product_category_id, product_id, order_product_total_packs, order_product_price_per_pack, order_product_discount_per_pack, order_product_discounted_pack_price, order_product_total_discount, order_product_total_price, product_image) VALUES(?,?,?,?,?,?,?,?,?,?)';
+      'INSERT INTO order_detail(master_id, product_category_id, product_id, order_product_total_packs,order_product_free_qty, order_product_price_per_pack, order_product_discount_per_pack, order_product_discounted_pack_price, order_product_total_discount, order_product_total_price, product_image) VALUES(?,?,?,?,?,?,?,?,?,?,?)';
 
   static String insertVisit =
       'INSERT INTO visits(customer_id, user_id, lat, long, isorder, createdon, is_upload, pair_id) VALUES(?,?,?,?,?,?,?,?)';
