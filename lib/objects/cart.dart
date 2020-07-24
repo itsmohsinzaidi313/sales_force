@@ -75,10 +75,10 @@ class Cart {
   }
 
   String getDiscount() {
-    String discount;
-    if(customer.discountType.toUpperCase() == 'P')
+    String discount = '0';
+    if (customer.discountType.toUpperCase() == 'P')
       discount = '${customer.discount}%';
-    else if(customer.discountType.toUpperCase() == 'A')
+    else if (customer.discountType.toUpperCase() == 'A')
       discount = 'Rs:${customer.discount}';
     return discount;
   }

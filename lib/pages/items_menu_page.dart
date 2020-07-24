@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sales_force/objects/cart.dart';
@@ -8,14 +9,16 @@ import 'package:sales_force/objects/menu_format.dart';
 import 'package:sales_force/objects/product.dart';
 import 'package:sales_force/objects/product_foc.dart';
 import 'package:sales_force/objects/product_prices.dart';
+import 'package:sales_force/pages_backend/items_menu_page_backend.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+
 import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
+
 import 'final_order_page.dart';
 
 class ItemsMenu extends StatefulWidget {
   MenuFormat format;
-
   ItemsMenu(String paymentMode, Customer customer) {
     format = new MenuFormat(paymentMode: paymentMode, customer: customer);
   }
@@ -28,13 +31,13 @@ class _StateItemsMenu extends State<ItemsMenu>
     with SingleTickerProviderStateMixin {
   MenuFormat format;
   Cart myCart;
+  ItemsMenuBackend _backend;
 
   _StateItemsMenu({this.format}) {
     myCart = new Cart(format.customer);
   }
 
   TabController _tabController;
-
   List<Tab> tabs;
   List<Category> categories = [];
   List<Product> products = [];
@@ -54,19 +57,6 @@ class _StateItemsMenu extends State<ItemsMenu>
         text: value1.product_category_title.toUpperCase(),
       ));
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initTabs();
-    _tabController = TabController(vsync: this, length: tabs.length);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   @override
@@ -104,10 +94,10 @@ class _StateItemsMenu extends State<ItemsMenu>
   List<Widget> productsView(String tabTitle) {
     List<Widget> widgets = [];
     for (int i = 0; i < products.length; i++) {
-      String unitPrice = getProductPrice(
+      String unitPrice = _backend.getProductPrice(
           format.customer.customerGroupId, products[i].product_id);
       if (double.parse(unitPrice) >= 0.01) {
-        if (products[i].product_category_id == getCategoryId(tabTitle))
+        if (products[i].product_category_id == _backend.getCategoryId(tabTitle))
           widgets.add(Container(
             child: Column(
               children: <Widget>[
@@ -138,7 +128,7 @@ class _StateItemsMenu extends State<ItemsMenu>
                                     onPressed: () {
                                   myCart.add(
                                       products[i],
-                                      getProductPrice(
+                                      _backend.getProductPrice(
                                           format.customer.customerGroupId,
                                           products[i].product_id));
                                   setState(() {
@@ -167,64 +157,6 @@ class _StateItemsMenu extends State<ItemsMenu>
       }
     }
     return widgets;
-  }
-
-  String getCategoryId(String category) {
-    String categoryId = "0";
-    for (Category value in categories) {
-      if (value.product_category_title.toUpperCase() ==
-          category.toUpperCase()) {
-        categoryId = value.product_category_id;
-        break;
-      }
-    }
-    return categoryId;
-  }
-
-  String getProductPrice(String customerGroupId, String productId) {
-    Product product = new Product();
-
-    products.forEach((element) {
-      if (element.product_id == productId) product = element;
-    });
-    for (ProductPrices value in productPrices) {
-      if (customerGroupId == value.customer_group_id &&
-          productId == value.product_id) {
-        if (format.paymentMode == 'CASH') {
-          if (product.discount_type.toUpperCase() == 'P') {
-            double price = double.parse(value.cash_price) *
-                (double.parse(product.discount) / 100);
-            return price.toString();
-          } else if (product.discount_type.toUpperCase() == 'A') {
-            double price =
-                double.parse(value.cash_price) - double.parse(product.discount);
-            return price.toString();
-          } else if (product.discount_type.toUpperCase() == 'N') {
-            double price = double.parse(value.cash_price);
-            return price.toString();
-          }
-        } else if (format.paymentMode == 'CREDIT') {
-          if (product.discount_type.toUpperCase() == 'P') {
-            double price = double.parse(value.credit_price) *
-                (double.parse(product.discount) / 100);
-            return price.toString();
-          } else if (product.discount_type.toUpperCase() == 'A') {
-            double price = double.parse(value.credit_price) -
-                double.parse(product.discount);
-            return price.toString();
-          } else if (product.discount_type.toUpperCase() == 'N') {
-            double price = double.parse(value.credit_price);
-            return price.toString();
-          }
-        }
-      }
-    }
-    for (Product value1 in products) {
-      if (productId == value1.product_id) {
-        return value1.product_carton_price;
-      }
-    }
-    return '0';
   }
 
   slideUpPanelCollapsed() {
@@ -290,11 +222,11 @@ class _StateItemsMenu extends State<ItemsMenu>
           child: Row(children: <Widget>[
             Expanded(
                 child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: AppTheme.text(
-                  color: Colors.white,
-                  text: 'Total ${myCart.getAmountBeforeDiscount()}'),
-            )),
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppTheme.text(
+                      color: Colors.white,
+                      text: 'Total ${myCart.getAmountBeforeDiscount()}'),
+                )),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: AppTheme.roundRaisedButton(
@@ -338,8 +270,8 @@ class _StateItemsMenu extends State<ItemsMenu>
     } else {
       myCart.products.forEach((product) {
         if (!product.focOverride)
-          product.focQuantity =
-              getFocQuantity(int.parse(product.product_id), product.quantity);
+          product.focQuantity = _backend.getFocQuantity(
+              int.parse(product.product_id), product.quantity);
         widgets.add(AppTheme.card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -414,18 +346,18 @@ class _StateItemsMenu extends State<ItemsMenu>
     return widgets;
   }
 
-  int getFocQuantity(int productId, int quantity) {
-    int focQuantity = 0;
-    listProductFoc.forEach((element) {
-      if (productId == element.productId && quantity >= element.start &&
-          quantity <= element.end) {
-        focQuantity = element.quantity;
-      }
-    });
-    return focQuantity;
+  @override
+  void initState() {
+    super.initState();
+    initTabs();
+    _backend = new ItemsMenuBackend(
+        categories, products, productPrices, listProductFoc, format);
+    _tabController = TabController(vsync: this, length: tabs.length);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }
-
-
-
-
