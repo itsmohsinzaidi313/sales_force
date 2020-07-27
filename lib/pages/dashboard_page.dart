@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,11 +8,10 @@ import 'package:sales_force/pages/pick_customer_page.dart';
 import 'package:sales_force/pages/settings_page.dart';
 import 'package:sales_force/pages/sql_view_page.dart';
 import 'package:sales_force/pages/view_visits_page.dart';
+import 'package:sales_force/shared/app_theme.dart';
+import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/select_queries.dart';
-
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
 
 class Dashboard extends StatefulWidget {
   static String email;

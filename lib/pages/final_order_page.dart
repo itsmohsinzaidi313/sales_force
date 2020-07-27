@@ -22,7 +22,7 @@ class FinalOrder extends StatelessWidget {
             Row(children: <Widget>[
               Expanded(
                   child: AppTheme.text(
-                      text: 'Customer:', fontSize: titleFontSize)),
+                      text: 'Customer: ', fontSize: titleFontSize)),
               AppTheme.text(
                   text: '${cart.customer.getName().toString().toUpperCase()}',
                   fontSize: titleFontSize)
@@ -33,14 +33,14 @@ class FinalOrder extends StatelessWidget {
                   child: AppTheme.text(
                       text: 'Order Amount', fontSize: titleFontSize)),
               AppTheme.text(
-                  text: 'Rs:${cart.getAmountBeforeDiscount()}',
+                  text: 'Rs: ${cart.getAmountBeforeDiscount()}',
                   fontSize: titleFontSize)
             ]),
             SizedBox(height: rowSpacing),
             Row(children: <Widget>[
               Expanded(
                   child: AppTheme.text(
-                      text: 'Discount:', fontSize: titleFontSize)),
+                      text: 'Discount: ', fontSize: titleFontSize)),
               AppTheme.text(
                   text: '${cart.getDiscount()}', fontSize: titleFontSize)
             ]),
@@ -48,16 +48,16 @@ class FinalOrder extends StatelessWidget {
             Row(children: <Widget>[
               Expanded(
                   child: AppTheme.text(
-                      text: 'Discounted Amount:', fontSize: titleFontSize)),
+                      text: 'Discounted Amount: ', fontSize: titleFontSize)),
               AppTheme.text(
-                  text: 'Rs:${cart.getDiscountedAmount()}',
+                  text: 'Rs: ${cart.getDiscountedAmount()}',
                   fontSize: titleFontSize)
             ]),
             SizedBox(height: rowSpacing),
             Row(children: <Widget>[
               Expanded(
                   child: AppTheme.text(
-                      text: 'Receivable:',
+                      text: 'Receivable: ',
                       fontSize: titleFontSize,
                       fontWeight: FontWeight.bold)),
               AppTheme.text(

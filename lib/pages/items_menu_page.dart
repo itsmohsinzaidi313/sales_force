@@ -39,24 +39,30 @@ class _StateItemsMenu extends State<ItemsMenu>
 
   TabController _tabController;
   List<Tab> tabs;
-  List<Category> categories = [];
-  List<Product> products = [];
-  List<ProductPrices> productPrices = [];
-  List<ProductFoc> listProductFoc = [];
+//  List<Category> categories = [];
+  List<String> categories = [];
+//  List<Product> products = [];
+//  List<ProductPrices> productPrices = [];
+//  List<ProductFoc> listProductFoc = [];
 
   initTabs() {
     tabs = [];
-    if (categories.length == 0) ;
-    categories.addAll(DAL.staticCategories);
-    if (products.length == 0) products.addAll(DAL.staticProducts);
-    if (productPrices.length == 0)
-      productPrices.addAll(DAL.staticProductPrices);
-    if (listProductFoc.length == 0) listProductFoc.addAll(DAL.staticProductFoc);
-    for (Category value1 in categories) {
+    _backend = new ItemsMenuBackend(DAL.staticCategories, DAL.staticProducts, DAL.staticProductPrices, DAL.staticProductFoc, format);
+//    if (categories.length == 0) ;
+//    categories.addAll(DAL.staticCategories);
+    DAL.staticCategories.forEach((element) {
+      categories.add(element.product_category_title);
+    });
+//    if (products.length == 0) products.addAll(DAL.staticProducts);
+//    if (productPrices.length == 0)
+//      productPrices.addAll(DAL.staticProductPrices);
+//    if (listProductFoc.length == 0) listProductFoc.addAll(DAL.staticProductFoc);
+    for (String value1 in categories) {
       tabs.add(new Tab(
-        text: value1.product_category_title.toUpperCase(),
+        text: value1.toUpperCase(),
       ));
     }
+    _tabController = TabController(vsync: this, length: tabs.length);
   }
 
   @override
@@ -76,10 +82,10 @@ class _StateItemsMenu extends State<ItemsMenu>
           panel: slideUpPanelPanel(),
           collapsed: slideUpPanelCollapsed(),
           body: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('images/salesPattern1.jpg'),
-                    repeat: ImageRepeat.repeat)),
+//            decoration: BoxDecoration(
+//                image: DecorationImage(
+//                    image: AssetImage('images/salesPattern1.jpg'),
+//                    repeat: ImageRepeat.repeat)),
             margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 200),
             child: slideUpPanelBody(),
           ),
@@ -93,11 +99,11 @@ class _StateItemsMenu extends State<ItemsMenu>
 
   List<Widget> productsView(String tabTitle) {
     List<Widget> widgets = [];
-    for (int i = 0; i < products.length; i++) {
+    for (int i = 0; i < _backend.products.length; i++) {
       String unitPrice = _backend.getProductPrice(
-          format.customer.customerGroupId, products[i].product_id);
+          format.customer.customerGroupId, _backend.products[i].product_id);
       if (double.parse(unitPrice) >= 0.01) {
-        if (products[i].product_category_id == _backend.getCategoryId(tabTitle))
+        if (_backend.products[i].product_category_id == _backend.getCategoryId(tabTitle))
           widgets.add(Container(
             child: Column(
               children: <Widget>[
@@ -118,19 +124,16 @@ class _StateItemsMenu extends State<ItemsMenu>
                                 Container(
                                   width: 200,
                                   height: 200,
-                                  child: Image.network(
-                                    products[i].getNetworkImage(),
-                                    fit: BoxFit.scaleDown,
-                                  ),
+                                  child: AppTheme.loadNetworkImage(_backend.products[i].getNetworkImage()),
                                 ),
                                 AppTheme.imageButton(
                                     'images/shopping_cart.png', 30,
                                     onPressed: () {
                                   myCart.add(
-                                      products[i],
+                                      _backend.products[i],
                                       _backend.getProductPrice(
                                           format.customer.customerGroupId,
-                                          products[i].product_id));
+                                          _backend.products[i].product_id));
                                   setState(() {
                                     double _ = myCart.getAmountBeforeDiscount();
                                   });
@@ -140,7 +143,7 @@ class _StateItemsMenu extends State<ItemsMenu>
                           ),
                           Center(
                               child: AppTheme.text(
-                                  text: products[i].product_title.toUpperCase(),
+                                  text: _backend.products[i].product_title.toUpperCase(),
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold)),
                           Center(
@@ -318,22 +321,15 @@ class _StateItemsMenu extends State<ItemsMenu>
                             text: '+',
                             onPressed: () {
                               myCart.add(product, product.product_carton_price);
-                              setState(() {
-//                              product.product_carton_price;
-//                              product.quantity;
-//                              product.getPrice();
-                              });
+                              setState(() => null);
                             }),
                         AppTheme.roundRaisedButton(
                             text: '-',
                             onPressed: () {
                               myCart.less(product);
-                              setState(() {
-                                myCart.cleanCart();
-                                //                          product.product_carton_price;
-                                //                          product.quantity.toString();
-                                //                          product.getPrice();
-                              });
+                              setState(() =>
+                                myCart.cleanCart()
+                              );
                             })
                       ],
                     ),
@@ -350,9 +346,6 @@ class _StateItemsMenu extends State<ItemsMenu>
   void initState() {
     super.initState();
     initTabs();
-    _backend = new ItemsMenuBackend(
-        categories, products, productPrices, listProductFoc, format);
-    _tabController = TabController(vsync: this, length: tabs.length);
   }
 
   @override

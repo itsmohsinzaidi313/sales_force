@@ -6,13 +6,26 @@ import 'package:sales_force/objects/product_prices.dart';
 
 class ItemsMenuBackend {
   List<Category> _categories = [];
+
+  List<Product> get products => _products;
+
+  set products(List<Product> value) {
+    _products = value;
+  }
+
   List<Product> _products = [];
   List<ProductPrices> _productPrices = [];
   List<ProductFoc> _listProductFoc = [];
   MenuFormat _format;
 
-  ItemsMenuBackend(this._categories, this._products, this._productPrices,
-      this._listProductFoc, this._format);
+  ItemsMenuBackend(List<Category> categories, List<Product> products, List<ProductPrices> productPrices,
+      List<ProductFoc> listProductFoc, MenuFormat format) {
+    this._categories.addAll(categories);
+    this._products.addAll(products);
+    this._productPrices.addAll(productPrices);
+    this._listProductFoc.addAll(listProductFoc);
+    this._format = format;
+  }
 
   String getProductPrice(String customerGroupId, String productId) {
     Product product = new Product();
