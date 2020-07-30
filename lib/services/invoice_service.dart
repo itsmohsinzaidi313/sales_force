@@ -40,9 +40,8 @@ class SPostInvoice extends ServiceCommon {
           if (packet != null) {
             status = await Library.uploadToServer(Config.putInvoiceAPILink,
                 jsonString: packet.toString());
-            await DAL.staticDal
-                .setInvoiceUploadStatus(inv['android_payment_id'].toString(), status);
-
+            await DAL.staticDal.setInvoiceUploadStatus(
+                inv['android_payment_id'].toString(), status);
           }
         });
     } catch (e) {

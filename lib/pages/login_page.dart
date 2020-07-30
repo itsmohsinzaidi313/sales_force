@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sales_force/objects/user.dart';
 import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/pages/dashboard_page.dart';
@@ -24,6 +25,7 @@ class _LoginState extends State<Login> {
   String email, password;
   ProgressDialog progressDialog;
   Logger _log = Config.log;
+  User user;
 
   @override
   void initState() {
@@ -32,7 +34,8 @@ class _LoginState extends State<Login> {
       if (dbExists)
         Library.getLoggedInUser().then((user) {
           setState(() {
-            DAL.currentUser = user;
+            // DAL.currentUser = user;
+            this.user = user;
           });
         });
     });
@@ -85,7 +88,7 @@ class _LoginState extends State<Login> {
   }
 
   Widget loginViewController() {
-    if (DAL.currentUser != null) {
+    if (this.user != null) {
       return Center(
         heightFactor: 1.5,
         child: Container(
@@ -101,7 +104,7 @@ class _LoginState extends State<Login> {
                     padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                     child: Center(
                         child: AppTheme.text(
-                            text: '${DAL.currentUser.email}',
+                            text: '${this.user.email}',
                             fontWeight: FontWeight.bold)),
                   ),
                   SizedBox(height: 50),
@@ -110,8 +113,8 @@ class _LoginState extends State<Login> {
                           text: 'Sign in',
                           onPressed: () {
                             progressDialog.show();
-                            Library.loadUserData(DAL.currentUser.email);
-                            Library.login(DAL.currentUser.email);
+                            Library.loadUserData(this.user.email);
+                            Library.login(this.user.email);
                             progressDialog.hide();
                             Navigator.of(context).pushAndRemoveUntil(
                               new MaterialPageRoute(

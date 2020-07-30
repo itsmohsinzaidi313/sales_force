@@ -30,7 +30,15 @@ class DAL {
   static List<ProductPrices> staticProductPrices;
   static List<ProductFoc> staticProductFoc;
   static ServiceControl serviceCtrl;
-  static User currentUser;
+  static User _currentUser;
+  static User get currentUser {
+    return _currentUser;
+  }
+
+  static set currentUser(user) {
+    _currentUser = user;
+  }
+
   static String userId;
   static DAL staticDal;
   Database db;
@@ -43,7 +51,7 @@ class DAL {
     }
   }
 
-  DAL.withDb({this.db});
+  DAL.withDb({this.db}); // USER ONLY TO RELOAD DATA AFTER USER IS
 
   initDatabase() async {
     try {
@@ -135,7 +143,7 @@ class DAL {
       _log.v('DAL LOADING CUSTOMERS');
       List customers = [];
       String query = Select.selectCustomer + ' where user_id = ?';
-      List whereArgs = [currentUser.user_id];
+      List whereArgs = [DAL.currentUser.user_id];
       Future<List> future = db.rawQuery(query, whereArgs);
       future.then((onValue) {
         customers = onValue;
@@ -183,18 +191,17 @@ class DAL {
   void loadUserSpecificResources() {
     try {
       _log.v('DAL LOADING USER');
-      List users = [];
       String query = Select.selectUser + " where user_email_address = ?";
       List whereArgs = [email];
       Future<List> future = db.rawQuery(query, whereArgs);
-      future.then((value) => users = value);
+      future.then((users) {
+        _log.w('loadUserSpecificResources: ${users.toList()}');
+        List<User> userList = getUsersList(users);
+        _log.w('loadUserSpecificResources ${userList[0].getList()}');
+        DAL.currentUser = userList[0];
+      });
       future.whenComplete(() {
-        users = getUsersList(users);
-        // _log.i('USER: ${currentUser.getList()}');
-        currentUser = users[0];
-        // _log.i('USER: ${currentUser.getList()}');
         _log.v('USER LOADED');
-        _log.v('USER :' + currentUser.email);
         getCategories();
         getCustomer();
         getCategoryNames();
@@ -219,10 +226,8 @@ class DAL {
   void getUsers() {
     try {
       _log.v('DAL LOADING USERS');
-      List users;
       Future<List> future = db.rawQuery(Select.selectUser);
-      future.then((value) {
-        users = value;
+      future.then((users) {
         staticUsers = getUsersList(users);
         _log.v('USERS LOADED');
         _log.v('TOTAL USERS :' + staticUsers.length.toString());
@@ -251,6 +256,8 @@ class DAL {
           modifiedon: e['modifiedon'],
           discountPercent: e['discount_percent']));
     });
+    // _log.w(
+    //     'getUserList: ${listUsers.where((element) => element.user_id == '63').toList()}');
     return listUsers;
   }
 
@@ -490,7 +497,7 @@ class DAL {
       String dateTime = Library.getDateTime();
       Position position = await Geolocator().getCurrentPosition();
       List<dynamic> orderMasterValues = [
-        currentUser.user_id,
+        DAL.currentUser.user_id,
         cart.customer.customerId,
         cart.getAmountBeforeDiscount().toString(),
         cart.getDiscountedAmount().toString(),
@@ -565,7 +572,7 @@ class DAL {
       _log.v('$location1\n$location2');
       List<String> values1 = [
         customer.customerId,
-        currentUser.user_id,
+        DAL.currentUser.user_id,
         location1.latitude.toString(),
         location1.longitude.toString(),
         '0',

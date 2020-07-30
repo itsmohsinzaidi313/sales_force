@@ -1,8 +1,5 @@
 import 'dart:async';
-
 import 'package:logger/logger.dart';
-import 'package:sales_force/sql/dal.dart';
-
 import '../shared/config.dart';
 
 abstract class ServiceCommon {
@@ -37,7 +34,6 @@ abstract class ServiceCommon {
 
   _operation() async {
     if (active) {
-      print('USER: ${DAL.currentUser.getList()}');
       if (cycleComplete) await perform();
     }
   }

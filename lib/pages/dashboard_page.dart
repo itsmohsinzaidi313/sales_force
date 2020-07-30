@@ -10,6 +10,7 @@ import 'package:sales_force/pages/settings_page.dart';
 import 'package:sales_force/pages/sql_view_page.dart';
 import 'package:sales_force/pages/view_visits_page.dart';
 import 'package:sales_force/shared/app_theme.dart';
+import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/select_queries.dart';
@@ -101,18 +102,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   List<Widget> getDashboardButtons() {
-    // bool wait = true;
-    // User user = new User.withUser(DAL.currentUser);
-    // while (wait) {
-    //   print('WAITING');
-    //   if (DAL.currentUser != null) {
-    //     wait = false;
-    //     print('${DAL.currentUser.getList()}');
-    //     print('WAIT ENDED');
-    //   }
-    // }
     double buttonLabelFontSize = 14.0;
-    // print(user.getList().toString());
     List<Widget> list = [
       RaisedButton(
         elevation: 4,
@@ -317,11 +307,11 @@ class _DashboardState extends State<Dashboard> {
         child: AppTheme.text(text: 'SQL'),
       ),
     ];
-    // if (int.parse(DAL.currentUser.user_type_id) == 3) {
+
+    // if (DAL.currentUser.user_type_id == '3') {
     //   list.removeLast();
     //   return list;
-    // }
-    // else if (int.parse(DAL.currentUser.user_type_id) == 4) {
+    // } else if (DAL.currentUser.user_type_id == '4') {
     //   list.removeRange(2, 6);
     //   return list;
     // }

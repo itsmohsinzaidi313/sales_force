@@ -1,6 +1,6 @@
 class Select {
   static String selectUser =
-      'select user_id, user_type_id, distributor_id, user_first_name, user_last_name, user_email_address, user_password, user_phone_number, user_mobile, user_status, createdon, modifiedon, discount_percent, user_type_id from users ';
+      'select user_id, user_type_id, distributor_id, user_first_name, user_last_name, user_email_address, user_password, user_phone_number, user_mobile, user_status, createdon, modifiedon, discount_percent from users ';
 
   static String selectUserTypes =
       'select user_type_id, user_type_title, user_type_permissions from users_types ';

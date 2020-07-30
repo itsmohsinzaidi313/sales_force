@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/shared/library.dart';
 
@@ -8,11 +7,13 @@ class SqlView extends StatefulWidget {
   _SqlViewState createState() => _SqlViewState();
 }
 
+bool applyNewLine = false;
+bool capsColumnNames = false;
+
 class _SqlViewState extends State<SqlView> {
   final _textEditingController = TextEditingController();
-  String _query = "";
   List<Map<String, dynamic>> result = [];
-
+  bool check1 = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +24,6 @@ class _SqlViewState extends State<SqlView> {
             title: TextField(
               controller: _textEditingController,
               decoration: InputDecoration(labelText: 'Query'),
-              onSubmitted: (value) => _query = value,
             ),
             leading: IconButton(
               icon: Icon(
@@ -35,7 +35,6 @@ class _SqlViewState extends State<SqlView> {
                   db
                       .rawQuery(_textEditingController.text)
                       .then((value) => setState(() {
-                            result.clear();
                             result = value;
                           }))
                       .catchError((onError) => setState(() {
@@ -58,6 +57,27 @@ class _SqlViewState extends State<SqlView> {
             ),
             subtitle: Text('Rows: ${result.length}'),
           ),
+          ButtonBar(
+            alignment: MainAxisAlignment.start,
+            children: <Widget>[
+              RaisedButton(
+                child: Text('New Line'),
+                onPressed: () {
+                  setState(() {
+                    applyNewLine = !applyNewLine;
+                  });
+                },
+              ),
+              RaisedButton(
+                child: Text('Caps Columns'),
+                onPressed: () {
+                  setState(() {
+                    capsColumnNames = !capsColumnNames;
+                  });
+                },
+              )
+            ],
+          ),
           Expanded(
             child: ListView.builder(
                 itemCount: result.length,
@@ -77,10 +97,24 @@ class _SqlViewState extends State<SqlView> {
             '${index + 1}',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          title: Text(result[index].toString()),
+          title: Text(styleColumns(result[index])),
         ),
       ),
     );
+  }
+
+  String styleColumns(Map<String, dynamic> map) {
+    String string = '';
+    String newLine = '';
+    if (applyNewLine) newLine = '\n';
+    map.forEach((key, value) {
+      if (capsColumnNames) {
+        string += '${key.toUpperCase()}: $value$newLine ';
+      } else {
+        string += '$key: $value$newLine ';
+      }
+    });
+    return string;
   }
 
   @override

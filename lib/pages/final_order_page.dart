@@ -152,21 +152,28 @@ class _FinalOrderState extends State<FinalOrder> {
           FlatButton(
             child: Text('Ok'),
             onPressed: () {
-              double discountApplied = _textEditingController.text == null
-                  ? 0.0
-                  : double.parse(_textEditingController.text);
-              discountAllowed = DAL.currentUser.discountPercent == null
-                  ? 0.0
-                  : double.parse(DAL.currentUser.discountPercent);
-              if (discountApplied <= discountAllowed) {
-                widget.cart.spoDiscount = discountApplied.toString();
-                Navigator.of(context).pop();
-                setState(() {});
-              } else
+              try {
+                double discountApplied = _textEditingController.text == null
+                    ? 0.0
+                    : double.parse(_textEditingController.text);
+                discountAllowed = DAL.currentUser.discountPercent == null
+                    ? 0.0
+                    : double.parse(DAL.currentUser.discountPercent);
+                if (discountApplied <= discountAllowed) {
+                  widget.cart.spoDiscount = discountApplied.toString();
+                  Navigator.of(context).pop();
+                  setState(() {});
+                } else
+                  AppTheme.showAlertDialogOK(context,
+                      title: 'Attention',
+                      message: 'Discount Limit Exceded.',
+                      onOK: () => Navigator.of(context).pop());
+              } catch (e) {
                 AppTheme.showAlertDialogOK(context,
                     title: 'Attention',
-                    message: 'Discount Limit Exceded.',
+                    message: 'Please check discount value.',
                     onOK: () => Navigator.of(context).pop());
+              }
             },
           ),
           FlatButton(

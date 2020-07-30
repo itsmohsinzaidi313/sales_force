@@ -17,22 +17,22 @@ class Config {
   static String putInvoiceAPILink = apiPrefix +
       'api.php?action=put&module=invoice_payment&user=${DAL.currentUser.user_id}';
 
-  static String putOrderVisitAPILink =
-      apiPrefix + 'api.php?action=put&module=visit_order&user=${DAL.currentUser.user_id}';
-  static String putTrackingAPILink =
-      apiPrefix + 'api.php?action=put&module=tracking&user=${DAL.currentUser.user_id}';
+  static String putOrderVisitAPILink = apiPrefix +
+      'api.php?action=put&module=visit_order&user=${DAL.currentUser.user_id}';
+  static String putTrackingAPILink = apiPrefix +
+      'api.php?action=put&module=tracking&user=${DAL.currentUser.user_id}';
   static String syncAPILink = apiPrefix + 'api.php?action=sync&createdon=';
   static const int serviceCycleDelay = 10; //seconds
 
   static double deviceDisplayWidth;
   static double deviceDisplayHeight;
 
-  static final Logger log = new Logger(printer: PrettyPrinter(
-      colors: true,
-      errorMethodCount: 1,
-      printEmojis: true,
-      printTime: false,
-      lineLength: 80,
-      methodCount: 0
-  ));
+  static final Logger log = new Logger(
+      printer: PrettyPrinter(
+          colors: true,
+          errorMethodCount: 1,
+          printEmojis: true,
+          printTime: false,
+          lineLength: 80,
+          methodCount: 0));
 }
