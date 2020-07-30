@@ -1,4 +1,4 @@
-import 'package:sales_force/objects/product_prices.dart';
+import 'package:sales_force/models/product_prices.dart';
 
 class Product {
   String product_id;

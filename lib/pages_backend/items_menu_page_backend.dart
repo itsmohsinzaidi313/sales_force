@@ -1,8 +1,8 @@
-import 'package:sales_force/objects/category.dart';
-import 'package:sales_force/objects/menu_format.dart';
-import 'package:sales_force/objects/product.dart';
-import 'package:sales_force/objects/product_foc.dart';
-import 'package:sales_force/objects/product_prices.dart';
+import 'package:sales_force/models/category.dart';
+import 'package:sales_force/models/menu_format.dart';
+import 'package:sales_force/models/product.dart';
+import 'package:sales_force/models/product_foc.dart';
+import 'package:sales_force/models/product_prices.dart';
 
 class ItemsMenuBackend {
   List<Category> _categories = [];
@@ -18,8 +18,12 @@ class ItemsMenuBackend {
   List<ProductFoc> _listProductFoc = [];
   MenuFormat _format;
 
-  ItemsMenuBackend(List<Category> categories, List<Product> products, List<ProductPrices> productPrices,
-      List<ProductFoc> listProductFoc, MenuFormat format) {
+  ItemsMenuBackend(
+      List<Category> categories,
+      List<Product> products,
+      List<ProductPrices> productPrices,
+      List<ProductFoc> listProductFoc,
+      MenuFormat format) {
     this._categories.addAll(categories);
     this._products.addAll(products);
     this._productPrices.addAll(productPrices);

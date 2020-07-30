@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sales_force/objects/cart.dart';
+import 'package:sales_force/models/cart.dart';
 import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';

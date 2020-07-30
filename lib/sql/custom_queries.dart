@@ -1,17 +1,17 @@
 import 'package:logger/logger.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
-import 'package:sales_force/objects/category.dart';
-import 'package:sales_force/objects/customer.dart';
-import 'package:sales_force/objects/invoice.dart';
-import 'package:sales_force/objects/product.dart';
-import 'package:sales_force/objects/user.dart';
+import 'package:sales_force/shared/config.dart';
+import 'package:sales_force/models/category.dart';
+import 'package:sales_force/models/customer.dart';
+import 'package:sales_force/models/invoice.dart';
+import 'package:sales_force/models/product.dart';
+import 'package:sales_force/models/user.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CustomQueries {
   static Logger _log = Config.log;
 
   static Future<bool> userExists(Database db, User user) async {
-      bool flag = false;
+    bool flag = false;
     try {
       int count = 0;
       List<Map<String, dynamic>> listMap = await db.rawQuery(
@@ -19,7 +19,7 @@ class CustomQueries {
       count = listMap[0]['count'];
       if (count > 0) flag = true;
       return flag;
-    } catch(e) {
+    } catch (e) {
       _log.e(e);
       return flag;
     }
@@ -28,13 +28,13 @@ class CustomQueries {
   static Future<bool> customerExists(Database db, Customer customer) async {
     bool flag = false;
     try {
-    int count = 0;
-    List<Map<String, dynamic>> listMap = await db.rawQuery(
-        "SELECT count(id) as count from customer where customer_id = '${customer.customerId}'");
-    count = listMap[0]['count'];
-    if (count > 0) flag = true;
-    return flag;
-    } catch(e) {
+      int count = 0;
+      List<Map<String, dynamic>> listMap = await db.rawQuery(
+          "SELECT count(id) as count from customer where customer_id = '${customer.customerId}'");
+      count = listMap[0]['count'];
+      if (count > 0) flag = true;
+      return flag;
+    } catch (e) {
       _log.e(e);
       return flag;
     }
@@ -45,12 +45,11 @@ class CustomQueries {
     try {
       int count = 0;
       List<Map<String, dynamic>> listMap = await db.rawQuery(
-          "SELECT count(id) as count from invoices where invoice_number = '${invoice
-              .invoice_number}'");
+          "SELECT count(id) as count from invoices where invoice_number = '${invoice.invoice_number}'");
       count = listMap[0]['count'];
       if (count > 0) flag = true;
       return flag;
-    } catch(e) {
+    } catch (e) {
       _log.e(e);
       return flag;
     }
@@ -65,7 +64,7 @@ class CustomQueries {
       count = listMap[0]['count'];
       if (count > 0) flag = true;
       return flag;
-    } catch(e) {
+    } catch (e) {
       _log.e(e);
       return flag;
     }
@@ -80,7 +79,7 @@ class CustomQueries {
       count = listMap[0]['count'];
       if (count > 0) flag = true;
       return flag;
-    } catch(e) {
+    } catch (e) {
       _log.e(e);
       return flag;
     }
@@ -96,7 +95,7 @@ class CustomQueries {
       count = listMap[0]['count'];
       if (count > 0) flag = true;
       return flag;
-    } catch(e) {
+    } catch (e) {
       _log.e(e);
       return flag;
     }

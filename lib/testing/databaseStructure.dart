@@ -1,4 +1,4 @@
-import 'package:sales_force/beta/table.dart';
+import 'package:sales_force/testing/table.dart';
 import 'package:sqflite/sqflite.dart';
 import 'columnTypes.dart';
 import 'column.dart';
@@ -54,9 +54,7 @@ class DatabaseStructure {
 
   DatabaseStructure({this.db}) {
     initDatabaseStructure();
-
   }
 
   initDatabaseStructure() {}
-
 }

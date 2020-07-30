@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
-import 'package:sales_force/objects/visit.dart';
+import 'package:sales_force/shared/app_theme.dart';
+import 'package:sales_force/models/visit.dart';
 
 class ViewVisits extends StatefulWidget {
   final List<Visit> visits;
@@ -33,8 +33,8 @@ class _ViewVisitsState extends State<ViewVisits> {
                 color: Colors.white,
                 child: ListTile(
                     title: Text('Dates',
-                        style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20))),
               ),
               ListView(
                 shrinkWrap: true,
@@ -57,11 +57,21 @@ class _ViewVisitsState extends State<ViewVisits> {
         else
           icon = new Icon(Icons.close, color: Colors.red);
         widgets.add(
-          Card(color: Colors.white, child: ListTile(title: Text(e.getStringDate()), trailing: icon)),
+          Card(
+              color: Colors.white,
+              child: ListTile(title: Text(e.getStringDate()), trailing: icon)),
         );
       });
     } else
-      widgets.add(Card(color: Colors.white, child: ListTile(title: AppTheme.text(text: 'No Visits To Show.'), trailing: Icon(Icons.priority_high, color: Colors.blue,),)));
+      widgets.add(Card(
+          color: Colors.white,
+          child: ListTile(
+            title: AppTheme.text(text: 'No Visits To Show.'),
+            trailing: Icon(
+              Icons.priority_high,
+              color: Colors.blue,
+            ),
+          )));
     return widgets;
   }
 }

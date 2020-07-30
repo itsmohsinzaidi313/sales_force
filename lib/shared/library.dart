@@ -11,7 +11,7 @@ import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:sales_force/Json_data_models/install_api.dart';
 import 'package:sales_force/shared/config.dart';
-import 'package:sales_force/objects/user.dart';
+import 'package:sales_force/models/user.dart';
 import 'package:sales_force/pages/dashboard_page.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/database.dart';

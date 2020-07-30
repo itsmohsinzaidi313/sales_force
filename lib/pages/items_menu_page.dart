@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sales_force/objects/cart.dart';
-import 'package:sales_force/objects/customer.dart';
-import 'package:sales_force/objects/menu_format.dart';
+import 'package:sales_force/models/cart.dart';
+import 'package:sales_force/models/customer.dart';
+import 'package:sales_force/models/menu_format.dart';
 import 'package:sales_force/pages_backend/items_menu_page_backend.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';

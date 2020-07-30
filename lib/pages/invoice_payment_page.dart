@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
-import 'package:sales_force/objects/json_elements.dart';
+import 'package:sales_force/shared/app_theme.dart';
+import 'package:sales_force/shared/library.dart';
+import 'package:sales_force/models/json_elements.dart';
 import 'package:sales_force/pages/invoice_payment_final_page.dart';
 
 //region INVOICE LIST VIEW

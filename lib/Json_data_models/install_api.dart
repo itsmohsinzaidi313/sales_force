@@ -1,15 +1,15 @@
 import 'package:logger/logger.dart';
-import 'package:sales_force/objects/category.dart';
-import 'package:sales_force/objects/category_permissions.dart';
-import 'package:sales_force/objects/customer.dart';
-import 'package:sales_force/objects/customer_group.dart';
-import 'package:sales_force/objects/data_lists.dart';
-import 'package:sales_force/objects/invoice.dart';
-import 'package:sales_force/objects/product.dart';
-import 'package:sales_force/objects/product_foc.dart';
-import 'package:sales_force/objects/product_prices.dart';
-import 'package:sales_force/objects/user.dart';
-import 'package:sales_force/objects/user_type.dart';
+import 'package:sales_force/models/category.dart';
+import 'package:sales_force/models/category_permissions.dart';
+import 'package:sales_force/models/customer.dart';
+import 'package:sales_force/models/customer_group.dart';
+import 'package:sales_force/models/data_lists.dart';
+import 'package:sales_force/models/invoice.dart';
+import 'package:sales_force/models/product.dart';
+import 'package:sales_force/models/product_foc.dart';
+import 'package:sales_force/models/product_prices.dart';
+import 'package:sales_force/models/user.dart';
+import 'package:sales_force/models/user_type.dart';
 import 'package:sales_force/shared/config.dart';
 
 class ApiInstall {

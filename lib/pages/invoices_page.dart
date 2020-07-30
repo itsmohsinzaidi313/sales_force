@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sales_force/objects/customer.dart';
-import 'package:sales_force/objects/invoice.dart';
-import 'package:sales_force/objects/json_elements.dart';
+import 'package:sales_force/models/customer.dart';
+import 'package:sales_force/models/invoice.dart';
+import 'package:sales_force/models/json_elements.dart';
 import 'package:sales_force/pages/invoice_payment_page.dart';
 import 'package:sales_force/sql/dal.dart';
-
-import '../shared/app_theme.dart';
+import 'package:sales_force/shared/app_theme.dart';
 
 class Invoices extends StatefulWidget {
   @override
@@ -19,10 +18,8 @@ class _InvoicesState extends State<Invoices> {
 
   @override
   Widget build(BuildContext context) {
-    if(invoices.length == 0)
-      invoices.addAll(DAL.staticInvoices);
-    if(customers.length == 0)
-      customers.addAll(DAL.staticCustomers);
+    if (invoices.length == 0) invoices.addAll(DAL.staticInvoices);
+    if (customers.length == 0) customers.addAll(DAL.staticCustomers);
     return Scaffold(
         appBar: AppBar(
           title: Text("INVOICES"),
@@ -33,10 +30,14 @@ class _InvoicesState extends State<Invoices> {
                   image: AssetImage('images/salesPattern1.jpg'),
                   repeat: ImageRepeat.repeat)),
           child: ListView(
-            children: ListTile.divideTiles(tiles: invoiceView(), context: context, color: Colors.grey).toList()
-          ),
+              children: ListTile.divideTiles(
+                      tiles: invoiceView(),
+                      context: context,
+                      color: Colors.grey)
+                  .toList()),
         ));
   }
+
   List<Widget> invoiceView() {
     try {
       List<Widget> widgets = [];
@@ -44,41 +45,44 @@ class _InvoicesState extends State<Invoices> {
         double invoiceAmount = double.parse(value.invoice_total_amount);
         double paidAmount = double.parse(value.invoice_paid_amount);
         Widget widget;
-        if(invoiceAmount == paidAmount)
-          widget = RaisedButton(child: AppTheme.text(text:'PAID', color: Colors.blue), color: Colors.white, onPressed: () => false,);
+        if (invoiceAmount == paidAmount)
+          widget = RaisedButton(
+            child: AppTheme.text(text: 'PAID', color: Colors.blue),
+            color: Colors.white,
+            onPressed: () => false,
+          );
         else
-        widget = AppTheme.rectangleRaisedButton(
-            text: 'PAY',
-            onPressed: () async => onTap(value));
-        widgets.add(Card(color: Colors.white, child:
-            ListTile(
-          contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            isThreeLine: true,
-
-            title: AppTheme.text(
-                text:
-                    '${getCustomerName(value.customer_id)}', fontSize: 20),
-            subtitle: AppTheme.text(text: '${value.invoice_number}\n${value.invoice_amount}', fontSize: 20),
-            trailing: widget))
-        );
+          widget = AppTheme.rectangleRaisedButton(
+              text: 'PAY', onPressed: () async => onTap(value));
+        widgets.add(Card(
+            color: Colors.white,
+            child: ListTile(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                isThreeLine: true,
+                title: AppTheme.text(
+                    text: '${getCustomerName(value.customer_id)}',
+                    fontSize: 20),
+                subtitle: AppTheme.text(
+                    text: '${value.invoice_number}\n${value.invoice_amount}',
+                    fontSize: 20),
+                trailing: widget)));
       }
-      if(widgets.length == 0)
-        widgets.add(
-            Card(
-              color: Colors.white,
-              child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                  isThreeLine: true,
-                  title: AppTheme.text(
-                      text:
-                      'No Invoies', fontSize: 20),
-                  subtitle: AppTheme.text(text: 'There are no invoices to display.', fontSize: 20),
-                  trailing: AppTheme.rectangleRaisedButton(
-                    text: 'Pay',
-                    onPressed: () {},
-                  )),
-            )
-        );
+      if (widgets.length == 0)
+        widgets.add(Card(
+          color: Colors.white,
+          child: ListTile(
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              isThreeLine: true,
+              title: AppTheme.text(text: 'No Invoies', fontSize: 20),
+              subtitle: AppTheme.text(
+                  text: 'There are no invoices to display.', fontSize: 20),
+              trailing: AppTheme.rectangleRaisedButton(
+                text: 'Pay',
+                onPressed: () {},
+              )),
+        ));
       return widgets;
     } catch (e) {
       List<Widget> widgets = [];

@@ -1,5 +1,5 @@
 import 'package:logger/logger.dart';
-import 'package:sales_force/objects/data_lists.dart';
+import 'package:sales_force/models/data_lists.dart';
 import 'package:sales_force/sql/insert_queries.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sales_force/shared/config.dart';

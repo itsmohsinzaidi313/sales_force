@@ -1,10 +1,9 @@
-import 'package:sales_force/objects/product.dart';
-import 'package:sales_force/objects/product_foc.dart';
-import 'package:sales_force/objects/product_prices.dart';
-import 'package:sales_force/objects/sync_packet.dart';
-import 'package:sales_force/objects/user.dart';
-import 'package:sales_force/objects/user_type.dart';
-
+import 'package:sales_force/models/product.dart';
+import 'package:sales_force/models/product_foc.dart';
+import 'package:sales_force/models/product_prices.dart';
+import 'package:sales_force/models/sync_packet.dart';
+import 'package:sales_force/models/user.dart';
+import 'package:sales_force/models/user_type.dart';
 import 'category.dart';
 import 'category_permissions.dart';
 import 'customer.dart';

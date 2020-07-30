@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:sales_force/objects/data_lists.dart';
-import 'package:sales_force/objects/sync_packet.dart';
+import 'package:sales_force/models/data_lists.dart';
+import 'package:sales_force/models/sync_packet.dart';
 import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/import_data.dart';
@@ -28,8 +28,8 @@ class ApiSync {
         get(url).then((response) {
           if (response.statusCode == 200) {
             Map<String, dynamic> data = jsonDecode(response.body);
-            String status = data['status'];
-            String message = data['message'];
+            // String status = data['status'];
+            // String message = data['message'];
             //log.v('SERVER REPLY\nSTATUS: $status\nMESSAGE: $message');
             getList(data['data']);
             ImportToDB('SYNCAPI');

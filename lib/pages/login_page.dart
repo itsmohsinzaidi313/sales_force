@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:sales_force/objects/user.dart';
+import 'package:sales_force/models/user.dart';
 import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/pages/dashboard_page.dart';
