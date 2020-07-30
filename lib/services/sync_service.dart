@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 import 'package:sales_force/Json_data_models/sync_api.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
+import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/objects/category.dart';
 import 'package:sales_force/objects/category_permissions.dart';
 import 'package:sales_force/objects/customer.dart';
@@ -51,15 +50,16 @@ class SSyncService extends ServiceCommon {
       ApiSync();
       List<SyncPacket> list = await getApis();
       list.forEach((e) async {
-        Response response = await get(e.url)
-            .timeout(Duration(seconds: 5), onTimeout: () {
+        Response response =
+            await get(e.url).timeout(Duration(seconds: 5), onTimeout: () {
           _log.w('CONNECTION TIMEOUT\nSYNC FAILED');
           return null;
         });
-        if(response != null) {
+        if (response != null) {
           Map<String, dynamic> data = jsonDecode(response.body);
-          bool status =
-          data['status'].toString().toUpperCase() == 'FAILED' ? false : true;
+          bool status = data['status'].toString().toUpperCase() == 'FAILED'
+              ? false
+              : true;
           //String message = data['message'];
           if (status) {
             data = data['data'];
@@ -89,12 +89,10 @@ class SSyncService extends ServiceCommon {
             else if (e.module == 'category') {
               Category category = new Category.withMap(data['categories']);
               if (e.operation == 'insert') {
-                insertCategory(
-                    db, category, category.getCategoryPermissions(),
+                insertCategory(db, category, category.getCategoryPermissions(),
                     e.serverId);
               } else if (e.operation == 'update') {
-                updateCategory(
-                    db, category, category.getCategoryPermissions(),
+                updateCategory(db, category, category.getCategoryPermissions(),
                     e.serverId);
               }
             }
@@ -122,15 +120,14 @@ class SSyncService extends ServiceCommon {
     List<SyncPacket> list = [];
 
     List<dynamic> dbData =
-    await db.rawQuery("${Select.selectSyncApis} where is_used = 0");
+        await db.rawQuery("${Select.selectSyncApis} where is_used = 0");
     if (dbData != null)
-      dbData.forEach((e) =>
-          list.add(new SyncPacket(
-              serverId: e['server_id'].toString(),
-              module: e['module'].toString(),
-              operation: e['operation'].toString(),
-              createdOn: e['createdon'].toString(),
-              url: e['url'])));
+      dbData.forEach((e) => list.add(new SyncPacket(
+          serverId: e['server_id'].toString(),
+          module: e['module'].toString(),
+          operation: e['operation'].toString(),
+          createdOn: e['createdon'].toString(),
+          url: e['url'])));
     return list;
   }
 
@@ -176,8 +173,8 @@ class SSyncService extends ServiceCommon {
       db.rawQuery(Insert.insertUsers, user.getList());
       DAL
           .withDb(
-        db: db,
-      )
+            db: db,
+          )
           .getUsers();
       _log.i('NEW USER ADDED');
     }
@@ -223,10 +220,9 @@ class SSyncService extends ServiceCommon {
     //product_category_id, user_id, product_category_title, product_category_image, createdon, modifiedon
     if (!await CustomQueries.categoryExists(db, category)) {
       db.rawInsert(Insert.insertCategories, category.getList());
-      categoryPermissions.forEach((e) =>
-          db.rawInsert(
-              Insert.insertCategoryPermissions,
-              [e.getCategoryId(), e.getUserId()]));
+      categoryPermissions.forEach((e) => db.rawInsert(
+          Insert.insertCategoryPermissions,
+          [e.getCategoryId(), e.getUserId()]));
       DAL.withDb(db: db).getCategories();
       _log.i('CATEGORY INSERTED');
     }
@@ -237,6 +233,7 @@ class SSyncService extends ServiceCommon {
 
   void updateUser(Database db, User user, String serverId) {
     Update.updateUsers(db, user);
+    if (DAL.currentUser.user_id == user.user_id) DAL.currentUser = user;
     Update.updateSyncApiStatus(serverId, db);
     DAL.withDb(db: db).getUsers();
     _log.i('USER UPDATED');

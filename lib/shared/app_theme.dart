@@ -133,7 +133,7 @@ class AppTheme {
       FontWeight fontWeight,
       double fontSize,
       Widget content,
-      Function onPressed}) {
+      List<FlatButton> buttons}) {
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -142,12 +142,7 @@ class AppTheme {
                       style: textStyle(
                           fontWeight: fontWeight, fontSize: fontSize))),
               content: content,
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('OK'),
-                  onPressed: onPressed,
-                )
-              ],
+              actions: buttons,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
             ));

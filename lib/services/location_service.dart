@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:geolocator/geolocator.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
+import 'package:sales_force/shared/config.dart';
+import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/services/common.dart';
 import 'package:sales_force/sql/dal.dart';
 

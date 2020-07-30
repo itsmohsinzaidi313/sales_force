@@ -1,6 +1,6 @@
 class Insert {
   static String insertUsers =
-      'INSERT INTO users(user_id, user_type_id, distributor_id, user_first_name, user_last_name, user_email_address, user_password, user_phone_number, user_mobile, user_status, createdon, modifiedon) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)';
+      'INSERT INTO users(user_id, user_type_id, distributor_id, user_first_name, user_last_name, user_email_address, user_password, user_phone_number, user_mobile, user_status, createdon, modifiedon, discount_percent, user_type_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
   static String insertUsersTypes =
       'INSERT INTO users_types(user_type_id, user_type_title, user_type_permissions) VALUES(?,?,?)';
@@ -33,14 +33,15 @@ class Insert {
       'INSERT INTO customer(customer_id, customer_group_id, user_id, country_id, city_id, state_id, area_id, customer_first_name, customer_last_name, customer_email, customer_phone, customer_mobile, customer_shop_name, customer_address1, status, discount_type, discount, credit_limit) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
   static String insertOrderMaster =
-      'INSERT INTO order_master(user_id, customer_id, order_amount, order_discount, order_total, order_status, order_delivery_date, createdon) VALUES(?,?,?,?,?,?,?,?)';
+      'INSERT INTO order_master(user_id, customer_id, order_amount, order_discount, order_total, order_status, order_delivery_date, createdon, spo_discount) VALUES(?,?,?,?,?,?,?,?,?)';
 
   static String insertOrderDetail =
       'INSERT INTO order_detail(master_id, product_category_id, product_id, order_product_total_packs,order_product_free_qty, order_product_price_per_pack, order_product_discount_per_pack, order_product_discounted_pack_price, order_product_total_discount, order_product_total_price, product_image) VALUES(?,?,?,?,?,?,?,?,?,?,?)';
 
   static String insertVisit =
       'INSERT INTO visits(customer_id, user_id, lat, long, isorder, createdon, is_upload, pair_id) VALUES(?,?,?,?,?,?,?,?)';
-
+  static String insertOrderLocation =
+      'INSERT INTO visits(customer_id, user_id, lat, long, isorder, createdon, is_upload, order_id) VALUES(?,?,?,?,?,?,?,?)';
   static String insertCategoryPermissions =
       'INSERT INTO category_permissions(category_id, user_id) VALUES(?,?)';
 
@@ -50,7 +51,8 @@ class Insert {
   static String insertSyncApi =
       'INSERT INTO sync_apis(server_id, module, operation, url, createdon) VALUES(?,?,?,?,?)';
 
-  static String insertProductFoc = 'INSERT INTO product_foc(product_id, start, end, quantity) VALUES(?,?,?,?)';
+  static String insertProductFoc =
+      'INSERT INTO product_foc(product_id, start, end, quantity) VALUES(?,?,?,?)';
 
 //  static String insertInvoiceIfNotExists(Invoice invoice) {
 //    return "INSERT INTO invoices(invoice_id, order_id, customer_id, user_id, invoice_number, invoice_date, invoice_amount, invoice_discount, invoice_total_amount, invoice_paid_amount, invoice_balance, invoice_status, createdon, modifiedon) select invoice_id, order_id, customer_id, user_id, invoice_number, invoice_date, invoice_amount, invoice_discount, invoice_total_amount, invoice_paid_amount, invoice_balance, invoice_status, createdon, modifiedon from (select '${invoice.invoice_id}' as invoice_id, '${invoice.order_id}' as order_id, '${invoice.customer_id}' as customer_id, '${invoice.user_id}' as  user_id, '${invoice.invoice_number}' as invoice_number, '${invoice.invoice_date}' as invoice_date, '${invoice.invoice_amount}' as invoice_amount, '${invoice.invoice_discount}' as invoice_discount, '${invoice.invoice_total_amount}' as invoice_total_amount, '${invoice.invoice_paid_amount}' as invoice_paid_amount, '${invoice.invoice_balance}' as invoice_balance, '${invoice.invoice_status}' as invoice_status, '${invoice.createdon}' as createdon, '${invoice.modifiedon}' as modifiedon) t WHERE NOT EXISTS (SELECT 1 from invoices where invoices.invoice_number = t.invoice_number); select last_insert_rowid() as id;";

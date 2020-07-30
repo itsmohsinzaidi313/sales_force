@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:logger/logger.dart';
 import 'package:sales_force/services/common.dart';
 import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/shared/library.dart';
@@ -8,7 +9,7 @@ import 'package:sqflite/sqflite.dart';
 
 class SPostOrder extends ServiceCommon {
   Database db;
-
+  Logger _log = Config.log;
   SPostOrder(Database db) {
     this.db = db;
     initiate();
@@ -39,12 +40,22 @@ class SPostOrder extends ServiceCommon {
             map[jsonEncode(k)] = jsonEncode(v);
           });
           map[jsonEncode('order_product')] = jsonEncode(detail);
-          map = {jsonEncode('order'):[map]};
-          bool status = await Library.uploadToServer(Config.putOrderVisitAPILink, jsonString: map.toString());
+          query =
+              '${Select.selectOrderLocation} where isorder = 1 and order_id = ${e['order_android_id']}';
+          List<Map<String, dynamic>> locationMap = await db.rawQuery(query);
+          map = {
+            '${jsonEncode('visit_data')}': jsonEncode(locationMap),
+            jsonEncode('order'): [map]
+          };
+          bool status = await Library.uploadToServer(
+              Config.putOrderVisitAPILink,
+              jsonString: map.toString());
           DAL.staticDal.setOrderUploadStatus(e['order_android_id'], status);
+          DAL.staticDal.setVisitUploadStatus(
+              e['order_taken_android_id'].toString(), status);
         });
     } catch (e) {
-      print('>>>ERROR ON ORDER UPLOAD SERVICE\n$e');
+      _log.e('>>>ERROR ON ORDER UPLOAD SERVICE\n$e');
     }
   }
 }

@@ -4,12 +4,24 @@ import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
 
-class FinalOrder extends StatelessWidget {
+class FinalOrder extends StatefulWidget {
   final Cart cart;
-  final double titleFontSize = 18;
-  final double rowSpacing = 8.0;
 
   FinalOrder({this.cart});
+
+  @override
+  _FinalOrderState createState() => _FinalOrderState(cart: this.cart);
+}
+
+class _FinalOrderState extends State<FinalOrder> {
+  final double titleFontSize = 18;
+  final double rowSpacing = 8.0;
+  final Cart cart;
+  _FinalOrderState({this.cart}) {
+    this.cart.spoDiscount = '0';
+  }
+  final TextEditingController _textEditingController =
+      new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +36,8 @@ class FinalOrder extends StatelessWidget {
                   child: AppTheme.text(
                       text: 'Customer: ', fontSize: titleFontSize)),
               AppTheme.text(
-                  text: '${cart.customer.getName().toString().toUpperCase()}',
+                  text:
+                      '${widget.cart.customer.getName().toString().toUpperCase()}',
                   fontSize: titleFontSize)
             ]),
             SizedBox(height: rowSpacing),
@@ -33,16 +46,16 @@ class FinalOrder extends StatelessWidget {
                   child: AppTheme.text(
                       text: 'Order Amount', fontSize: titleFontSize)),
               AppTheme.text(
-                  text: 'Rs: ${cart.getAmountBeforeDiscount()}',
+                  text: 'Rs: ${widget.cart.getAmountBeforeDiscount()}',
                   fontSize: titleFontSize)
             ]),
             SizedBox(height: rowSpacing),
             Row(children: <Widget>[
               Expanded(
                   child: AppTheme.text(
-                      text: 'Discount: ', fontSize: titleFontSize)),
+                      text: 'Customer Discount: ', fontSize: titleFontSize)),
               AppTheme.text(
-                  text: '${cart.getDiscount()}', fontSize: titleFontSize)
+                  text: '${widget.cart.getDiscount()}', fontSize: titleFontSize)
             ]),
             SizedBox(height: rowSpacing),
             Row(children: <Widget>[
@@ -50,7 +63,7 @@ class FinalOrder extends StatelessWidget {
                   child: AppTheme.text(
                       text: 'Discounted Amount: ', fontSize: titleFontSize)),
               AppTheme.text(
-                  text: 'Rs: ${cart.getDiscountedAmount()}',
+                  text: 'Rs: ${widget.cart.getDiscountedAmount()}',
                   fontSize: titleFontSize)
             ]),
             SizedBox(height: rowSpacing),
@@ -61,7 +74,7 @@ class FinalOrder extends StatelessWidget {
                       fontSize: titleFontSize,
                       fontWeight: FontWeight.bold)),
               AppTheme.text(
-                  text: 'Rs:${cart.getAmountAfterDiscount()}',
+                  text: 'Rs:${widget.cart.getAmountAfterDiscount()}',
                   fontSize: titleFontSize,
                   fontWeight: FontWeight.bold)
             ]),
@@ -70,19 +83,24 @@ class FinalOrder extends StatelessWidget {
                 flex: 0,
                 child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: cart.products.length,
+                    itemCount: widget.cart.products.length,
                     itemBuilder: (BuildContext context, int index) =>
                         getWidget(context, index)))
           ])),
           Center(
+            child: AppTheme.roundRaisedButton(
+                text: 'Add Discount',
+                onPressed: () => showUserDiscountDialog()),
+          ),
+          Center(
               child: AppTheme.roundRaisedButton(
                   text: 'Take Order',
                   onPressed: () {
-                    DAL.staticDal.addOrder(cart);
-                    AppTheme.showAlertDialog(context,
+                    DAL.staticDal.addOrder(widget.cart);
+                    AppTheme.showAlertDialogOK(context,
                         title: 'Success',
-                        content: Text('Order Saved'),
-                        onPressed: () => Library.resetViewToDashBoard(context));
+                        message: 'Order Saved',
+                        onOK: () => Library.resetViewToDashBoard(context));
                   }))
         ],
       ),
@@ -91,11 +109,70 @@ class FinalOrder extends StatelessWidget {
 
   Widget getWidget(BuildContext context, int index) {
     return ListTile(
-      title: AppTheme.text(text: cart.products[index].product_title),
+      title: AppTheme.text(text: widget.cart.products[index].product_title),
       subtitle: AppTheme.text(
           text:
-              'Quantity: ${cart.products[index].quantity}\nFOC Quantity: ${cart.products[index].focQuantity}'),
+              'Quantity: ${widget.cart.products[index].quantity}\nFOC Quantity: ${widget.cart.products[index].focQuantity}'),
       isThreeLine: true,
     );
+  }
+
+  void showUserDiscountDialog() {
+    double discountAllowed = DAL.currentUser.discountPercent == null
+        ? 0.0
+        : double.parse(DAL.currentUser.discountPercent);
+    _textEditingController.text = '';
+    AppTheme.showAlertDialog(context,
+        title: 'Add Dicount',
+        content: Wrap(
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[Text('Discount Limit: $discountAllowed%')],
+                ),
+                Row(
+                  children: <Widget>[
+                    Text('Discount %:'),
+                    SizedBox(
+                      width: 100,
+                      child: TextField(
+                        controller: _textEditingController,
+                        keyboardType: TextInputType.number,
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+        buttons: [
+          FlatButton(
+            child: Text('Ok'),
+            onPressed: () {
+              double discountApplied = _textEditingController.text == null
+                  ? 0.0
+                  : double.parse(_textEditingController.text);
+              discountAllowed = DAL.currentUser.discountPercent == null
+                  ? 0.0
+                  : double.parse(DAL.currentUser.discountPercent);
+              if (discountApplied <= discountAllowed) {
+                widget.cart.spoDiscount = discountApplied.toString();
+                Navigator.of(context).pop();
+                setState(() {});
+              } else
+                AppTheme.showAlertDialogOK(context,
+                    title: 'Attention',
+                    message: 'Discount Limit Exceded.',
+                    onOK: () => Navigator.of(context).pop());
+            },
+          ),
+          FlatButton(
+            child: Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ]);
   }
 }

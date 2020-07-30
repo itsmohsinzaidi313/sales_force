@@ -1,15 +1,21 @@
 import 'package:sales_force/objects/customer.dart';
 import 'package:sales_force/objects/product.dart';
 
-
 class Cart {
   List<Product> products;
   Customer customer;
   String _discountType;
-  Cart(Customer customer){
+  String _spoDiscount = '0';
+  Cart(Customer customer) {
     products = new List();
     this.customer = customer;
     this._discountType = customer.discountType;
+  }
+
+  String get spoDiscount => _spoDiscount;
+
+  set spoDiscount(String value) {
+    _spoDiscount = value;
   }
 
   getCartItems() {
@@ -18,12 +24,13 @@ class Cart {
 
   void add(Product product, String price) {
     Product newInstance = new Product.withProduct(product: product);
-      newInstance.product_pack_price = price;
+    newInstance.product_pack_price = price;
     if (products.length == 0) {
       products.add(newInstance);
     } else {
       for (int i = 0; i <= products.length; i++) {
-        if (i < products.length && products[i].product_id == newInstance.product_id) {
+        if (i < products.length &&
+            products[i].product_id == newInstance.product_id) {
           products[i].add();
           break;
         }
@@ -44,33 +51,39 @@ class Cart {
   }
 
   String _orderDiscount = '0';
-  double getAmountAfterDiscount(){
+  double getAmountAfterDiscount() {
     String orderTotal = '0';
 
     if (customer.discountType.toUpperCase() == 'A') {
       _orderDiscount = customer.discount;
       orderTotal =
-          (getAmountBeforeDiscount() - double.parse(_orderDiscount))
-              .toString();
-    }
-    else if (customer.discountType.toUpperCase() == 'P') {
+          (getAmountBeforeDiscount() - double.parse(_orderDiscount)).toString();
+    } else if (customer.discountType.toUpperCase() == 'P') {
       _orderDiscount =
-          (getAmountBeforeDiscount() *
-              (double.parse(customer.discount) / 100))
+          (getAmountBeforeDiscount() * (double.parse(customer.discount) / 100))
               .toString();
-      orderTotal = (getAmountBeforeDiscount() - double.parse(_orderDiscount))
-          .toString();
-    }
-    else{
+      orderTotal =
+          (getAmountBeforeDiscount() - double.parse(_orderDiscount)).toString();
+    } else {
       orderTotal = getAmountBeforeDiscount().toString();
+    }
+    
+    double x = _spoDiscount == null ? 0.0 : double.parse(_spoDiscount);
+    if (x >= 1) {
+      _orderDiscount = (getAmountBeforeDiscount() * (x / 100)).toString();
+      orderTotal =
+          (getAmountBeforeDiscount() - double.parse(_orderDiscount)).toString();
     }
     return double.parse(orderTotal);
   }
 
-  String getDiscountedAmount(){
+  String getDiscountedAmount() {
     double beforeDiscount = getAmountBeforeDiscount();
     double afterDiscount = getAmountAfterDiscount();
     _orderDiscount = (beforeDiscount - afterDiscount).toString();
+    // double x = _spoDiscount == null ? 0.0 : double.parse(_spoDiscount);
+    // x += double.parse(_orderDiscount);
+    // _orderDiscount = x.toString();
     return _orderDiscount;
   }
 
@@ -83,7 +96,7 @@ class Cart {
     return discount;
   }
 
-  String getDiscountType(){
+  String getDiscountType() {
     return _discountType;
   }
 

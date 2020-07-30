@@ -1,5 +1,4 @@
 import 'dart:core';
-
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
@@ -16,9 +15,8 @@ import 'package:sales_force/objects/user.dart';
 import 'package:sales_force/services/service_control.dart';
 import 'package:sales_force/sql/select_queries.dart';
 import 'package:sqflite/sqflite.dart';
-
-import '../shared/config.dart';
-import '../shared/library.dart';
+import 'package:sales_force/shared/config.dart';
+import 'package:sales_force/shared/library.dart';
 import 'insert_queries.dart';
 
 class DAL {
@@ -192,7 +190,9 @@ class DAL {
       future.then((value) => users = value);
       future.whenComplete(() {
         users = getUsersList(users);
+        // _log.i('USER: ${currentUser.getList()}');
         currentUser = users[0];
+        // _log.i('USER: ${currentUser.getList()}');
         _log.v('USER LOADED');
         _log.v('USER :' + currentUser.email);
         getCategories();
@@ -248,7 +248,8 @@ class DAL {
           mobile: e['user_mobile'],
           user_status: e['user_status'],
           createdon: e['createdon'],
-          modifiedon: e['modifiedon']));
+          modifiedon: e['modifiedon'],
+          discountPercent: e['discount_percent']));
     });
     return listUsers;
   }
@@ -345,8 +346,7 @@ class DAL {
     try {
       _log.v('DAL LOADING INVOICES');
       Future<dynamic> future = db.rawQuery(
-          "${Select.selectInvoices} where user_id = ${DAL.currentUser
-              .user_id} order by invoice_date desc");
+          "${Select.selectInvoices} where user_id = ${DAL.currentUser.user_id} order by invoice_date desc");
       future
           .then((value) => staticInvoices = getInvoicesList(value))
           .catchError(
@@ -385,7 +385,7 @@ class DAL {
   void getProductFoc() {
     try {
       _log.v('DAL LOADING PRODUCT FOC');
-          db
+      db
           .rawQuery(Select.selectProductFoc)
           .then((value) => staticProductFoc = getProductFocList(value))
           .catchError((onError) =>
@@ -487,6 +487,8 @@ class DAL {
   addOrder(Cart cart) async {
     try {
       _log.v('ENTRY addOrder');
+      String dateTime = Library.getDateTime();
+      Position position = await Geolocator().getCurrentPosition();
       List<dynamic> orderMasterValues = [
         currentUser.user_id,
         cart.customer.customerId,
@@ -495,10 +497,21 @@ class DAL {
         cart.getAmountAfterDiscount().toString(),
         '0',
         '0',
-        Library.getDateTime()
+        dateTime,
+        cart.spoDiscount
       ];
       int id = await db.rawInsert(Insert.insertOrderMaster, orderMasterValues);
-
+      List<dynamic> orderLocationData = [
+        cart.customer.customerId,
+        DAL.currentUser.user_id,
+        position.latitude,
+        position.longitude,
+        1,
+        dateTime,
+        0,
+        id
+      ];
+      db.rawInsert(Insert.insertOrderLocation, orderLocationData);
       cart.products.forEach((e) async {
         List<dynamic> orderDetailValues = [
           id,
@@ -578,13 +591,13 @@ class DAL {
     }
   }
 
-  setVisitUploadStatus(String paidId, bool status) {
+  setVisitUploadStatus(String id, bool status) {
     try {
       int value = 0;
       if (status) value = 1;
 
       db.update('visits', {'is_upload': '$value'},
-          where: 'pair_id = ?', whereArgs: [paidId]);
+          where: 'id = ?', whereArgs: [id]);
     } catch (e) {
       _log.e('ERROR ON setVisitUploadStatus', [e]);
     }

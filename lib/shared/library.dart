@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:sales_force/Json_data_models/install_api.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
+import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/objects/user.dart';
 import 'package:sales_force/pages/dashboard_page.dart';
 import 'package:sales_force/sql/dal.dart';
@@ -121,7 +121,8 @@ class Library {
             mobile: e['user_mobile'],
             user_status: e['user_status'],
             createdon: e['createdon'],
-            modifiedon: e['modifiedon']);
+            modifiedon: e['modifiedon'],
+            discountPercent: e['discount_percent']);
         return user;
       } else {
         return null;
@@ -216,28 +217,40 @@ class Library {
   }
 
   static Future<bool> uploadToServer(String url, {String jsonString}) async {
-    bool status = false;
-    Response onValue;
-    Map<String, String> header = {
-      'content-type': 'application/x-www-form-urlencoded'
-    };
-    if (jsonString != null) {
-      onValue = await post(url, headers: header, body: {'json': jsonString});
-    }
+    try {
+      bool status = false;
+      Response onValue;
+      Map<String, String> header = {
+        'content-type': 'application/x-www-form-urlencoded'
+      };
+      bool hasServerAccess =
+          await Library.hasServerAccess().catchError((onError) => false);
+      if (jsonString != null && hasServerAccess) {
+        onValue = await post(url, headers: header, body: {'json': jsonString})
+            .catchError(
+                (onError) => _log.e('ERROR ON uploadToServer', [onError]));
+
 //    if (url == Config.putTrackingAPILink) log.v('LOCATION SENT');
 //    if (url == Config.putInvoiceAPILink) log.v('INVOICE SENT');
 //    if (url == Config.putOrderVisitAPILink) log.v('ORDER SENT');
 //    if (url == Config.putOrderVisitAPILink) log.v('VISIT SENT');
-    Map response = jsonDecode(onValue.body);
-    //_log.i('ENTRY SERVER UPLOAD');
-    //print('STATUS CODE: ${onValue.statusCode}');
-    _log.i(
-        'SERVER REPLY\nSTATUS: ${response['status'].toString().toUpperCase()}\nDATA: ${response['data']}');
-    if (response['status'].toString().contains('success')) status = true;
-    //print('MESSAGE: ${response['message'].toString().toUpperCase()}');
-    //log.i('DATA: ${response['data']}');
-    //_log.i('EXIT SERVER UPLOAD');
-    return status;
+        if (onValue != null) {
+          Map response = jsonDecode(onValue.body);
+          //_log.i('ENTRY SERVER UPLOAD');
+          //print('STATUS CODE: ${onValue.statusCode}');
+          _log.i(
+              'SERVER REPLY\nSTATUS: ${response['status'].toString().toUpperCase()}\nDATA: ${response['data']}');
+          if (response['status'].toString().contains('success')) status = true;
+          //print('MESSAGE: ${response['message'].toString().toUpperCase()}');
+          //log.i('DATA: ${response['data']}');
+          //_log.i('EXIT SERVER UPLOAD');
+        }
+      }
+      return status;
+    } catch (e) {
+      _log.wtf('ERROR ON uploadToServer', [e]);
+      return false;
+    }
   }
 
   static void updateData() async {
@@ -247,7 +260,9 @@ class Library {
   }
 
   static resetViewToDashBoard(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (context)=> new Dashboard()), (route) => false);
+    Navigator.of(context).pushAndRemoveUntil(
+        new MaterialPageRoute(builder: (context) => new Dashboard()),
+        (route) => false);
   }
 
   static getLocation() async {

@@ -72,13 +72,14 @@ class _LoginState extends State<Login> {
                   image: AssetImage('images/salesPattern1.jpg'),
                   repeat: ImageRepeat.repeat)),
           child: ListView(
-            children: <Widget>[Container(
-
-                child: Column(
-                  children: <Widget>[
-                    loginViewController(),
-                  ],
-                ))],
+            children: <Widget>[
+              Container(
+                  child: Column(
+                children: <Widget>[
+                  loginViewController(),
+                ],
+              ))
+            ],
           ),
         ));
   }
@@ -191,7 +192,6 @@ class _LoginState extends State<Login> {
           progressDialog.show();
 
           Library.validateUser(username, key).then((value) {
-//            print('>>>>$value');
             progressDialog.hide();
             if (value) {
               DAL.staticDal = new DAL(email: username);
@@ -226,7 +226,8 @@ class _LoginState extends State<Login> {
     });
   }
 
-  static const List<String> choices = [Download, /*Update*/
+  static const List<String> choices = [
+    Download, /*Update*/
   ];
   static const String Download = 'Download';
 
@@ -255,7 +256,8 @@ class _LoginState extends State<Login> {
               message: 'An error has occured.\n${onError.toString()}',
               onOK: () => Navigator.pop(context));
       });
-    } /*else if (choice == Update) {
+    }
+    /*else if (choice == Update) {
       Library.hasServerAccess().then((value) {
         if (value) {
           progressDialog.show();

@@ -120,7 +120,9 @@ class ApiInstall {
           mobile: e['user_mobile'],
           user_status: e['user_status'],
           createdon: e['createdon'],
-          modifiedon: e['modifiedon']));
+          modifiedon: e['modifiedon'],
+          discountPercent:
+              e['discount_percent'] == null ? '0' : e['discount_percent']));
     });
   }
 

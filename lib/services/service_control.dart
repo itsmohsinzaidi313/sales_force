@@ -1,7 +1,6 @@
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
+import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/services/invoice_service.dart';
 import 'package:sales_force/services/location_service.dart';
 import 'package:sales_force/services/orders_service.dart';

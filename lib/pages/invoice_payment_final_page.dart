@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
+import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/objects/json_elements.dart';
 import 'package:sales_force/sql/dal.dart';
 
@@ -181,10 +181,10 @@ class _CashPaymentFinalState extends State<CashPaymentFinal> {
                       } else {
                         this.invoice.paymentMode = 'Cash';
                         DAL.staticDal.storeInvoice(this.invoice);
-                        AppTheme.showAlertDialog(context,
+                        AppTheme.showAlertDialogOK(context,
                             title: 'Success',
-                            content: Text('Invoice Saved'),
-                            onPressed: () => Library.resetViewToDashBoard(context));
+                            message: 'Invoice Saved',
+                            onOK: () => Library.resetViewToDashBoard(context));
                       }
                     },
                   ),
@@ -416,10 +416,10 @@ class _ChequePaymentFinalState extends State<ChequePaymentFinal> {
                     } else {
                       this.invoice.paymentMode = 'Cheque';
                       DAL.staticDal.storeInvoice(this.invoice);
-                      AppTheme.showAlertDialog(context,
+                      AppTheme.showAlertDialogOK(context,
                           title: 'Success',
-                          content: Text('Invoice Saved'),
-                          onPressed: () =>
+                          message: 'Invoice Saved',
+                          onOK: () =>
                               Library.resetViewToDashBoard(context));
                     }
                   },

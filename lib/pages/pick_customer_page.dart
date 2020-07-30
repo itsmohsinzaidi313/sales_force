@@ -163,9 +163,9 @@ class _PickCustomerState extends State<PickCustomer> {
                       plzWait.hide();
                       value = value == null ? 0 : value;
                       if (value > 0) {
-                        AppTheme.showAlertDialog(context,
+                        AppTheme.showAlertDialogOK(context,
                             title: 'Success',
-                            content: Text('Visit Registered'), onPressed: () {
+                            message: 'Visit Registered', onOK: () {
                           Library.resetViewToDashBoard(context);
                         });
                       } else {}

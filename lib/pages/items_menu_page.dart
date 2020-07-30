@@ -1,21 +1,14 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sales_force/objects/cart.dart';
-import 'package:sales_force/objects/category.dart';
 import 'package:sales_force/objects/customer.dart';
 import 'package:sales_force/objects/menu_format.dart';
-import 'package:sales_force/objects/product.dart';
-import 'package:sales_force/objects/product_foc.dart';
-import 'package:sales_force/objects/product_prices.dart';
 import 'package:sales_force/pages_backend/items_menu_page_backend.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/app_theme.dart';
-
-import 'final_order_page.dart';
+import 'package:sales_force/shared/app_theme.dart';
+import 'package:sales_force/pages/final_order_page.dart';
 
 class ItemsMenu extends StatefulWidget {
   MenuFormat format;
@@ -47,7 +40,8 @@ class _StateItemsMenu extends State<ItemsMenu>
 
   initTabs() {
     tabs = [];
-    _backend = new ItemsMenuBackend(DAL.staticCategories, DAL.staticProducts, DAL.staticProductPrices, DAL.staticProductFoc, format);
+    _backend = new ItemsMenuBackend(DAL.staticCategories, DAL.staticProducts,
+        DAL.staticProductPrices, DAL.staticProductFoc, format);
 //    if (categories.length == 0) ;
 //    categories.addAll(DAL.staticCategories);
     DAL.staticCategories.forEach((element) {
@@ -103,7 +97,8 @@ class _StateItemsMenu extends State<ItemsMenu>
       String unitPrice = _backend.getProductPrice(
           format.customer.customerGroupId, _backend.products[i].product_id);
       if (double.parse(unitPrice) >= 0.01) {
-        if (_backend.products[i].product_category_id == _backend.getCategoryId(tabTitle))
+        if (_backend.products[i].product_category_id ==
+            _backend.getCategoryId(tabTitle))
           widgets.add(Container(
             child: Column(
               children: <Widget>[
@@ -121,10 +116,24 @@ class _StateItemsMenu extends State<ItemsMenu>
                             child: Stack(
                               alignment: Alignment(1, 1),
                               children: <Widget>[
-                                Container(
-                                  width: 200,
-                                  height: 200,
-                                  child: AppTheme.loadNetworkImage(_backend.products[i].getNetworkImage()),
+                                GestureDetector(
+                                  child: Container(
+                                    width: 200,
+                                    height: 200,
+                                    child: AppTheme.loadNetworkImage(
+                                        _backend.products[i].getNetworkImage()),
+                                  ),
+                                  onTap: () {
+                                    myCart.add(
+                                        _backend.products[i],
+                                        _backend.getProductPrice(
+                                            format.customer.customerGroupId,
+                                            _backend.products[i].product_id));
+                                    setState(() {
+                                      double _ =
+                                          myCart.getAmountBeforeDiscount();
+                                    });
+                                  },
                                 ),
                                 AppTheme.imageButton(
                                     'images/shopping_cart.png', 30,
@@ -143,7 +152,8 @@ class _StateItemsMenu extends State<ItemsMenu>
                           ),
                           Center(
                               child: AppTheme.text(
-                                  text: _backend.products[i].product_title.toUpperCase(),
+                                  text: _backend.products[i].product_title
+                                      .toUpperCase(),
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold)),
                           Center(
@@ -217,7 +227,7 @@ class _StateItemsMenu extends State<ItemsMenu>
                   color: Colors.white))),
       Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: ListView(children: getCartItemsWidgets()),
       )),
       Container(
@@ -225,11 +235,11 @@ class _StateItemsMenu extends State<ItemsMenu>
           child: Row(children: <Widget>[
             Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AppTheme.text(
-                      color: Colors.white,
-                      text: 'Total ${myCart.getAmountBeforeDiscount()}'),
-                )),
+              padding: const EdgeInsets.all(8.0),
+              child: AppTheme.text(
+                  color: Colors.white,
+                  text: 'Total ${myCart.getAmountBeforeDiscount()}'),
+            )),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: AppTheme.roundRaisedButton(
@@ -277,66 +287,63 @@ class _StateItemsMenu extends State<ItemsMenu>
               int.parse(product.product_id), product.quantity);
         widgets.add(AppTheme.card(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                      child: AppTheme.text(
-                        text: 'ItemName:${product.product_title}\n'
-                            'Unit Price: ${product.product_pack_price}\n'
-                            'Quantity: ${product.quantity}\n'
-                            'FOC Qty: ${product.focQuantity}\n'
-                            'Amount: ${product.getPrice()}',
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Column(
-                      children: <Widget>[
-                        AppTheme.text(text: 'FOC'),
-                        AppTheme.roundRaisedButton(
-                            text: '+',
-                            onPressed: () {
-                              product.focOverride = true;
-                              setState(() => product.focQuantity++);
-                            }),
-                        AppTheme.roundRaisedButton(
-                            text: '-',
-                            onPressed: () {
-                              setState(() {
-                                product.focOverride = true;
-                                myCart.cleanCart();
-                                if (product.focQuantity >= 1) product
-                                    .focQuantity--;
-                              });
-                            })
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Column(
-                      children: <Widget>[
-                        AppTheme.text(text: 'Quantity'),
-                        AppTheme.roundRaisedButton(
-                            text: '+',
-                            onPressed: () {
-                              myCart.add(product, product.product_carton_price);
-                              setState(() => null);
-                            }),
-                        AppTheme.roundRaisedButton(
-                            text: '-',
-                            onPressed: () {
-                              myCart.less(product);
-                              setState(() =>
-                                myCart.cleanCart()
-                              );
-                            })
-                      ],
-                    ),
-                  ),
-                ],
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                  child: AppTheme.text(
+                text: 'ItemName:${product.product_title}\n'
+                    'Unit Price: ${product.product_pack_price}\n'
+                    'Quantity: ${product.quantity}\n'
+                    'FOC Qty: ${product.focQuantity}\n'
+                    'Amount: ${product.getPrice()}',
+              )),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Column(
+                  children: <Widget>[
+                    AppTheme.text(text: 'FOC'),
+                    AppTheme.roundRaisedButton(
+                        text: '+',
+                        onPressed: () {
+                          product.focOverride = true;
+                          setState(() => product.focQuantity++);
+                        }),
+                    AppTheme.roundRaisedButton(
+                        text: '-',
+                        onPressed: () {
+                          setState(() {
+                            product.focOverride = true;
+                            myCart.cleanCart();
+                            if (product.focQuantity >= 1) product.focQuantity--;
+                          });
+                        })
+                  ],
+                ),
               ),
-            )));
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Column(
+                  children: <Widget>[
+                    AppTheme.text(text: 'Quantity'),
+                    AppTheme.roundRaisedButton(
+                        text: '+',
+                        onPressed: () {
+                          myCart.add(product, product.product_carton_price);
+                          setState(() => null);
+                        }),
+                    AppTheme.roundRaisedButton(
+                        text: '-',
+                        onPressed: () {
+                          myCart.less(product);
+                          setState(() => myCart.cleanCart());
+                        })
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )));
       });
     }
     return widgets;

@@ -14,7 +14,8 @@ import '../shared/config.dart';
 class Update {
   static Logger _log = Config.log;
   static updateLoggedIn(bool loginStatus, Database db) async {
-    int x = await db.rawUpdate('update app_settings set is_loggedin = ?', [1]).catchError((e) => _log.e(e));
+    int x = await db.rawUpdate('update app_settings set is_loggedin = ?',
+        [1]).catchError((e) => _log.e(e));
     if (x > 0)
       return true;
     else
@@ -22,8 +23,8 @@ class Update {
   }
 
   static updateSyncDate(String syncDate, Database db) async {
-    int x = await db.rawUpdate(
-        'update app_settings set sync_date = ?', [Library.getDateTime()]).catchError((e) => _log.e(e));
+    int x = await db.rawUpdate('update app_settings set sync_date = ?',
+        [Library.getDateTime()]).catchError((e) => _log.e(e));
     if (x > 0)
       return true;
     else
@@ -32,7 +33,8 @@ class Update {
 
   static updateSyncApiStatus(String id, Database db) async {
     int x = await db.rawUpdate(
-        'update sync_apis set is_used = 1 where server_id = ?', [id]).catchError((e) => _log.e(e));
+        'update sync_apis set is_used = 1 where server_id = ?',
+        [id]).catchError((e) => _log.e(e));
     print('>>>API UPDATED $x');
     return x;
   }
@@ -41,13 +43,16 @@ class Update {
       List<CategoryPermissions> categoryPermissions) {
     db
         .rawUpdate(
-            "update categories set product_category_id = ?, user_id = ?, product_category_title = ?, product_category_image = ?, createdon = ?, modifiedon = ? where product_category_id = '${category.product_category_id}'", category.getList()).catchError((e) => _log.e(e));
+            "update categories set product_category_id = ?, user_id = ?, product_category_title = ?, product_category_image = ?, createdon = ?, modifiedon = ? where product_category_id = '${category.product_category_id}'",
+            category.getList())
+        .catchError((e) => _log.e(e));
 
     if (categoryPermissions != null) {
       db.execute(
           "delete from category_permissions where category_id = '${category.product_category_id}'");
       categoryPermissions.forEach((e) {
-        db.rawQuery(Insert.insertCategoryPermissions, [e.categoryId, e.userId]).catchError((e) => _log.e(e));
+        db.rawQuery(Insert.insertCategoryPermissions,
+            [e.categoryId, e.userId]).catchError((e) => _log.e(e));
       });
     }
   }
@@ -75,25 +80,37 @@ class Update {
     db.execute(
         "delete from product_prices where product_id = '${product.product_id}'");
     productPrices.forEach((e) {
-      db.rawInsert(Insert.insertProductPrices,
-          [e.product_id, e.customer_group_id, e.cash_price, e.credit_price]).catchError((e) => _log.e(e));
+      db.rawInsert(Insert.insertProductPrices, [
+        e.product_id,
+        e.customer_group_id,
+        e.cash_price,
+        e.credit_price
+      ]).catchError((e) => _log.e(e));
     });
   }
 
   static void updateUsers(Database db, User user) {
-    db.rawUpdate(
-        "update users set user_id = ?, user_type_id = ?, distributor_id = ?, user_first_name = ?, user_last_name = ?, user_email_address = ?, user_password = ?, user_phone_number = ?, user_mobile = ?, user_status = ?, createdon = ?, modifiedon = ? where user_id = '${user.user_id}'",
-        user.getList()).catchError((e) => _log.e(e));
+    db
+        .rawUpdate(
+            "update users set user_id = ?, user_type_id = ?, distributor_id = ?, user_first_name = ?, user_last_name = ?, user_email_address = ?, user_password = ?, user_phone_number = ?, user_mobile = ?, user_status = ?, createdon = ?, modifiedon = ?, discount_percent = ?, user_type_id = ? where user_id = '${user.user_id}'",
+            user.getList())
+        .catchError((e) => _log.e(e));
   }
 
   static void updateCustomer(Database db, Customer customer) {
-    db.rawUpdate("update customer set customer_id = ?, customer_group_id = ?, user_id = ?, country_id = ?, city_id = ?, state_id = ?, area_id = ?, customer_first_name = ?, customer_last_name = ?, customer_email = ?, customer_phone = ?, customer_mobile = ?, customer_shop_name = ?, customer_address1 = ?, status = ?, discount_type = ?, discount = ?, credit_limit = ? where customer_id = '${customer.customerId}'", customer.getList()).catchError((e) => _log.e(e));
+    db
+        .rawUpdate(
+            "update customer set customer_id = ?, customer_group_id = ?, user_id = ?, country_id = ?, city_id = ?, state_id = ?, area_id = ?, customer_first_name = ?, customer_last_name = ?, customer_email = ?, customer_phone = ?, customer_mobile = ?, customer_shop_name = ?, customer_address1 = ?, status = ?, discount_type = ?, discount = ?, credit_limit = ? where customer_id = '${customer.customerId}'",
+            customer.getList())
+        .catchError((e) => _log.e(e));
   }
 
   static void updateProductFoc(Database db, List<ProductFoc> listProductFoc) {
     listProductFoc.forEach((element) {
-        db.delete('product_foc', where: 'product_id = ?', whereArgs: [element.productId]);
-        db.rawInsert(Insert.insertProductFoc, [element.productId, element.start, element.end, element.quantity]);
+      db.delete('product_foc',
+          where: 'product_id = ?', whereArgs: [element.productId]);
+      db.rawInsert(Insert.insertProductFoc,
+          [element.productId, element.start, element.end, element.quantity]);
     });
   }
 }

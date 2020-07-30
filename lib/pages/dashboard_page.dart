@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sales_force/objects/user.dart';
 import 'package:sales_force/objects/visit.dart';
 import 'package:sales_force/pages/pick_customer_page.dart';
 import 'package:sales_force/pages/settings_page.dart';
@@ -58,7 +59,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    double buttonLabelFontSize = 14.0;
     progressDialog = AppTheme.showProgressDialog(context);
 //    initServices();
     return WillPopScope(
@@ -94,230 +94,238 @@ class _DashboardState extends State<Dashboard> {
               crossAxisCount: 2,
               crossAxisSpacing: 10.0,
               mainAxisSpacing: 10.0,
-              children: <Widget>[
-                RaisedButton(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  color: Colors.white,
-                  onPressed: () async {
-                    Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) => new PickCustomer(
-                                  loadFor: 'newSale',
-                                )));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Image(
-                            image: AssetImage('images/newSale2.png'),
-                          ),
-                        ),
-                        AutoSizeText(
-                          'NEW SALE',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: buttonLabelFontSize),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                RaisedButton(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) =>
-                                new PickCustomer(loadFor: 'viewSale')));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Image(
-                            image: AssetImage('images/viewSale.png'),
-                          ),
-                        ),
-                        Text(
-                          'VIEW SALE',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: buttonLabelFontSize),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                RaisedButton(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/invoices');
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Image(
-                            image: AssetImage('images/viewInvoices.png'),
-                          ),
-                        ),
-                        AutoSizeText(
-                          'INVOICES',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: buttonLabelFontSize),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                RaisedButton(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  color: Colors.white,
-                  onPressed: () {
-                    Library.getDatabase().then((db) async {
-                      db
-                          .rawQuery(
-                              "${Select.selectVisits} where user_id = ${DAL.currentUser.user_id} order by createdon desc")
-                          .then((list) {
-                        int paidId = 0;
-                        List<Visit> visits = [];
-                        list.forEach((e) {
-                          if (paidId != e['pair_id']) {
-                            bool value = e['is_upload'] == 1 ? true : false;
-                            visits.add(new Visit(
-                                createdOn: DateTime.parse(e['createdon']),
-                                isUploaded: value));
-                            paidId = e['pair_id'];
-                          } else
-                            paidId = e['pair_id'];
-                        });
-                        Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => new ViewVisits(
-                                      visits: visits,
-                                    )));
-                      });
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Image(
-                            image: AssetImage('images/viewLocation.png'),
-                          ),
-                        ),
-                        AutoSizeText(
-                          'VIEW VISIT',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: buttonLabelFontSize),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) =>
-                                new PickCustomer(loadFor: 'registerVisit')));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Image(
-                            image: AssetImage('images/visits.png'),
-                          ),
-                        ),
-                        AutoSizeText(
-                          'NEW VISIT',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: buttonLabelFontSize),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  color: Colors.white,
-                  onPressed: () {
-                    progressDialog.show();
-                    Library.updateData();
-                    Timer(Duration(seconds: 5), () => progressDialog.hide());
-                    Future.delayed(Duration(seconds: 15)).whenComplete(
-                        () => Library.login(DAL.currentUser.email));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Image(
-                            image: AssetImage('images/sync.png'),
-                          ),
-                        ),
-                        AutoSizeText(
-                          'SYNC',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: buttonLabelFontSize),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                RaisedButton(
-                  color: Colors.white,
-                  onPressed: () {
-//                    Library.getDatabase()
-//                        .then((value) => value
-//                            .rawQuery('PRAGMA table_info(invoices)')
-//                            .then((value) => value.forEach((element) {
-//                                  print("${element['name']}\n");
-//                                })))
-//                        .catchError((onError) => print(onError))
-//                        .whenComplete(() => print('end'));
-//                  print('Height ${Config.deviceDisplayHeight}');
-//                  print('Width ${Config.deviceDisplayWidth}');
-                    Navigator.of(context).push(new MaterialPageRoute(
-                        builder: (BuildContext context) => new SqlView()));
-                  },
-                  child: AppTheme.text(text: 'SQL'),
-                ),
-              ],
+              children: getDashboardButtons(),
             ),
           ),
         ));
+  }
+
+  List<Widget> getDashboardButtons() {
+    // bool wait = true;
+    // User user = new User.withUser(DAL.currentUser);
+    // while (wait) {
+    //   print('WAITING');
+    //   if (DAL.currentUser != null) {
+    //     wait = false;
+    //     print('${DAL.currentUser.getList()}');
+    //     print('WAIT ENDED');
+    //   }
+    // }
+    double buttonLabelFontSize = 14.0;
+    // print(user.getList().toString());
+    List<Widget> list = [
+      RaisedButton(
+        elevation: 4,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        color: Colors.white,
+        onPressed: () async {
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new PickCustomer(
+                        loadFor: 'newSale',
+                      )));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Image(
+                  image: AssetImage('images/newSale2.png'),
+                ),
+              ),
+              AutoSizeText(
+                'NEW SALE',
+                style: TextStyle(
+                    color: Colors.black, fontSize: buttonLabelFontSize),
+              ),
+            ],
+          ),
+        ),
+      ),
+      RaisedButton(
+        elevation: 4,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        color: Colors.white,
+        onPressed: () {
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new PickCustomer(loadFor: 'viewSale')));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Image(
+                  image: AssetImage('images/viewSale.png'),
+                ),
+              ),
+              Text(
+                'VIEW SALE',
+                style: TextStyle(
+                    color: Colors.black, fontSize: buttonLabelFontSize),
+              ),
+            ],
+          ),
+        ),
+      ),
+      RaisedButton(
+        elevation: 4,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        color: Colors.white,
+        onPressed: () {
+          Navigator.pushNamed(context, '/invoices');
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Image(
+                  image: AssetImage('images/viewInvoices.png'),
+                ),
+              ),
+              AutoSizeText(
+                'INVOICES',
+                style: TextStyle(
+                    color: Colors.black, fontSize: buttonLabelFontSize),
+              ),
+            ],
+          ),
+        ),
+      ),
+      RaisedButton(
+        elevation: 4,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        color: Colors.white,
+        onPressed: () {
+          Library.getDatabase().then((db) async {
+            db
+                .rawQuery(
+                    "${Select.selectVisits} where user_id = ${DAL.currentUser.user_id} order by createdon desc")
+                .then((list) {
+              int paidId = 0;
+              List<Visit> visits = [];
+              list.forEach((e) {
+                if (paidId != e['pair_id']) {
+                  bool value = e['is_upload'] == 1 ? true : false;
+                  visits.add(new Visit(
+                      createdOn: DateTime.parse(e['createdon']),
+                      isUploaded: value));
+                  paidId = e['pair_id'];
+                } else
+                  paidId = e['pair_id'];
+              });
+              Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new ViewVisits(
+                            visits: visits,
+                          )));
+            });
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Image(
+                  image: AssetImage('images/viewLocation.png'),
+                ),
+              ),
+              AutoSizeText(
+                'VIEW VISIT',
+                style: TextStyle(
+                    color: Colors.black, fontSize: buttonLabelFontSize),
+              ),
+            ],
+          ),
+        ),
+      ),
+      RaisedButton(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        color: Colors.white,
+        onPressed: () {
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) =>
+                      new PickCustomer(loadFor: 'registerVisit')));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Image(
+                  image: AssetImage('images/visits.png'),
+                ),
+              ),
+              AutoSizeText(
+                'NEW VISIT',
+                style: TextStyle(
+                    color: Colors.black, fontSize: buttonLabelFontSize),
+              ),
+            ],
+          ),
+        ),
+      ),
+      RaisedButton(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        color: Colors.white,
+        onPressed: () {
+          progressDialog.show();
+          Library.updateData();
+          Timer(Duration(seconds: 5), () => progressDialog.hide());
+          Future.delayed(Duration(seconds: 15))
+              .whenComplete(() => Library.login(DAL.currentUser.email));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Image(
+                  image: AssetImage('images/sync.png'),
+                ),
+              ),
+              AutoSizeText(
+                'SYNC',
+                style: TextStyle(
+                    color: Colors.black, fontSize: buttonLabelFontSize),
+              ),
+            ],
+          ),
+        ),
+      ),
+      RaisedButton(
+        color: Colors.white,
+        onPressed: () {
+          Navigator.of(context).push(new MaterialPageRoute(
+              builder: (BuildContext context) => new SqlView()));
+        },
+        child: AppTheme.text(text: 'SQL'),
+      ),
+    ];
+    // if (int.parse(DAL.currentUser.user_type_id) == 3) {
+    //   list.removeLast();
+    //   return list;
+    // }
+    // else if (int.parse(DAL.currentUser.user_type_id) == 4) {
+    //   list.removeRange(2, 6);
+    //   return list;
+    // }
+    return list;
   }
 
   static const String settings = 'Settings';

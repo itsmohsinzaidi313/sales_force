@@ -2,9 +2,8 @@ import 'package:logger/logger.dart';
 import 'package:sales_force/objects/data_lists.dart';
 import 'package:sales_force/sql/insert_queries.dart';
 import 'package:sqflite/sqflite.dart';
-
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
+import 'package:sales_force/shared/config.dart';
+import 'package:sales_force/shared/library.dart';
 
 class ImportToDB {
   Database db;
@@ -25,7 +24,7 @@ class ImportToDB {
         importSyncApi();
         break;
       default:
-        _log.e('CHECK FLAG IN initDatabase');
+        _log.e('CHECK FLAG IN initDatabase\nFlag is $flag');
         break;
     }
   }
@@ -70,9 +69,10 @@ class ImportToDB {
 //          txn.rawInsert(Insert.insertUsers, e.getList());
 //          return null;
 //        });
-        db.rawInsert(Insert.insertUsers, e.getList());
+        db
+            .rawInsert(Insert.insertUsers, e.getList())
+            .catchError((onError) => _log.e('ERROR ON importUsers', [onError]));
       });
-      _log.v('EXIT importUsers');
     } catch (e) {
       _log.e('ERROR ON importUsers\n$e');
     }
@@ -84,7 +84,8 @@ class ImportToDB {
       DataLists.listCategories.forEach((e) {
 //        database.transaction(
 //            (txn) => txn.rawInsert(Insert.insertCategories, e.getList()));
-        db.rawInsert(Insert.insertCategories, e.getList());
+        db.rawInsert(Insert.insertCategories, e.getList()).catchError(
+            (onError) => _log.e('ERROR ON importCategories', [onError]));
       });
       _log.v('EXIT importCategories');
     } catch (e) {
@@ -98,7 +99,8 @@ class ImportToDB {
       DataLists.listProduct.forEach((e) {
 //        database.transaction(
 //            (txn) => txn.rawInsert(Insert.insertProducts, e.getList()));
-        db.rawInsert(Insert.insertProducts, e.getList());
+        db.rawInsert(Insert.insertProducts, e.getList()).catchError(
+            (onError) => _log.e('ERROR ON importProducts', [onError]));
       });
       _log.v('EXIT importProducts');
     } catch (e) {
@@ -178,14 +180,27 @@ class ImportToDB {
 
   void importSyncApi() {
     try {
-      _log.v('ENTRY ON importSyncApi');
+      int insertedCount = 0;
+      int apiRecevedCount = 0;
       if (DataLists.listSyncPackets != null &&
-          DataLists.listSyncPackets.isNotEmpty)
+          DataLists.listSyncPackets.isNotEmpty) {
+        // _log.v('ENTRY ON importSyncApi');
         DataLists.listSyncPackets.forEach((e) async {
+          // _log.v(e.url);
           String query =
               "insert into sync_apis(server_id, module, operation, url, createdon, is_used) select server_id, module, operation, url, createdon, is_used from (select '${e.serverId}' as server_id, '${e.module}' as module, '${e.operation}' as operation, '${e.url}' as url, '${e.createdOn}' as createdon, '${e.isUsed}' as is_used) t where not exists(select 1 from sync_apis where sync_apis.server_id = t.server_id);";
-          db.rawQuery(query);
+          db
+              .rawInsert(query)
+              .then((value) => insertedCount += value == null ? 0 : value)
+              // .whenComplete(() => _log.v('EXIT ON importSyncApi'))
+              .catchError((onError) {
+            _log.e('ERROR ON importSyncApi', [onError]);
+            return null;
+          });
+          apiRecevedCount++;
         });
+        _log.v('API RECEIVED : $apiRecevedCount\nAPI INSERTED: $insertedCount');
+      }
     } catch (e) {
       _log.e('ERROR ON importSyncApi', [e]);
     }
