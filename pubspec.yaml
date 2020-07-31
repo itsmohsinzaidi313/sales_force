@@ -82,6 +82,7 @@ flutter:
     - images/salesPattern1.jpg
     - images/salesPattern2.jpg
     - images/salesPattern3.jpg
+    - images/salesPattern4.jpg
     - images/sync.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

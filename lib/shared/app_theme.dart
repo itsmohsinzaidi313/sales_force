@@ -116,6 +116,36 @@ class AppTheme {
     return TextStyle(fontSize: fontSize, fontWeight: fontWeight, color: color);
   }
 
+  static Card roundIconButton(
+      {String text,
+      TextStyle textStyle,
+      Color buttonColor,
+      Icon icon,
+      double iconSize,
+      Function onPressed}) {
+    return Card(
+      color: buttonColor,
+      shape: CircleBorder(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          IconButton(
+            iconSize: iconSize,
+            icon: icon,
+            onPressed: onPressed,
+          ),
+          AutoSizeText(
+            text,
+            style: textStyle,
+            minFontSize: 14,
+            maxFontSize: 18,
+          ),
+        ],
+      ),
+    );
+  }
+
   static Text text(
       {String text,
       double fontSize = 15,
@@ -230,14 +260,13 @@ class AppTheme {
 
   static Widget loadNetworkImage(String url) {
     return Image.network(url, loadingBuilder:
-        (BuildContext context, Widget child,
-        ImageChunkEvent loadingProgress) {
+        (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
       if (loadingProgress == null) return child;
       return Center(
         child: CircularProgressIndicator(
           value: loadingProgress.expectedTotalBytes != null
               ? loadingProgress.cumulativeBytesLoaded /
-              loadingProgress.expectedTotalBytes
+                  loadingProgress.expectedTotalBytes
               : null,
         ),
       );

@@ -3,15 +3,13 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:sales_force/models/visit.dart';
-import 'package:sales_force/pages/pick_customer_page.dart';
 import 'package:sales_force/pages/settings_page.dart';
 import 'package:sales_force/pages/sql_view_page.dart';
-import 'package:sales_force/pages/view_visits_page.dart';
+import 'package:sales_force/pages_backend/dashboard_page_backend.dart';
 import 'package:sales_force/shared/app_theme.dart';
+import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
-import 'package:sales_force/sql/select_queries.dart';
 import 'package:sales_force/models/user.dart';
 
 class Dashboard extends StatefulWidget {
@@ -67,9 +65,9 @@ class _DashboardState extends State<Dashboard> {
     return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
-          backgroundColor: Colors.grey[600],
+          // backgroundColor: Colors.grey[600],
           appBar: AppBar(
-            title: Text('SALE FORCE'),
+            title: Text('MAIN MENU'),
             actions: <Widget>[
               PopupMenuButton<String>(
                   shape: RoundedRectangleBorder(
@@ -93,231 +91,318 @@ class _DashboardState extends State<Dashboard> {
                     image: AssetImage('images/salesPattern1.jpg'),
                     repeat: ImageRepeat.repeat)),
             child: GridView.count(
-              padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width * 0.08,
+                  right: MediaQuery.of(context).size.width * 0.08,
+                  top: 20,
+                  bottom: 20),
               crossAxisCount: 2,
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
-              children: getDashboardButtons(),
+              crossAxisSpacing: MediaQuery.of(context).size.width * 0.05,
+              mainAxisSpacing: MediaQuery.of(context).size.height * 0.05,
+              children: getDashboardButtons2(),
             ),
           ),
         ));
   }
 
   List<Widget> getDashboardButtons() {
-    double buttonLabelFontSize = 14.0;
-    List<Widget> list = [
-      RaisedButton(
-        elevation: 4,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        color: Colors.white,
-        onPressed: () async {
-          Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) => new PickCustomer(
-                        loadFor: 'newSale',
-                      )));
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Image(
-                  image: AssetImage('images/newSale2.png'),
+    DashboardBackend _backend = new DashboardBackend();
+    try {
+      double buttonLabelFontSize = 14.0;
+      List<Widget> list = [
+        RaisedButton(
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          color: Colors.white,
+          onPressed: () => _backend.newSaleButtonOnPressed(context),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Image(
+                    image: AssetImage('images/newSale2.png'),
+                  ),
                 ),
-              ),
-              AutoSizeText(
-                'NEW SALE',
-                style: TextStyle(
-                    color: Colors.black, fontSize: buttonLabelFontSize),
-              ),
-            ],
+                AutoSizeText(
+                  'NEW SALE',
+                  style: TextStyle(
+                      color: Colors.black, fontSize: buttonLabelFontSize),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      RaisedButton(
-        elevation: 4,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        color: Colors.white,
-        onPressed: () {
-          Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) => new PickCustomer(loadFor: 'viewSale')));
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Image(
-                  image: AssetImage('images/viewSale.png'),
+        RaisedButton(
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          color: Colors.white,
+          onPressed: () => _backend.viewSaleButtonOnPressed(context),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Image(
+                    image: AssetImage('images/viewSale.png'),
+                  ),
                 ),
-              ),
-              Text(
-                'VIEW SALE',
-                style: TextStyle(
-                    color: Colors.black, fontSize: buttonLabelFontSize),
-              ),
-            ],
+                Text(
+                  'VIEW SALE',
+                  style: TextStyle(
+                      color: Colors.black, fontSize: buttonLabelFontSize),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      RaisedButton(
-        elevation: 4,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        color: Colors.white,
-        onPressed: () {
-          Navigator.pushNamed(context, '/invoices');
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Image(
-                  image: AssetImage('images/viewInvoices.png'),
+        RaisedButton(
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          color: Colors.white,
+          onPressed: () => _backend.viewInvoices(context),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Image(
+                    image: AssetImage('images/viewInvoices.png'),
+                  ),
                 ),
-              ),
-              AutoSizeText(
-                'INVOICES',
-                style: TextStyle(
-                    color: Colors.black, fontSize: buttonLabelFontSize),
-              ),
-            ],
+                AutoSizeText(
+                  'INVOICES',
+                  style: TextStyle(
+                      color: Colors.black, fontSize: buttonLabelFontSize),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      RaisedButton(
-        elevation: 4,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        color: Colors.white,
-        onPressed: () {
-          Library.getDatabase().then((db) async {
-            db
-                .rawQuery(
-                    "${Select.selectVisits} where user_id = ${DAL.currentUser.user_id} order by createdon desc")
-                .then((list) {
-              int paidId = 0;
-              List<Visit> visits = [];
-              list.forEach((e) {
-                if (paidId != e['pair_id']) {
-                  bool value = e['is_upload'] == 1 ? true : false;
-                  visits.add(new Visit(
-                      createdOn: DateTime.parse(e['createdon']),
-                      isUploaded: value));
-                  paidId = e['pair_id'];
-                } else
-                  paidId = e['pair_id'];
-              });
-              Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => new ViewVisits(
-                            visits: visits,
-                          )));
-            });
-          });
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Image(
-                  image: AssetImage('images/viewLocation.png'),
+        RaisedButton(
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          color: Colors.white,
+          onPressed: () => _backend.viewVisitsButtonOnPressed(context),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Image(
+                    image: AssetImage('images/viewLocation.png'),
+                  ),
                 ),
-              ),
-              AutoSizeText(
-                'VIEW VISIT',
-                style: TextStyle(
-                    color: Colors.black, fontSize: buttonLabelFontSize),
-              ),
-            ],
+                AutoSizeText(
+                  'VIEW VISIT',
+                  style: TextStyle(
+                      color: Colors.black, fontSize: buttonLabelFontSize),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      RaisedButton(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        color: Colors.white,
-        onPressed: () {
-          Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) =>
-                      new PickCustomer(loadFor: 'registerVisit')));
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Image(
-                  image: AssetImage('images/visits.png'),
+        RaisedButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          color: Colors.white,
+          onPressed: () => _backend.newVisitButtonOnPressed(context),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Image(
+                    image: AssetImage('images/visits.png'),
+                  ),
                 ),
-              ),
-              AutoSizeText(
-                'NEW VISIT',
-                style: TextStyle(
-                    color: Colors.black, fontSize: buttonLabelFontSize),
-              ),
-            ],
+                AutoSizeText(
+                  'NEW VISIT',
+                  style: TextStyle(
+                      color: Colors.black, fontSize: buttonLabelFontSize),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      RaisedButton(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        color: Colors.white,
-        onPressed: () {
-          progressDialog.show();
-          Library.updateData();
-          Timer(Duration(seconds: 5), () => progressDialog.hide());
-          Future.delayed(Duration(seconds: 15))
-              .whenComplete(() => Library.login(DAL.currentUser.email));
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Image(
-                  image: AssetImage('images/sync.png'),
+        RaisedButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          color: Colors.white,
+          onPressed: () => _backend.syncButtonOnPressed(progressDialog),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Image(
+                    image: AssetImage('images/sync.png'),
+                  ),
                 ),
-              ),
-              AutoSizeText(
-                'SYNC',
-                style: TextStyle(
-                    color: Colors.black, fontSize: buttonLabelFontSize),
-              ),
-            ],
+                AutoSizeText(
+                  'SYNC',
+                  style: TextStyle(
+                      color: Colors.black, fontSize: buttonLabelFontSize),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      RaisedButton(
-        color: Colors.white,
-        onPressed: () {
-          Navigator.of(context).push(new MaterialPageRoute(
-              builder: (BuildContext context) => new SqlView()));
-        },
-        child: AppTheme.text(text: 'SQL'),
-      ),
-    ];
+        RaisedButton(
+          color: Colors.white,
+          onPressed: () => _backend.viewSqlPage(context),
+          child: AppTheme.text(text: 'SQL'),
+        ),
+      ];
 
-    if (this._user.user_type_id == '3') {
-      // list.removeLast();
+      if (this._user.user_type_id == '3') {
+        // list.removeLast();
+        return list;
+      } else if (this._user.user_type_id == '4') {
+        list.removeRange(2, 6);
+        return list;
+      }
       return list;
-    } else if (this._user.user_type_id == '4') {
-      list.removeRange(2, 6);
-      return list;
+    } catch (e) {
+      Config.log.e('ERROR IN BUTTONS', [e]);
+      return [];
     }
-    return list;
+  }
+
+  List<Widget> getDashboardButtons2() {
+    DashboardBackend _backend = new DashboardBackend();
+    try {
+      // Color newSaleButtonColor = Color.fromRGBO(251, 91, 57, 1.0);
+      // Color viewSaleButtonColor = Color.fromRGBO(251, 91, 57, 1.0);
+      // Color newVisitButtonColor = Color.fromRGBO(251, 91, 57, 1.0);
+      // Color viewVisitButtonColor = Color.fromRGBO(251, 91, 57, 1.0);
+      // Color invoiceButtonColor = Color.fromRGBO(251, 91, 57, 1.0);
+      // Color syncButtonColor = Color.fromRGBO(251, 91, 57, 1.0);
+      // Color sqlButtonColor = Color.fromRGBO(251, 91, 57, 1.0);
+      Color redColor = Color.fromRGBO(251, 91, 57, 0.7);
+      Color blueColor = Color.fromRGBO(145, 202, 245, 0.6);
+      Color newSaleButtonColor = redColor;
+      Color viewSaleButtonColor = Colors.white;
+      Color newVisitButtonColor = redColor;
+      Color viewVisitButtonColor = redColor;
+      Color invoiceButtonColor = Colors.white;
+      Color syncButtonColor = Colors.white;
+      Color sqlButtonColor = Colors.black;
+
+      double fontSize = 18;
+      double iconSize = MediaQuery.of(context).size.width * 0.14;
+      Color buttonColor = blueColor;
+      // Color buttonColor = Colors.blue;
+      List<Widget> list = [
+        AppTheme.roundIconButton(
+            text: 'NEW SALE',
+            textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: fontSize,
+                color: Colors.white),
+            icon: Icon(
+              Icons.add_shopping_cart,
+              color: Colors.white,
+            ),
+            iconSize: iconSize,
+            buttonColor: redColor,
+            onPressed: () => _backend.newSaleButtonOnPressed(context)),
+        AppTheme.roundIconButton(
+            text: 'VIEW SALE',
+            textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: fontSize,
+                color: Colors.white),
+            icon: Icon(
+              Icons.view_headline,
+              color: Colors.white,
+            ),
+            iconSize: iconSize,
+            buttonColor: blueColor,
+            onPressed: () => _backend.viewSaleButtonOnPressed(context)),
+        AppTheme.roundIconButton(
+            text: 'INVOICES',
+            textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: fontSize,
+                color: Colors.white),
+            icon: Icon(
+              Icons.assignment,
+              color: Colors.white,
+            ),
+            iconSize: iconSize,
+            buttonColor: blueColor,
+            onPressed: () => _backend.viewInvoices(context)),
+        AppTheme.roundIconButton(
+            text: 'VIEW VISITS',
+            textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: fontSize,
+                color: Colors.white),
+            icon: Icon(
+              Icons.not_listed_location,
+              color: Colors.white,
+            ),
+            iconSize: iconSize,
+            buttonColor: redColor,
+            onPressed: () => _backend.viewVisitsButtonOnPressed(context)),
+        AppTheme.roundIconButton(
+            text: 'NEW VISITS',
+            textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: fontSize,
+                color: Colors.white),
+            icon: Icon(
+              Icons.add_location,
+              color: Colors.white,
+            ),
+            iconSize: iconSize,
+            buttonColor: redColor,
+            onPressed: () => _backend.newVisitButtonOnPressed(context)),
+        AppTheme.roundIconButton(
+            text: 'SYNC DATA',
+            textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: fontSize,
+                color: Colors.white),
+            icon: Icon(
+              Icons.sync,
+              color: Colors.white,
+            ),
+            iconSize: iconSize,
+            buttonColor: blueColor,
+            onPressed: () => _backend.syncButtonOnPressed(progressDialog)),
+        AppTheme.roundIconButton(
+            text: 'SQLITE',
+            textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: fontSize,
+                color: Colors.white),
+            icon: Icon(
+              Icons.storage,
+              color: Colors.white,
+            ),
+            iconSize: iconSize,
+            buttonColor: redColor,
+            onPressed: () => _backend.viewSqlPage(context)),
+      ];
+
+      if (this._user.user_type_id == '3') {
+        // list.removeLast();
+        return list;
+      } else if (this._user.user_type_id == '4') {
+        list.removeRange(2, 6);
+        return list;
+      }
+      return list;
+    } catch (e) {
+      Config.log.e('ERROR IN BUTTONS', [e]);
+      return [];
+    }
   }
 
   static const String settings = 'Settings';
