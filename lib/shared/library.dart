@@ -133,6 +133,15 @@ class Library {
     }
   }
 
+  static Future<User> getUser(String email) async {
+    User user;
+    Database db = await getDatabase();
+    List<Map<String, dynamic>> listMap = await db
+        .rawQuery('${Select.selectUser} where user_email_address = ?', [email]);
+    user = new User.withQueryResult(listMap);
+    return user;
+  }
+
   static isLoggedIn(String email) async {
     try {
       bool response = false;
@@ -261,7 +270,8 @@ class Library {
 
   static resetViewToDashBoard(BuildContext context) {
     Navigator.of(context).pushAndRemoveUntil(
-        new MaterialPageRoute(builder: (context) => new Dashboard()),
+        new MaterialPageRoute(
+            builder: (context) => new Dashboard(DAL.currentUser)),
         (route) => false);
   }
 

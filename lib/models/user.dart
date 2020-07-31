@@ -68,6 +68,39 @@ class User {
           i[0]['discount_percent'] == null ? '' : i[0]['discount_percent'];
     }
   }
+  User.withQueryResult(List<Map<String, dynamic>> listMap) {
+    this.user_id = listMap[0]['user_id'] == null ? '' : listMap[0]['user_id'];
+    this.user_type_id =
+        listMap[0]['user_type_id'] == null ? '' : listMap[0]['user_type_id'];
+    this.distributor_id = listMap[0]['distributor_id'] == null
+        ? ''
+        : listMap[0]['distributor_id'];
+    this.firstname = listMap[0]['user_first_name'] == null
+        ? ''
+        : listMap[0]['user_first_name'];
+    this.lastname = listMap[0]['user_last_name'] == null
+        ? ''
+        : listMap[0]['user_last_name'];
+    this.email = listMap[0]['user_email_address'] == null
+        ? ''
+        : listMap[0]['user_email_address'];
+    this.password =
+        listMap[0]['user_password'] == null ? '' : listMap[0]['user_password'];
+    this.phoneNumber = listMap[0]['user_phone_number'] == null
+        ? ''
+        : listMap[0]['user_phone_number'];
+    this.mobile =
+        listMap[0]['user_mobile'] == null ? '' : listMap[0]['user_mobile'];
+    this.user_status =
+        listMap[0]['user_status'] == null ? '' : listMap[0]['user_status'];
+    this.createdon =
+        listMap[0]['createdon'] == null ? '' : listMap[0]['createdon'];
+    this.modifiedon =
+        listMap[0]['modifiedon'] == null ? '' : listMap[0]['modifiedon'];
+    this.discountPercent = listMap[0]['discount_percent'] == null
+        ? ''
+        : listMap[0]['discount_percent'];
+  }
 
   getList() {
     return [

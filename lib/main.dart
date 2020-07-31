@@ -11,7 +11,7 @@ void main() {
     initialRoute: '/',
     routes: {
       '/': (context) => Login(),
-      '/dashboard': (context) => Dashboard(),
+      '/dashboard': (context) => Dashboard(null),
       '/invoices': (context) => Invoices(),
       '/customersList': (context) => PickCustomer(),
       '/finalOrder': (context) => FinalOrder(),

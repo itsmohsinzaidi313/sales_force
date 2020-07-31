@@ -12,8 +12,7 @@ import 'package:sales_force/pages/dashboard_page.dart';
 import 'package:sales_force/services/service_control.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sqflite/sqflite.dart';
-
-import '../shared/config.dart';
+import 'package:sales_force/shared/config.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -118,7 +117,8 @@ class _LoginState extends State<Login> {
                             progressDialog.hide();
                             Navigator.of(context).pushAndRemoveUntil(
                               new MaterialPageRoute(
-                                  builder: (context) => new Dashboard()),
+                                  builder: (context) =>
+                                      new Dashboard(this.user)),
                               (Route<dynamic> route) => false,
                             );
                           }))
@@ -198,7 +198,13 @@ class _LoginState extends State<Login> {
             progressDialog.hide();
             if (value) {
               DAL.staticDal = new DAL(email: username);
-              Navigator.pushReplacementNamed(context, '/dashboard');
+              // Navigator.pushReplacementNamed(context, '/dashboard');
+              Library.getUser(username)
+                  .then((value) => Navigator.of(context).pushAndRemoveUntil(
+                        new MaterialPageRoute(
+                            builder: (context) => new Dashboard(value)),
+                        (Route<dynamic> route) => false,
+                      ));
             } else {
               AppTheme.showAlertDialogOK(context,
                   title: 'Attention',

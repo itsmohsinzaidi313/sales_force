@@ -12,15 +12,19 @@ import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/select_queries.dart';
+import 'package:sales_force/models/user.dart';
 
 class Dashboard extends StatefulWidget {
-  static String email;
+  final User _user;
+  Dashboard(this._user);
 
   @override
-  _DashboardState createState() => _DashboardState();
+  _DashboardState createState() => _DashboardState(this._user);
 }
 
 class _DashboardState extends State<Dashboard> {
+  final User _user;
+  _DashboardState(this._user);
   ProgressDialog progressDialog;
 
   Future<bool> _onWillPop() async {
@@ -306,13 +310,13 @@ class _DashboardState extends State<Dashboard> {
       ),
     ];
 
-    // if (DAL.currentUser.user_type_id == '3') {
-    //   list.removeLast();
-    //   return list;
-    // } else if (DAL.currentUser.user_type_id == '4') {
-    //   list.removeRange(2, 6);
-    //   return list;
-    // }
+    if (this._user.user_type_id == '3') {
+      // list.removeLast();
+      return list;
+    } else if (this._user.user_type_id == '4') {
+      list.removeRange(2, 6);
+      return list;
+    }
     return list;
   }
 

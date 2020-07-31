@@ -1,5 +1,5 @@
-import 'package:sales_force/objects/customer.dart';
-import 'package:sales_force/objects/product.dart';
+import 'package:sales_force/models/customer.dart';
+import 'package:sales_force/models/product.dart';
 
 class Cart {
   List<Product> products;
@@ -67,7 +67,7 @@ class Cart {
     } else {
       orderTotal = getAmountBeforeDiscount().toString();
     }
-    
+
     double x = _spoDiscount == null ? 0.0 : double.parse(_spoDiscount);
     if (x >= 1) {
       _orderDiscount = (getAmountBeforeDiscount() * (x / 100)).toString();
