@@ -25,10 +25,11 @@ class _InvoicesState extends State<Invoices> {
           title: Text("INVOICES"),
         ),
         body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('images/salesPattern1.jpg'),
-                  repeat: ImageRepeat.repeat)),
+          color: AppTheme.backgroundColor,
+          // decoration: BoxDecoration(
+          //     image: DecorationImage(
+          //         image: AssetImage(AppTheme.backgroundImage),
+          //         repeat: ImageRepeat.repeat)),
           child: ListView(
               children: ListTile.divideTiles(
                       tiles: invoiceView(),

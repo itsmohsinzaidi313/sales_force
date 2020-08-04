@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
+import 'package:sales_force/shared/config.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class AppTheme {
   static Logger _log = Config.log;
   static const Color appThemeColor = Color.fromARGB(255, 196, 16, 1);
-
+  static const Color redColor = Color.fromRGBO(251, 91, 57, 0.7);
+  static const Color blueColor = Color.fromRGBO(145, 202, 245, 0.6);
+  static const String backgroundImage = 'images/salesPattern2.jpg';
+  static Color backgroundColor = Colors.grey[200];
   static ProgressDialog showProgressDialog(BuildContext context,
       {String text = '', bool isDismissible = true}) {
     final spinKit = new SpinKitFadingCube(

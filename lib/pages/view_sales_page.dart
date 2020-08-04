@@ -27,10 +27,11 @@ class _ViewSalesState extends State<ViewSales> {
     return new Scaffold(
       appBar: AppBar(title: Text('View Sales')),
       body: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('images/salesPattern1.jpg'),
-                repeat: ImageRepeat.repeat)),
+        color: AppTheme.backgroundColor,
+        // decoration: BoxDecoration(
+        //     image: DecorationImage(
+        //         image: AssetImage(AppTheme.backgroundImage),
+        //         repeat: ImageRepeat.repeat)),
         child: ListView(
           children: getSalesRecordWidget(),
         ),

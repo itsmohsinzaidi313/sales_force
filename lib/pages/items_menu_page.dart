@@ -76,10 +76,11 @@ class _StateItemsMenu extends State<ItemsMenu>
           panel: slideUpPanelPanel(),
           collapsed: slideUpPanelCollapsed(),
           body: Container(
-//            decoration: BoxDecoration(
-//                image: DecorationImage(
-//                    image: AssetImage('images/salesPattern1.jpg'),
-//                    repeat: ImageRepeat.repeat)),
+            color: AppTheme.backgroundColor,
+            // decoration: BoxDecoration(
+            //     image: DecorationImage(
+            //         image: AssetImage(AppTheme.backgroundImage),
+            //         repeat: ImageRepeat.repeat)),
             margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 200),
             child: slideUpPanelBody(),
           ),

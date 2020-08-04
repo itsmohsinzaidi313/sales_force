@@ -37,10 +37,11 @@ class _PickCustomerState extends State<PickCustomer> {
           title: Text('Customers'),
         ),
         body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('images/salesPattern1.jpg'),
-                  repeat: ImageRepeat.repeat)),
+          color: AppTheme.backgroundColor,
+          // decoration: BoxDecoration(
+          //     image: DecorationImage(
+          //         image: AssetImage(AppTheme.backgroundImage),
+          //         repeat: ImageRepeat.repeat)),
           child: Padding(
               padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
               child: ListView(

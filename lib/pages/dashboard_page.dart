@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sales_force/pages/settings_page.dart';
-import 'package:sales_force/pages/sql_view_page.dart';
 import 'package:sales_force/pages_backend/dashboard_page_backend.dart';
 import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/shared/config.dart';
@@ -86,10 +85,11 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),
           body: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('images/salesPattern1.jpg'),
-                    repeat: ImageRepeat.repeat)),
+            color: AppTheme.backgroundColor,
+            // decoration: BoxDecoration(
+            //     image: DecorationImage(
+            //         image: AssetImage(AppTheme.backgroundImage),
+            //         repeat: ImageRepeat.repeat)),
             child: GridView.count(
               padding: EdgeInsets.only(
                   left: MediaQuery.of(context).size.width * 0.08,
