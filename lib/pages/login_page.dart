@@ -88,41 +88,48 @@ class _LoginState extends State<Login> {
   }
 
   Widget loginViewController() {
+    Image logo = Image.asset('images/icon2.jpg');
     if (this.user != null) {
       return Center(
-        heightFactor: 1.5,
+        heightFactor: MediaQuery.of(context).size.height * 0.0018,
         child: Container(
-          width: 200,
-          height: 200,
+          width: MediaQuery.of(context).size.width * 0.9,
           child: Card(
             elevation: 10.0,
             child: Padding(
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.only(top: 50),
               child: Column(
                 children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height * 0.03),
+                    child: logo,
+                  ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                    padding: const EdgeInsets.only(bottom: 10),
                     child: Center(
                         child: AppTheme.text(
                             text: '${this.user.email}',
                             fontWeight: FontWeight.bold)),
                   ),
-                  SizedBox(height: 50),
-                  Center(
-                      child: AppTheme.roundRaisedButton(
-                          text: 'Sign in',
-                          onPressed: () {
-                            progressDialog.show();
-                            Library.loadUserData(this.user.email);
-                            Library.login(this.user.email);
-                            progressDialog.hide();
-                            Navigator.of(context).pushAndRemoveUntil(
-                              new MaterialPageRoute(
-                                  builder: (context) =>
-                                      new Dashboard(this.user)),
-                              (Route<dynamic> route) => false,
-                            );
-                          }))
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Center(
+                        child: AppTheme.roundRaisedButton(
+                            text: 'Sign in',
+                            onPressed: () {
+                              progressDialog.show();
+                              Library.loadUserData(this.user.email);
+                              Library.login(this.user.email);
+                              progressDialog.hide();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                new MaterialPageRoute(
+                                    builder: (context) =>
+                                        new Dashboard(this.user)),
+                                (Route<dynamic> route) => false,
+                              );
+                            })),
+                  )
                 ],
               ),
             ),
@@ -131,9 +138,9 @@ class _LoginState extends State<Login> {
       );
     } else
       return Center(
-        heightFactor: 1.5,
+        heightFactor: MediaQuery.of(context).size.height * 0.0018,
         child: Container(
-          width: 400,
+          width: MediaQuery.of(context).size.width * 0.9,
           child: Card(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 50, 20, 40),
@@ -142,6 +149,11 @@ class _LoginState extends State<Login> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height * 0.02),
+                      child: logo,
+                    ),
                     TextFormField(
                       decoration: InputDecoration(
                           hintText: 'Email',
