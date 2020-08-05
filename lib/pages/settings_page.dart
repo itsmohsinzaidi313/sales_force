@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sales_force/services/common.dart';
-import 'package:sales_force/services/service_control.dart';
 import 'package:sales_force/sql/dal.dart';
 
 class SettingsView extends StatefulWidget {
@@ -13,8 +12,7 @@ class _SettingsViewState extends State<SettingsView> {
   static const List<String> tileTitle = ['Services', 'Permissions'];
   List<ExpansionTile> _listOfExpansions = List<ExpansionTile>.generate(
       tileTitle.length,
-          (i) =>
-          ExpansionTile(
+      (i) => ExpansionTile(
             title: Text(tileTitle[i]),
             children: _subTileControler(i),
           ));
@@ -40,7 +38,7 @@ class _SettingsViewState extends State<SettingsView> {
         ),
         body: ListView(
           children:
-          _listOfExpansions.map((expansionTile) => expansionTile).toList(),
+              _listOfExpansions.map((expansionTile) => expansionTile).toList(),
         ));
   }
 }
@@ -48,23 +46,23 @@ class _SettingsViewState extends State<SettingsView> {
 getPermissionsWidgets() {
   return Permission.values
       .where((Permission permission) {
-    return permission != Permission.reminders &&
-        permission != Permission.photos &&
-        permission != Permission.sensors &&
-        permission != Permission.sms &&
-        permission != Permission.speech &&
-        permission != Permission.activityRecognition &&
-        permission != Permission.phone &&
-        permission != Permission.microphone &&
-        permission != Permission.calendar &&
-        permission != Permission.contacts &&
-        permission != Permission.camera &&
-        permission != Permission.phone &&
-        permission != Permission.ignoreBatteryOptimizations &&
-        permission != Permission.accessMediaLocation &&
-        permission != Permission.notification &&
-        permission != Permission.unknown;
-  })
+        return permission != Permission.reminders &&
+            permission != Permission.photos &&
+            permission != Permission.sensors &&
+            permission != Permission.sms &&
+            permission != Permission.speech &&
+            permission != Permission.activityRecognition &&
+            permission != Permission.phone &&
+            permission != Permission.microphone &&
+            permission != Permission.calendar &&
+            permission != Permission.contacts &&
+            permission != Permission.camera &&
+            permission != Permission.phone &&
+            permission != Permission.ignoreBatteryOptimizations &&
+            permission != Permission.accessMediaLocation &&
+            permission != Permission.notification &&
+            permission != Permission.unknown;
+      })
       .map((permission) => PermissionWidget(permission))
       .toList();
 }
@@ -145,8 +143,8 @@ class _PermissionState extends State<PermissionWidget> {
     );
   }
 
-  void checkPermissionStatus(BuildContext context,
-      Permission permission) async {
+  void checkPermissionStatus(
+      BuildContext context, Permission permission) async {
     Future<PermissionStatus> future = permission.request();
     future.then((onValue) {
       print(onValue.isGranted);
@@ -174,7 +172,6 @@ class ServicesWidgets extends StatefulWidget {
 
   @override
   _ServicesWidgetsState createState() => _ServicesWidgetsState(name: this.name);
-
 }
 
 class _ServicesWidgetsState extends State<ServicesWidgets> {
@@ -186,8 +183,7 @@ class _ServicesWidgetsState extends State<ServicesWidgets> {
   @override
   void initState() {
     super.initState();
-    setState(() =>
-    status = DAL.serviceCtrl.serviceStatus(name));
+    setState(() => status = DAL.serviceCtrl.serviceStatus(name));
   }
 
   @override
@@ -197,12 +193,12 @@ class _ServicesWidgetsState extends State<ServicesWidgets> {
       subtitle: Text((status) ? 'Running' : 'Stopped',
           style: TextStyle(color: (status) ? Colors.green : Colors.red)),
       trailing: IconButton(
-          icon: Icon((status) ? Icons.play_arrow : Icons.stop), onPressed: () {
-        DAL.serviceCtrl.updateServiceStatus(name, !status);
+          icon: Icon((status) ? Icons.play_arrow : Icons.stop),
+          onPressed: () {
+            DAL.serviceCtrl.updateServiceStatus(name, !status);
 
-        setState(() =>
-        status = DAL.serviceCtrl.serviceStatus(name));
-      }),
+            setState(() => status = DAL.serviceCtrl.serviceStatus(name));
+          }),
     );
   }
 }
