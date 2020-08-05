@@ -11,7 +11,7 @@ class _TestPageState extends State<TestPage> {
     return Container(
       child: Center(
         child: RaisedButton(
-          child: Text('Trigger'),
+          child: Text('Mera Lund'),
           onPressed: () {},
         ),
       ),
