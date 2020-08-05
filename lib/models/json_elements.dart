@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/config.dart';
+import 'package:sales_force/shared/config.dart';
 
 class JSONInvoice {
   String androidPaymentId;

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'file:///C:/Users/imoss/OneDrive/Documents/Projects/Flutter/sales_force/lib/shared/library.dart';
+import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/services/common.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/select_queries.dart';
