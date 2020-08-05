@@ -30,7 +30,7 @@ class DatabaseStructure {
   final Table APPSETTINGS = new Table(
       name: Table.APP_SETTINGS,
       columns: Column.APP_SETTINGS,
-      types: ColumnTypes.APPSETTINGS);
+      types: ColumnTypes.APP_SETTINGS);
   final Table PRODUCTPRICES = new Table(
       name: Table.PRODUCT_PRICES,
       columns: Column.PRODUCTPRICES,
@@ -38,7 +38,7 @@ class DatabaseStructure {
   final Table CUSTOMERGROUPS = new Table(
       name: Table.CUSTOMER_GROUPS,
       columns: Column.CUSTOMER_GROUPS,
-      types: ColumnTypes.CUSTOMERGROUPS);
+      types: ColumnTypes.CUSTOMER_GROUPS);
   final Table CUSTOMER = new Table(
       name: Table.CUSTOMER,
       columns: Column.CUSTOMER,
