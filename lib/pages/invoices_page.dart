@@ -15,13 +15,10 @@ class Invoices extends StatefulWidget {
 
 class _InvoicesState extends State<Invoices> {
   List<Invoice> invoices = [];
-  // List<Customer> customers = [];
 
   @override
   Widget build(BuildContext context) {
     if (invoices.length == 0) invoices.addAll(DAL.staticInvoices);
-    // if (customers.length == 0) customers.addAll(DAL.staticCustomers);
-    //  Future<List<Map<String, dynamic>>> map = Library.getDatabase().then((db) => db.rawQuery("select customer_id, (customer_first_name || ' ' || customer_last_name) as name from customer"));
     return Scaffold(
         appBar: AppBar(
           title: Text("INVOICES"),
@@ -115,44 +112,5 @@ class _InvoicesState extends State<Invoices> {
                     discount: invoice.invoice_discount,
                     totalAmount: invoice.invoice_total_amount,
                     paidAmount: invoice.invoice_paid_amount))));
-  }
-
-  // String getCustomerName(String id) {
-  //   String name = '';
-  //   for (Customer value in customers) {
-  //     if (value.customerId == id) {
-  //       name =
-  //           value.firstName.toUpperCase() + ' ' + value.lastName.toUpperCase();
-  //       break;
-  //     } else {
-  //       name = 'NO NAME';
-  //     }
-  //   }
-  //   return name;
-  // }
-
-  // Future<String> getFutureCustomerName(String id) async {
-  //   String name = '';
-  //   for (Customer value in customers) {
-  //     if (value.customerId == id) {
-  //       List<Map<String, dynamic>> x = await Library.getDatabase().then(
-  //           (value) => value.rawQuery(
-  //               "select (customer_first_name || ' ' || customer_last_name) as name from customer = ?",
-  //               [id]));
-  //       name = x[0]['name'];
-  //       break;
-  //     } else {
-  //       name = 'NO NAME';
-  //     }
-  //   }
-  //   return name;
-  // }
-
-  getInvoice(String invoiceId) {
-    for (Invoice value in invoices) {
-      if (value.invoice_id == invoiceId) {
-        return value;
-      }
-    }
   }
 }
