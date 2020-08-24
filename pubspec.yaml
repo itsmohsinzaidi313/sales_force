@@ -84,6 +84,10 @@ flutter:
     - images/salesPattern4.jpg
     - images/sync.png
     - images/icon2.jpg
+    - devaj_logo_large.png
+    - devaj_logo_small.png
+    - devaj_theme_bg.jpg
+    - ddf_logo.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

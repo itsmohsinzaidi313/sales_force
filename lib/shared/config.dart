@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sqflite/sqflite.dart';
@@ -24,9 +25,14 @@ class Config {
       'api.php?action=put&module=tracking&user=${DAL.currentUser.user_id}';
   static String syncAPILink = apiPrefix + 'api.php?action=sync&createdon=';
   static const int serviceCycleDelay = 10; //seconds
+  static const int splashTimeOut = 5; //seconds
+  static double deviceDisplayWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width;
+  }
 
-  static double deviceDisplayWidth;
-  static double deviceDisplayHeight;
+  static double deviceDisplayHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height;
+  }
 
   static final Logger log = new Logger(
       printer: PrettyPrinter(

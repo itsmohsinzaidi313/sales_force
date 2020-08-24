@@ -20,6 +20,7 @@ class SPostOrder extends ServiceCommon {
 
   @override
   perform() async {
+    cycleComplete = false;
     log.i('ORDER UPLOAD SERVICE RESPONDING');
     uploadOrders();
   }
@@ -56,6 +57,8 @@ class SPostOrder extends ServiceCommon {
         });
     } catch (e) {
       _log.e('>>>ERROR ON ORDER UPLOAD SERVICE\n$e');
+    } finally {
+      cycleComplete = true;
     }
   }
 }

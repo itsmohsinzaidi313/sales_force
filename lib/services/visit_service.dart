@@ -21,6 +21,7 @@ class SPostVisit extends ServiceCommon {
 
   @override
   Future<void> perform() async {
+    cycleComplete = false;
     log.i('VISIT SERVICE RESPONDING');
     uploadVisit();
   }
@@ -49,5 +50,6 @@ class SPostVisit extends ServiceCommon {
       DAL.staticDal
           .setVisitUploadStatus(e['order_taken_android_id'].toString(), status);
     });
+    cycleComplete = true;
   }
 }

@@ -33,8 +33,8 @@ abstract class ServiceCommon {
       Timer.periodic(Duration(seconds: duration), (Timer t) => _operation());
 
   _operation() async {
-    if (active) {
-      if (cycleComplete) await perform();
+    if (active && cycleComplete) {
+      await perform();
     }
   }
 }

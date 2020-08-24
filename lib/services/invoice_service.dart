@@ -14,6 +14,7 @@ class SPostInvoice extends ServiceCommon {
 
   @override
   Future<void> perform() async {
+    cycleComplete = false;
     Config.log.i('INVOICE UPLOAD SERVICE RESPONDING');
     _uploadInvoices();
   }
@@ -46,6 +47,8 @@ class SPostInvoice extends ServiceCommon {
         });
     } catch (e) {
       log.e('>>>ERROR ON INVOICE UPLOAD SERVICE\n$e');
+    } finally {
+      cycleComplete = true;
     }
   }
 }

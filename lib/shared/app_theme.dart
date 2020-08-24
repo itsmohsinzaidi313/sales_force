@@ -8,11 +8,13 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 class AppTheme {
   static Logger _log = Config.log;
-  static const Color appThemeColor = Color.fromARGB(255, 196, 16, 1);
+  static const Color appThemeColor = Colors.blue;
   static const Color redColor = Color.fromRGBO(251, 91, 57, 0.7);
   static const Color blueColor = Color.fromRGBO(145, 202, 245, 0.6);
   static const String backgroundImage = 'images/salesPattern2.jpg';
+  static const Color ddfColor = Color.fromRGBO(242, 235, 243, 1.0);
   static Color backgroundColor = Colors.grey[200];
+
   static ProgressDialog showProgressDialog(BuildContext context,
       {String text = '', bool isDismissible = true}) {
     final spinKit = new SpinKitFadingCube(
@@ -24,6 +26,7 @@ class AppTheme {
         type: ProgressDialogType.Normal,
         isDismissible: false,
         customBody: Container(
+          color: Colors.transparent,
           height: 250,
           width: 100,
           child: Column(
@@ -94,6 +97,21 @@ class AppTheme {
         text,
         style: TextStyle(color: color, fontSize: fontSize),
       ),
+      onPressed: onPressed,
+    );
+  }
+
+  static RaisedButton recRaisedButton(
+      {String text,
+      Color textColor = Colors.white,
+      Color buttonColor = Colors.blue,
+      Function onPressed}) {
+    return RaisedButton(
+      child: Text(
+        text,
+        style: TextStyle(color: textColor),
+      ),
+      color: buttonColor,
       onPressed: onPressed,
     );
   }
@@ -261,9 +279,14 @@ class AppTheme {
             ));
   }
 
-  static Widget loadNetworkImage(String url) {
-    return Image.network(url, loadingBuilder:
-        (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+  static Widget loadNetworkImage(
+      {String url, double height, double width, BoxFit boxFit = BoxFit.fill}) {
+    return Image.network(url,
+        height: height,
+        width: width,
+        fit: boxFit,
+        alignment: Alignment.center, loadingBuilder: (BuildContext context,
+            Widget child, ImageChunkEvent loadingProgress) {
       if (loadingProgress == null) return child;
       return Center(
         child: CircularProgressIndicator(

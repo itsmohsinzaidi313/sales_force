@@ -34,6 +34,9 @@ class Cart {
           products[i].add();
           break;
         }
+        // IF THE ABOVE BREAK IS NOT TRIGGERED ON THE LAST LOOP CYCLE
+        // THAT IS CONSIDERED AS A NEW PRODUCT AND THEREFORE THE IF STATEMENT
+        // WILL AND THE PRODUCT AS NEW PRODUCT
         if (i == products.length) {
           products.add(newInstance);
           break;
@@ -110,6 +113,34 @@ class Cart {
             products[i].less();
           }
           break;
+        }
+      }
+    }
+  }
+
+  void setQuantity(Product product, int quantity) {
+    if (products.length > 0) {
+      for (int i = 0; i < products.length; i++) {
+        String prodId = products[i].product_id;
+        if (prodId == product.product_id) {
+          if (quantity >= 1) {
+            products[i].quantity = quantity;
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  void setFOCQuantity(Product product, int focQuantity) {
+    if (products.length > 0) {
+      for (int i = 0; i < products.length; i++) {
+        String prodId = products[i].product_id;
+        if (prodId == product.product_id) {
+          if (focQuantity >= 1) {
+            products[i].focQuantity = focQuantity;
+            break;
+          }
         }
       }
     }

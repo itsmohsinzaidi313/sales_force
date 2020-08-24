@@ -35,6 +35,7 @@ class SSyncService extends ServiceCommon {
 
   @override
   Future<void> perform() async {
+    cycleComplete = false;
     log.i('SYNC SERVICE RESPONDING');
 //    db
 //        .rawQuery("select * from sync_apis")
@@ -113,6 +114,8 @@ class SSyncService extends ServiceCommon {
       });
     } catch (e) {
       log.e('ERROR ON SYNC SERVICE syncData', [e]);
+    } finally {
+      cycleComplete = true;
     }
   }
 

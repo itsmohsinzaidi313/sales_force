@@ -68,6 +68,11 @@ class Library {
     return formatter.format(DateTime.now());
   }
 
+  static String getDate() {
+    DateFormat formatter = new DateFormat('yyyy-MM-dd');
+    return formatter.format(DateTime.now());
+  }
+
   static getDatabasePath() async {
     String dbStorage = await getDatabasesPath();
     return join(dbStorage, Config.DATABASE_NAME);
@@ -228,14 +233,17 @@ class Library {
   static Future<bool> uploadToServer(String url, {String jsonString}) async {
     try {
       bool status = false;
-      Response onValue;
+      Response onPost;
       Map<String, String> header = {
         'content-type': 'application/x-www-form-urlencoded'
       };
-      bool hasServerAccess =
-          await Library.hasServerAccess().catchError((onError) => false);
+      bool hasServerAccess = await Library.hasServerAccess();
       if (jsonString != null && hasServerAccess) {
-        onValue = await post(url, headers: header, body: {'json': jsonString})
+        onPost = await post(url, headers: header, body: {'json': jsonString})
+            .timeout(
+              Duration(seconds: 5),
+              onTimeout: () => null,
+            )
             .catchError(
                 (onError) => _log.e('ERROR ON uploadToServer', [onError]));
 
@@ -243,8 +251,8 @@ class Library {
 //    if (url == Config.putInvoiceAPILink) log.v('INVOICE SENT');
 //    if (url == Config.putOrderVisitAPILink) log.v('ORDER SENT');
 //    if (url == Config.putOrderVisitAPILink) log.v('VISIT SENT');
-        if (onValue != null) {
-          Map response = jsonDecode(onValue.body);
+        if (onPost != null) {
+          Map response = jsonDecode(onPost.body);
           //_log.i('ENTRY SERVER UPLOAD');
           //print('STATUS CODE: ${onValue.statusCode}');
           _log.i(

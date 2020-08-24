@@ -82,8 +82,7 @@ class DAL {
     try {
       _log.v('DAL LOADING PRODUCT PRICES');
       List productPrices = [];
-      Future<List> future = db.rawQuery(Select.selectProductPrices);
-      future.then((onValue) {
+      db.rawQuery(Select.selectProductPrices).then((onValue) {
         productPrices = onValue;
         staticProductPrices = getProductPricesList(productPrices);
         _log.v('DAL PRODUCT PRICES LOADED');
@@ -195,9 +194,7 @@ class DAL {
       List whereArgs = [email];
       Future<List> future = db.rawQuery(query, whereArgs);
       future.then((users) {
-        _log.w('loadUserSpecificResources: ${users.toList()}');
         List<User> userList = getUsersList(users);
-        _log.w('loadUserSpecificResources ${userList[0].getList()}');
         DAL.currentUser = userList[0];
       });
       future.whenComplete(() {
@@ -491,53 +488,66 @@ class DAL {
     }
   }
 
-  addOrder(Cart cart) async {
+  Future<bool> addOrder(Cart cart) async {
     try {
       _log.v('ENTRY addOrder');
-      String dateTime = Library.getDateTime();
-      Position position = await Geolocator().getCurrentPosition();
-      List<dynamic> orderMasterValues = [
-        DAL.currentUser.user_id,
-        cart.customer.customerId,
-        cart.getAmountBeforeDiscount().toString(),
-        cart.getDiscountedAmount().toString(),
-        cart.getAmountAfterDiscount().toString(),
-        '0',
-        '0',
-        dateTime,
-        cart.spoDiscount
-      ];
-      int id = await db.rawInsert(Insert.insertOrderMaster, orderMasterValues);
-      List<dynamic> orderLocationData = [
-        cart.customer.customerId,
-        DAL.currentUser.user_id,
-        position.latitude,
-        position.longitude,
-        1,
-        dateTime,
-        0,
-        id
-      ];
-      db.rawInsert(Insert.insertOrderLocation, orderLocationData);
-      cart.products.forEach((e) async {
-        List<dynamic> orderDetailValues = [
-          id,
-          e.product_category_id,
-          e.product_id,
-          e.quantity.toString(),
-          e.focQuantity.toString(),
-          e.product_pack_price,
+      String dateTime = Library.getDate();
+      Position position = await Geolocator().getCurrentPosition().timeout(
+            Duration(seconds: 10),
+            onTimeout: () => null,
+          );
+      if (position != null) {
+        List<dynamic> orderMasterValues = [
+          DAL.currentUser.user_id,
+          cart.customer.customerId,
+          cart.getAmountBeforeDiscount().toString(),
+          cart.getDiscountedAmount().toString(),
+          cart.getAmountAfterDiscount().toString(),
           '0',
-          '0',
-          '0',
-          e.getPrice(),
-          e.product_image
+          dateTime,
+          dateTime,
+          cart.spoDiscount
         ];
-        int _ = await db.rawInsert(Insert.insertOrderDetail, orderDetailValues);
-      });
-      _log.v('EXIT addOrder');
+        int id =
+            await db.rawInsert(Insert.insertOrderMaster, orderMasterValues);
+        List<dynamic> orderLocationData = [
+          cart.customer.customerId,
+          DAL.currentUser.user_id,
+          position.latitude,
+          position.longitude,
+          1,
+          dateTime,
+          0,
+          id
+        ];
+        db.rawInsert(Insert.insertOrderLocation, orderLocationData);
+        cart.products.forEach((e) async {
+          List<dynamic> orderDetailValues = [
+            id,
+            e.product_category_id,
+            e.product_id,
+            e.quantity.toString(),
+            e.focQuantity.toString(),
+            e.product_pack_price,
+            '0',
+            '0',
+            '0',
+            e.getPrice(),
+            e.product_image
+          ];
+          db
+              .rawInsert(Insert.insertOrderDetail, orderDetailValues)
+              .then((value) => _log.v('ORDER ADDED ID# $value'));
+        });
+        _log.v('EXIT addOrder');
+        return true;
+      } else {
+        _log.v('EXIT addOrder');
+        return false;
+      }
     } catch (e) {
       _log.e('ERROR ON addOrder', [e]);
+      return false;
     }
   }
 

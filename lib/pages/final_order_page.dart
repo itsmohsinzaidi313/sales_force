@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sales_force/models/cart.dart';
 import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/shared/library.dart';
@@ -25,95 +26,126 @@ class _FinalOrderState extends State<FinalOrder> {
 
   @override
   Widget build(BuildContext context) {
+    ProgressDialog progressDialog =
+        AppTheme.showProgressDialog(context, isDismissible: false);
     return Scaffold(
       appBar: AppBar(title: Text('Confirm Order')),
       body: Column(
         children: <Widget>[
-          AppTheme.card(
-              child: Column(children: <Widget>[
-            Row(children: <Widget>[
-              Expanded(
-                  child: AppTheme.text(
-                      text: 'Customer: ', fontSize: titleFontSize)),
-              AppTheme.text(
-                  text:
-                      '${widget.cart.customer.getName().toString().toUpperCase()}',
-                  fontSize: titleFontSize)
-            ]),
-            SizedBox(height: rowSpacing),
-            Row(children: <Widget>[
-              Expanded(
-                  child: AppTheme.text(
-                      text: 'Order Amount', fontSize: titleFontSize)),
-              AppTheme.text(
-                  text: 'Rs: ${widget.cart.getAmountBeforeDiscount()}',
-                  fontSize: titleFontSize)
-            ]),
-            SizedBox(height: rowSpacing),
-            Row(children: <Widget>[
-              Expanded(
-                  child: AppTheme.text(
-                      text: 'Customer Discount: ', fontSize: titleFontSize)),
-              AppTheme.text(
-                  text: '${widget.cart.getDiscount()}', fontSize: titleFontSize)
-            ]),
-            SizedBox(height: rowSpacing),
-            Row(children: <Widget>[
-              Expanded(
-                  child: AppTheme.text(
-                      text: 'Discounted Amount: ', fontSize: titleFontSize)),
-              AppTheme.text(
-                  text: 'Rs: ${widget.cart.getDiscountedAmount()}',
-                  fontSize: titleFontSize)
-            ]),
-            SizedBox(height: rowSpacing),
-            Row(children: <Widget>[
-              Expanded(
-                  child: AppTheme.text(
-                      text: 'Receivable: ',
-                      fontSize: titleFontSize,
-                      fontWeight: FontWeight.bold)),
-              AppTheme.text(
-                  text: 'Rs:${widget.cart.getAmountAfterDiscount()}',
-                  fontSize: titleFontSize,
-                  fontWeight: FontWeight.bold)
-            ]),
-            SizedBox(height: rowSpacing),
+          Expanded(
+              child: Column(children: [
+            AppTheme.card(
+              child: Column(
+                children: <Widget>[
+                  Row(children: <Widget>[
+                    Expanded(
+                        child: AppTheme.text(
+                            text: 'Customer: ', fontSize: titleFontSize)),
+                    AppTheme.text(
+                        text:
+                            '${widget.cart.customer.getName().toString().toUpperCase()}',
+                        fontSize: titleFontSize)
+                  ]),
+                  SizedBox(height: rowSpacing),
+                  Row(children: <Widget>[
+                    Expanded(
+                        child: AppTheme.text(
+                            text: 'Order Amount', fontSize: titleFontSize)),
+                    AppTheme.text(
+                        text: 'Rs: ${widget.cart.getAmountBeforeDiscount()}',
+                        fontSize: titleFontSize)
+                  ]),
+                  SizedBox(height: rowSpacing),
+                  Row(children: <Widget>[
+                    Expanded(
+                        child: AppTheme.text(
+                            text: 'Customer Discount: ',
+                            fontSize: titleFontSize)),
+                    AppTheme.text(
+                        text: '${widget.cart.getDiscount()}',
+                        fontSize: titleFontSize)
+                  ]),
+                  SizedBox(height: rowSpacing),
+                  Row(children: <Widget>[
+                    Expanded(
+                        child: AppTheme.text(
+                            text: 'Discounted Amount: ',
+                            fontSize: titleFontSize)),
+                    AppTheme.text(
+                        text: 'Rs: ${widget.cart.getDiscountedAmount()}',
+                        fontSize: titleFontSize)
+                  ]),
+                  SizedBox(height: rowSpacing),
+                  Row(children: <Widget>[
+                    Expanded(
+                        child: AppTheme.text(
+                            text: 'Receivable: ',
+                            fontSize: titleFontSize,
+                            fontWeight: FontWeight.bold)),
+                    AppTheme.text(
+                        text: 'Rs:${widget.cart.getAmountAfterDiscount()}',
+                        fontSize: titleFontSize,
+                        fontWeight: FontWeight.bold)
+                  ]),
+                ],
+              ),
+            ),
             Expanded(
-                flex: 0,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: widget.cart.products.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        getWidget(context, index)))
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: widget.cart.products.length,
+                  itemBuilder: (BuildContext context, int index) =>
+                      getWidget(context, index)),
+            ),
           ])),
-          Center(
-            child: AppTheme.roundRaisedButton(
-                text: 'Add Discount',
-                onPressed: () => showUserDiscountDialog()),
+          Column(
+            children: [
+              Center(
+                child: AppTheme.roundRaisedButton(
+                    text: 'Add Discount',
+                    onPressed: () => showUserDiscountDialog()),
+              ),
+              Center(
+                  child: AppTheme.roundRaisedButton(
+                      text: 'Take Order',
+                      onPressed: () {
+                        progressDialog.show();
+                        DAL.staticDal.addOrder(widget.cart).then((value) {
+                          progressDialog.hide();
+                          if (value) {
+                            AppTheme.showAlertDialogOK(context,
+                                title: 'Success',
+                                message: 'Order Saved',
+                                onOK: () =>
+                                    Library.resetViewToDashBoard(context));
+                          } else {
+                            AppTheme.showAlertDialogOK(context,
+                                title: 'Failed',
+                                message:
+                                    'Order request failed.\nPlease enable your location if disabled.',
+                                onOK: () => Navigator.of(context).pop());
+                          }
+                        });
+                      }))
+            ],
           ),
-          Center(
-              child: AppTheme.roundRaisedButton(
-                  text: 'Take Order',
-                  onPressed: () {
-                    DAL.staticDal.addOrder(widget.cart);
-                    AppTheme.showAlertDialogOK(context,
-                        title: 'Success',
-                        message: 'Order Saved',
-                        onOK: () => Library.resetViewToDashBoard(context));
-                  }))
         ],
       ),
     );
   }
 
   Widget getWidget(BuildContext context, int index) {
-    return ListTile(
-      title: AppTheme.text(text: widget.cart.products[index].product_title),
-      subtitle: AppTheme.text(
-          text:
-              'Quantity: ${widget.cart.products[index].quantity}\nFOC Quantity: ${widget.cart.products[index].focQuantity}'),
-      isThreeLine: true,
+    return Column(
+      children: [
+        ListTile(
+          title: AppTheme.text(text: widget.cart.products[index].product_title),
+          subtitle: AppTheme.text(
+              text:
+                  'Quantity: ${widget.cart.products[index].quantity}\nFOC Quantity: ${widget.cart.products[index].focQuantity}'),
+          isThreeLine: true,
+        ),
+        Divider(),
+      ],
     );
   }
 

@@ -42,7 +42,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    initConfig(context);
     if (DAL.serviceCtrl == null) DAL.serviceCtrl = new ServiceControl();
     progressDialog = AppTheme.showProgressDialog(context, isDismissible: false);
     getDatabasesPath().then((onValue) => Config.DATABASES_PATH = onValue);
@@ -299,10 +298,5 @@ class _LoginState extends State<Login> {
     progressDialog.show();
     Library.firstRun();
     Timer(Duration(seconds: 10), () => progressDialog.hide());
-  }
-
-  void initConfig(BuildContext context) {
-    Config.deviceDisplayHeight = MediaQuery.of(context).size.height;
-    Config.deviceDisplayWidth = MediaQuery.of(context).size.width;
   }
 }

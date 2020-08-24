@@ -91,7 +91,7 @@ class _PickCustomerState extends State<PickCustomer> {
   List<Widget> newSaleView(Customer value) {
     return <Widget>[
       Row(children: <Widget>[
-        AppTheme.roundRaisedButton(
+        AppTheme.recRaisedButton(
             text: 'Cash',
             onPressed: () {
               Navigator.push(
@@ -102,7 +102,7 @@ class _PickCustomerState extends State<PickCustomer> {
       ]),
       Row(
         children: <Widget>[
-          AppTheme.roundRaisedButton(
+          AppTheme.recRaisedButton(
               text: 'Credit',
               onPressed: () {
                 Navigator.push(
@@ -117,7 +117,7 @@ class _PickCustomerState extends State<PickCustomer> {
 
   List<Widget> viewSale(Customer customer) {
     return <Widget>[
-      AppTheme.roundRaisedButton(
+      AppTheme.recRaisedButton(
         text: 'View Sale',
         onPressed: () async {
           List<Map<String, dynamic>> record = await DAL.staticDal
@@ -136,7 +136,7 @@ class _PickCustomerState extends State<PickCustomer> {
   List<Widget> registerVisit(Customer customer) {
     return <Widget>[
       //TODO: ENABLE FOR CUSTOMER WISE VISIT VIEW
-      /*AppTheme.roundRaisedButton(
+      /*AppTheme.recRaisedButton(
           text: 'View History',
           onPressed: () {
             getVisits(customer).then((value) {
@@ -148,7 +148,7 @@ class _PickCustomerState extends State<PickCustomer> {
                           )));
             });
           }),*/
-      AppTheme.roundRaisedButton(
+      AppTheme.recRaisedButton(
           text: 'Add Visit',
           onPressed: () async {
             AppTheme.showAlertDialogYN(context,

@@ -4,6 +4,7 @@ import 'package:sales_force/models/customer.dart';
 import 'package:sales_force/models/invoice.dart';
 import 'package:sales_force/models/json_elements.dart';
 import 'package:sales_force/pages/invoice_payment_page.dart';
+import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/shared/app_theme.dart';
 
@@ -20,16 +21,17 @@ class _InvoicesState extends State<Invoices> {
   Widget build(BuildContext context) {
     if (invoices.length == 0) invoices.addAll(DAL.staticInvoices);
     if (customers.length == 0) customers.addAll(DAL.staticCustomers);
+    //  Future<List<Map<String, dynamic>>> map = Library.getDatabase().then((db) => db.rawQuery("select customer_id, (customer_first_name || ' ' || customer_last_name) as name from customer"));
     return Scaffold(
         appBar: AppBar(
           title: Text("INVOICES"),
         ),
         body: Container(
-          color: AppTheme.backgroundColor,
           // decoration: BoxDecoration(
           //     image: DecorationImage(
           //         image: AssetImage(AppTheme.backgroundImage),
           //         repeat: ImageRepeat.repeat)),
+          color: AppTheme.backgroundColor,
           child: ListView(
               children: ListTile.divideTiles(
                       tiles: invoiceView(),
@@ -79,9 +81,9 @@ class _InvoicesState extends State<Invoices> {
               title: AppTheme.text(text: 'No Invoies', fontSize: 20),
               subtitle: AppTheme.text(
                   text: 'There are no invoices to display.', fontSize: 20),
-              trailing: AppTheme.rectangleRaisedButton(
-                text: 'Pay',
-                onPressed: () {},
+              trailing: Icon(
+                Icons.info_outline,
+                color: Colors.blue,
               )),
         ));
       return widgets;
@@ -96,32 +98,51 @@ class _InvoicesState extends State<Invoices> {
   }
 
   onTap(Invoice invoice) {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => new InvoicePayment(
-                invoice: new JSONInvoice(
-                    androidPaymentId: invoice.invoice_id,
-                    paymentUserId: invoice.user_id,
-                    paymentOrderId: invoice.order_id,
-                    paymentInvoiceId: invoice.invoice_id,
-                    paymentCustomerId: invoice.customer_id,
-                    paymentAmount: invoice.invoice_amount,
-                    customerName: getCustomerName(invoice.customer_id),
-                    invoiceNumber: invoice.invoice_number,
-                    date: invoice.invoice_date,
-                    amountReceived: "",
-                    discount: invoice.invoice_discount,
-                    totalAmount: invoice.invoice_total_amount,
-                    paidAmount: invoice.invoice_paid_amount))));
+    getFutureCustomerName(invoice.customer_id).then((customerName) {
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => new InvoicePayment(
+                  invoice: new JSONInvoice(
+                      androidPaymentId: invoice.invoice_id,
+                      paymentUserId: invoice.user_id,
+                      paymentOrderId: invoice.order_id,
+                      paymentInvoiceId: invoice.invoice_id,
+                      paymentCustomerId: invoice.customer_id,
+                      paymentAmount: invoice.invoice_amount,
+                      customerName: customerName,
+                      invoiceNumber: invoice.invoice_number,
+                      date: invoice.invoice_date,
+                      amountReceived: '',
+                      discount: invoice.invoice_discount,
+                      totalAmount: invoice.invoice_total_amount,
+                      paidAmount: invoice.invoice_paid_amount))));
+    });
   }
 
-  getCustomerName(String id) {
+  String getCustomerName(String id) {
     String name = '';
     for (Customer value in customers) {
       if (value.customerId == id) {
         name =
             value.firstName.toUpperCase() + ' ' + value.lastName.toUpperCase();
+        break;
+      } else {
+        name = 'NO NAME';
+      }
+    }
+    return name;
+  }
+
+  Future<String> getFutureCustomerName(String id) async {
+    String name = '';
+    for (Customer value in customers) {
+      if (value.customerId == id) {
+        List<Map<String, dynamic>> x = await Library.getDatabase().then(
+            (value) => value.rawQuery(
+                "select (customer_first_name || ' ' || customer_last_name) as name from customer = ?",
+                [id]));
+        name = x[0]['name'];
         break;
       } else {
         name = 'NO NAME';
