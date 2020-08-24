@@ -398,6 +398,9 @@ class _DashboardState extends State<Dashboard> {
         list.removeRange(2, 6);
         // list.removeLast();
         return list;
+      } else if (this._user.user_type_id == '5') {
+        list.removeRange(0, 1);
+        return list;
       }
       return list;
     } catch (e) {

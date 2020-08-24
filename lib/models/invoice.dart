@@ -1,4 +1,5 @@
 class Invoice {
+  String customer_name;
   String invoice_id;
   String order_id;
   String customer_id;
@@ -15,7 +16,8 @@ class Invoice {
   String modifiedon;
 
   Invoice(
-      {this.invoice_id,
+      {this.customer_name,
+      this.invoice_id,
       this.order_id,
       this.customer_id,
       this.user_id,

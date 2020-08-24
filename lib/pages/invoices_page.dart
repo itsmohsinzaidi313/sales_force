@@ -15,12 +15,12 @@ class Invoices extends StatefulWidget {
 
 class _InvoicesState extends State<Invoices> {
   List<Invoice> invoices = [];
-  List<Customer> customers = [];
+  // List<Customer> customers = [];
 
   @override
   Widget build(BuildContext context) {
     if (invoices.length == 0) invoices.addAll(DAL.staticInvoices);
-    if (customers.length == 0) customers.addAll(DAL.staticCustomers);
+    // if (customers.length == 0) customers.addAll(DAL.staticCustomers);
     //  Future<List<Map<String, dynamic>>> map = Library.getDatabase().then((db) => db.rawQuery("select customer_id, (customer_first_name || ' ' || customer_last_name) as name from customer"));
     return Scaffold(
         appBar: AppBar(
@@ -63,9 +63,8 @@ class _InvoicesState extends State<Invoices> {
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 isThreeLine: true,
-                title: AppTheme.text(
-                    text: '${getCustomerName(value.customer_id)}',
-                    fontSize: 20),
+                title:
+                    AppTheme.text(text: '${value.customer_name}', fontSize: 20),
                 subtitle: AppTheme.text(
                     text: '${value.invoice_number}\n${value.invoice_amount}',
                     fontSize: 20),
@@ -98,58 +97,56 @@ class _InvoicesState extends State<Invoices> {
   }
 
   onTap(Invoice invoice) {
-    getFutureCustomerName(invoice.customer_id).then((customerName) {
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => new InvoicePayment(
-                  invoice: new JSONInvoice(
-                      androidPaymentId: invoice.invoice_id,
-                      paymentUserId: invoice.user_id,
-                      paymentOrderId: invoice.order_id,
-                      paymentInvoiceId: invoice.invoice_id,
-                      paymentCustomerId: invoice.customer_id,
-                      paymentAmount: invoice.invoice_amount,
-                      customerName: customerName,
-                      invoiceNumber: invoice.invoice_number,
-                      date: invoice.invoice_date,
-                      amountReceived: '',
-                      discount: invoice.invoice_discount,
-                      totalAmount: invoice.invoice_total_amount,
-                      paidAmount: invoice.invoice_paid_amount))));
-    });
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => new InvoicePayment(
+                invoice: new JSONInvoice(
+                    androidPaymentId: invoice.invoice_id,
+                    paymentUserId: invoice.user_id,
+                    paymentOrderId: invoice.order_id,
+                    paymentInvoiceId: invoice.invoice_id,
+                    paymentCustomerId: invoice.customer_id,
+                    paymentAmount: invoice.invoice_amount,
+                    customerName: invoice.customer_name,
+                    invoiceNumber: invoice.invoice_number,
+                    date: invoice.invoice_date,
+                    amountReceived: '',
+                    discount: invoice.invoice_discount,
+                    totalAmount: invoice.invoice_total_amount,
+                    paidAmount: invoice.invoice_paid_amount))));
   }
 
-  String getCustomerName(String id) {
-    String name = '';
-    for (Customer value in customers) {
-      if (value.customerId == id) {
-        name =
-            value.firstName.toUpperCase() + ' ' + value.lastName.toUpperCase();
-        break;
-      } else {
-        name = 'NO NAME';
-      }
-    }
-    return name;
-  }
+  // String getCustomerName(String id) {
+  //   String name = '';
+  //   for (Customer value in customers) {
+  //     if (value.customerId == id) {
+  //       name =
+  //           value.firstName.toUpperCase() + ' ' + value.lastName.toUpperCase();
+  //       break;
+  //     } else {
+  //       name = 'NO NAME';
+  //     }
+  //   }
+  //   return name;
+  // }
 
-  Future<String> getFutureCustomerName(String id) async {
-    String name = '';
-    for (Customer value in customers) {
-      if (value.customerId == id) {
-        List<Map<String, dynamic>> x = await Library.getDatabase().then(
-            (value) => value.rawQuery(
-                "select (customer_first_name || ' ' || customer_last_name) as name from customer = ?",
-                [id]));
-        name = x[0]['name'];
-        break;
-      } else {
-        name = 'NO NAME';
-      }
-    }
-    return name;
-  }
+  // Future<String> getFutureCustomerName(String id) async {
+  //   String name = '';
+  //   for (Customer value in customers) {
+  //     if (value.customerId == id) {
+  //       List<Map<String, dynamic>> x = await Library.getDatabase().then(
+  //           (value) => value.rawQuery(
+  //               "select (customer_first_name || ' ' || customer_last_name) as name from customer = ?",
+  //               [id]));
+  //       name = x[0]['name'];
+  //       break;
+  //     } else {
+  //       name = 'NO NAME';
+  //     }
+  //   }
+  //   return name;
+  // }
 
   getInvoice(String invoiceId) {
     for (Invoice value in invoices) {

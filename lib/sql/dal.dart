@@ -143,8 +143,7 @@ class DAL {
       List customers = [];
       String query = Select.selectCustomer + ' where user_id = ?';
       List whereArgs = [DAL.currentUser.user_id];
-      Future<List> future = db.rawQuery(query, whereArgs);
-      future.then((onValue) {
+      db.rawQuery(query, whereArgs).then((onValue) {
         customers = onValue;
         staticCustomers = getCustomersList(customers);
         _log.v('DAL CUSTOMERS LOADED');
@@ -368,6 +367,7 @@ class DAL {
     List<Invoice> listInvoice = [];
     i.forEach((e) {
       listInvoice.add(new Invoice(
+          customer_name: e['customer_name'],
           invoice_id: e['invoice_id'],
           order_id: e['order_id'],
           customer_id: e['customer_id'],

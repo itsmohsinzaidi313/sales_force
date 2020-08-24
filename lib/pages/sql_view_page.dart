@@ -7,10 +7,9 @@ class SqlView extends StatefulWidget {
   _SqlViewState createState() => _SqlViewState();
 }
 
-bool applyNewLine = false;
-bool capsColumnNames = false;
-
 class _SqlViewState extends State<SqlView> {
+  bool applyNewLine = false;
+  bool capsColumnNames = false;
   final _textEditingController = TextEditingController();
   List<Map<String, dynamic>> result = [];
   bool check1 = false;

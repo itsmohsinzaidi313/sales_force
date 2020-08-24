@@ -5,11 +5,15 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class Config {
+  // ignore: non_constant_identifier_names
   static int DATABASE_BASE_VERSION;
   static const int DATABASE_VERSION = 29;
   static const String DATABASE_NAME = 'SaleForce.db';
+  // ignore: non_constant_identifier_names
   static Database DATABASE;
+  // ignore: non_constant_identifier_names
   static String DATABASES_PATH;
+  // ignore: non_constant_identifier_names
   static String DATABASE_PATH;
 
   static const String serverAddress = '72.52.142.19';
@@ -26,13 +30,11 @@ class Config {
   static String syncAPILink = apiPrefix + 'api.php?action=sync&createdon=';
   static const int serviceCycleDelay = 10; //seconds
   static const int splashTimeOut = 5; //seconds
-  static double deviceDisplayWidth(BuildContext context) {
-    return MediaQuery.of(context).size.width;
-  }
+  static double deviceDisplayWidth(BuildContext context) =>
+      MediaQuery.of(context).size.width;
 
-  static double deviceDisplayHeight(BuildContext context) {
-    return MediaQuery.of(context).size.height;
-  }
+  static double deviceDisplayHeight(BuildContext context) =>
+      MediaQuery.of(context).size.height;
 
   static final Logger log = new Logger(
       printer: PrettyPrinter(

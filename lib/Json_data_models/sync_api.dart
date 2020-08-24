@@ -7,7 +7,7 @@ import 'package:sales_force/models/sync_packet.dart';
 import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/import_data.dart';
-import '../shared/config.dart';
+import 'package:sales_force/shared/config.dart';
 
 class ApiSync {
   Logger log = Config.log;

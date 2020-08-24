@@ -15,7 +15,7 @@ class Select {
       'select products.product_id, products.product_category_id, products.product_type_id, products.user_id, products.product_title, products.product_pack_price, products.product_packs_per_carton, products.product_carton_price, products.product_price_per_liter, products.discount, products.isActive, products.createdon, products.modifiedon, categories.product_category_title from products left join categories on categories.product_category_id = products.product_category_id ';
 
   static String selectInvoices =
-      'select invoice_id, order_id, customer_id, user_id, invoice_number, invoice_date, invoice_amount, invoice_discount, invoice_total_amount, invoice_paid_amount, invoice_balance, invoice_status, createdon, modifiedon from invoices ';
+      "select (select customer_first_name || ' ' || customer_last_name from customer where customer_id = invoices.customer_id) as customer_name, invoice_id, order_id, customer_id, user_id, invoice_number, invoice_date, invoice_amount, invoice_discount, invoice_total_amount, invoice_paid_amount, invoice_balance, invoice_status, createdon, modifiedon from invoices ";
 
   static String selectSalesman =
       'select product_category_id, user_id from salesman ';
