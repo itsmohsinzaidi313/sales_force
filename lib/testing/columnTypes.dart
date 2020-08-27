@@ -1,5 +1,5 @@
 class ColumnTypes {
-  static const List<String> USERS = [
+  static const List<String> users = [
     'integer primary key',
     'text',
     'text',
@@ -14,31 +14,15 @@ class ColumnTypes {
     'text',
     'text'
   ];
-  static const List<String> USERSTYPES = [
+  static const List<String> userTypes = [
     'integer primary key',
     'text',
     'text',
     'text',
     'text'
   ];
-  static const List<String> CATEGORIES = [
+  static const List<String> categories = [
     'integer primary key',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text'
-  ];
-  static const List<String> PRODUCTS = [
-    'integer primary key',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
     'text',
     'text',
     'text',
@@ -46,17 +30,8 @@ class ColumnTypes {
     'text',
     'text'
   ];
-  static const List<String> PRODUCTPRICES = [
+  static const List<String> products = [
     'integer primary key',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text'
-  ];
-  static const List<String> INVOICES = [
-    'integer primary key',
-    'text',
     'text',
     'text',
     'text',
@@ -71,23 +46,16 @@ class ColumnTypes {
     'text',
     'text'
   ];
-  static const List<String> SALESMAN = [
+  static const List<String> productPrices = [
     'integer primary key',
+    'text',
+    'text',
     'text',
     'text',
     'text'
   ];
-  static const List<String> APP_SETTINGS = ['integer primary key', 'text'];
-  static const List<String> CUSTOMER_GROUPS = [
+  static const List<String> invoices = [
     'integer primary key',
-    'text',
-    'text',
-  ];
-  static const List<String> CUSTOMER = [
-    'integer primary key',
-    'text',
-    'text',
-    'text',
     'text',
     'text',
     'text',
@@ -103,7 +71,39 @@ class ColumnTypes {
     'text',
     'text'
   ];
-  static const List<String> ORDER_MASTER = [
+  static const List<String> salesman = [
+    'integer primary key',
+    'text',
+    'text',
+    'text'
+  ];
+  static const List<String> appSettings = ['integer primary key', 'text'];
+  static const List<String> customerGroups = [
+    'integer primary key',
+    'text',
+    'text',
+  ];
+  static const List<String> customer = [
+    'integer primary key',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text',
+    'text'
+  ];
+  static const List<String> orderMaster = [
     'integer primary key',
     'text',
     'text',
@@ -114,7 +114,7 @@ class ColumnTypes {
     'text',
     'text'
   ];
-  static const List<String> ORDER_DETAIL = [
+  static const List<String> orderDetail = [
     'integer primary key',
     'integer',
     'text',

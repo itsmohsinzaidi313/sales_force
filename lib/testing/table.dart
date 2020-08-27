@@ -1,52 +1,36 @@
+import 'package:sales_force/shared/library.dart';
+import 'package:sales_force/testing/tables.dart';
+import 'package:sqflite/sqlite_api.dart';
+
 class Table {
-  static const String USERS = 'users';
-  static const String USERS_TYPES = 'users_types';
-  static const String CATEGORIES = 'categories';
-  static const String PRODUCTS = 'products';
-  static const String INVOICES = 'invoices';
-  static const String SALESMAN = 'salesman';
-  static const String APP_SETTINGS = 'app_settings';
-  static const String PRODUCT_PRICES = 'product_prices';
-  static const String CUSTOMER_GROUPS = 'customer_groups';
-  static const String CUSTOMER = 'customer';
-  static const String ORDER_MASTER = 'order_master';
-  static const String ORDER_DETAIL = 'order_detail';
+  final String name;
+  final List<String> columnNames;
+  final List<String> types;
 
-  String name;
-  List<String> columnNames;
-  List<String> types;
-  List<dynamic> columns;
+  const Table({this.name, this.columnNames, this.types});
 
-  Table({this.name, this.columns, this.types}) {
-    columns = [];
-    for (int i = 0; i < columnNames.length; i++) {
-      columns.add({columnNames[i]: types[i]});
-    }
+  void create(Database db) async {
+    db.execute(getCreateTableQuery());
   }
+
+  void drop(Database db) {
+    db.execute(getDropTableQuery());
+  }
+
+  void delete(Database db) {
+    db.delete(name);
+  }
+
   getTablesList() {
-    return [
-      USERS,
-      USERS_TYPES,
-      CATEGORIES,
-      PRODUCTS,
-      PRODUCT_PRICES,
-      INVOICES,
-      SALESMAN,
-      APP_SETTINGS,
-      PRODUCT_PRICES,
-      CUSTOMER_GROUPS,
-      CUSTOMER,
-      ORDER_MASTER,
-      ORDER_DETAIL
-    ];
+    return Tables.tables;
   }
 
   String getCreateTableQuery() {
     String query = 'CREATE TABLE $name (';
-    for (Map value in columns) {
-      query += '${value[0][0]}, ${value[0][1]}';
+    for (int i = 0; i < columnNames.length; i++) {
+      query += '${columnNames[i]}, ${types[i]}';
     }
-    query += ')';
+    query += ');';
     return query;
   }
 

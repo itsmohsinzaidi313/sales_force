@@ -1,5 +1,5 @@
-class Column {
-  static const List<String> USERS = [
+class Columns {
+  static const List<String> users = [
     'id',
     'user_id',
     'user_type_id',
@@ -15,13 +15,13 @@ class Column {
     'createdon',
     'modifiedon'
   ];
-  static const List<String> USERSTYPES = [
+  static const List<String> userTypes = [
     'id',
     'user_type_id',
     'user_type_title',
     'user_type_permissions'
   ];
-  static const List<String> CATEGORIES = [
+  static const List<String> categories = [
     'id',
     'product_category_id',
     'user_id',
@@ -30,7 +30,7 @@ class Column {
     'createdon',
     'modifiedon'
   ];
-  static const List<String> PRODUCTS = [
+  static const List<String> products = [
     'id',
     'product_id',
     'product_category_id',
@@ -46,7 +46,7 @@ class Column {
     'createdon',
     'modifiedon'
   ];
-  static const List<String> PRODUCTPRICES = [
+  static const List<String> productPrices = [
     'id',
     'product_to_customer_group_id',
     'product_id',
@@ -54,7 +54,7 @@ class Column {
     'cash_price',
     'credit_price'
   ];
-  static const List<String> INVOICES = [
+  static const List<String> invoices = [
     'id',
     'invoice_id',
     'order_id',
@@ -71,14 +71,14 @@ class Column {
     'createdon',
     'modifiedon'
   ];
-  static const List<String> SALESMAN = [
+  static const List<String> salesman = [
     'id',
     'category_to_salesman_id',
     'product_category_id',
     'user_id'
   ];
-  static const List<String> APP_SETTINGS = ['id', 'sync_date'];
-  static const List<String> CUSTOMER_GROUPS = [
+  static const List<String> appSettings = ['id', 'sync_date'];
+  static const List<String> customerGroups = [
     'id',
     'product_to_customer_group_id',
     'product_id',
@@ -86,7 +86,7 @@ class Column {
     'cash_price',
     'credit_price'
   ];
-  static const List<String> CUSTOMER = [
+  static const List<String> customer = [
     'id',
     'customer_id',
     'customer_group_id',
@@ -107,7 +107,7 @@ class Column {
     'discount',
     'credit_limit'
   ];
-  static const List<String> ORDER_MASTER = [
+  static const List<String> orderMaster = [
     'id',
     'user_id',
     'customer_id',
@@ -118,7 +118,7 @@ class Column {
     'order_delivery_date',
     'createdon'
   ];
-  static const List<String> ORDER_DETAIL = [
+  static const List<String> orderDetail = [
     'id',
     'master_id',
     'product_category_id',

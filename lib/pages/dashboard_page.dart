@@ -392,14 +392,11 @@ class _DashboardState extends State<Dashboard> {
       ];
 
       if (this._user.user_type_id == '3') {
-        // list.removeLast();
+        list.removeLast();
         return list;
       } else if (this._user.user_type_id == '4') {
         list.removeRange(2, 6);
-        // list.removeLast();
-        return list;
-      } else if (this._user.user_type_id == '5') {
-        list.removeRange(0, 1);
+        list.removeLast();
         return list;
       }
       return list;
