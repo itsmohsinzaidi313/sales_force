@@ -33,7 +33,7 @@ class TablesV1 {
       'CREATE TABLE customer(id integer primary key,customer_id text, customer_group_id text, user_id text, country_id text, city_id text, state_id text, area_id text, customer_first_name text, customer_last_name text, customer_email text, customer_phone text, customer_mobile text, customer_shop_name, customer_address1 text, status text, discount_type text, discount text, credit_limit text)';
 
   static String ORDER_MASTER =
-      'CREATE TABLE order_master(id integer primary key, user_id text, customer_id text, order_amount text, order_discount text, order_total text, order_status text, order_delivery_date text, spo_discount text, createdon text)'; //, is_upload integer
+      'CREATE TABLE order_master(id integer primary key, user_id text, customer_id text, order_amount text, order_discount text, order_total text, order_status text, order_delivery_date text, spo_discount text, createdon text)';
 
   static String ORDER_DETAIL =
       'CREATE TABLE order_detail(id integer primary key, master_id integer, product_category_id text, product_id text, order_product_total_packs text, order_product_free_qty text, order_product_price_per_pack text, order_product_discount_per_pack text, order_product_discounted_pack_price text, order_product_total_discount text, order_product_total_price text, product_image text)';

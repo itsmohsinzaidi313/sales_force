@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sales_force/models/customer.dart';
 import 'package:sales_force/models/invoice.dart';
 import 'package:sales_force/models/json_elements.dart';
 import 'package:sales_force/pages/invoice_payment_page.dart';
-import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/shared/app_theme.dart';
 

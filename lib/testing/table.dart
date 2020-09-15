@@ -1,40 +1,44 @@
-import 'package:sales_force/shared/library.dart';
+import 'package:logger/logger.dart';
+import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/testing/tables.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class Table {
   final String name;
   final List<String> columnNames;
-  final List<String> types;
-
-  const Table({this.name, this.columnNames, this.types});
+  final List<String> columnTypes;
+  static Logger _log = Config.log;
+  const Table({this.name, this.columnNames, this.columnTypes});
 
   void create(Database db) async {
-    db.execute(getCreateTableQuery());
+    await db.execute(getCreateTableQuery());
+    _log.i('TABLE $name CREATED');
   }
 
-  void drop(Database db) {
+  void drop(Database db) async {
     db.execute(getDropTableQuery());
+    _log.i('TABLE $name DROPED');
   }
 
-  void delete(Database db) {
-    db.delete(name);
+  void delete(Database db) async {
+    await db.delete(name);
+    _log.i('TABLE $name DELETED');
   }
 
-  getTablesList() {
+  List<String> getTablesList() {
     return Tables.tables;
   }
 
   String getCreateTableQuery() {
     String query = 'CREATE TABLE $name (';
     for (int i = 0; i < columnNames.length; i++) {
-      query += '${columnNames[i]}, ${types[i]}';
+      query += '${columnNames[i]}, ${columnTypes[i]},';
     }
     query += ');';
     return query;
   }
 
   String getDropTableQuery() {
-    return 'DROP TABLE ${this.name}';
+    return 'DROP TABLE IF EXISTS ${this.name}';
   }
 }

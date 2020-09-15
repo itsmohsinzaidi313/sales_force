@@ -1,4 +1,21 @@
 class Columns {
+  // CREATE A LIST (CONTAINING COLUMN NAMES)
+  // BELOW THE COLUMNS LIST.
+  // THEN ADD THAT LIST VARIABLE IN COLUMNS LIST
+  static const List<List<String>> columns = [
+    users,
+    userTypes,
+    categories,
+    products,
+    productPrices,
+    invoices,
+    salesman,
+    appSettings,
+    customerGroups,
+    customer,
+    orderMaster,
+    orderDetail,
+  ];
   static const List<String> users = [
     'id',
     'user_id',

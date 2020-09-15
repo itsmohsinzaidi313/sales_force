@@ -1,4 +1,22 @@
 class ColumnTypes {
+  // CREATE A LIST (CONTAINING ONLY COLUMN TYPE)
+  // BELOW THE COLUMNTYPES LIST
+  // THEN ADD THAT LIST VARIABLE IN COLUMNTYPES LIST.
+  // COLUMN TYPES SHOULD MATCH THE INDEX VALUE OF COLUMN IN COLUMNS LIST CLASS,
+  static const List<List<String>> columnTypes = [
+    users,
+    userTypes,
+    categories,
+    products,
+    productPrices,
+    invoices,
+    salesman,
+    appSettings,
+    customerGroups,
+    customer,
+    orderMaster,
+    orderDetail,
+  ];
   static const List<String> users = [
     'integer primary key',
     'text',
