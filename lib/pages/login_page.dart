@@ -1,18 +1,19 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sales_force/models/user.dart';
-import 'package:sales_force/shared/app_theme.dart';
-import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/pages/dashboard_page.dart';
 import 'package:sales_force/services/service_control.dart';
+import 'package:sales_force/shared/app_theme.dart';
+import 'package:sales_force/shared/config.dart';
+import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sales_force/shared/config.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -221,7 +222,10 @@ class _LoginState extends State<Login> {
               AppTheme.showAlertDialogOK(context,
                   title: 'Attention',
                   message: 'Invalid email\\password.\nPlease try again.',
-                  onOK: () => Navigator.pop(context));
+                  onOK: () {
+                Navigator.pop(context);
+                progressDialog.hide();
+              });
             }
           }).catchError((onError) {
             progressDialog.hide();

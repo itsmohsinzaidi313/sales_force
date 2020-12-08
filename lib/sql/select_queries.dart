@@ -39,7 +39,7 @@ class Select {
       'select master_id as order_id, product_category_id, product_id, order_product_total_packs, order_product_free_qty, order_product_price_per_pack, order_product_discount_per_pack, order_product_discounted_pack_price, order_product_total_discount, order_product_total_price from order_detail ';
 
   static String selectOrderMasterDetail =
-      'select a.product_title, b.order_product_total_packs, b.order_product_free_qty, b.order_product_price_per_pack from products a left join order_detail b on b.product_id = a.product_id ';
+      "select ifnull(a.product_title,'x') as product_title, ifnull(b.order_product_total_packs,'0') as order_product_total_packs, ifnull(b.order_product_free_qty,'0') as order_product_free_qty, ifnull(b.order_product_price_per_pack,'0') as order_product_price_per_pack from products a left join order_detail b on b.product_id = a.product_id ";
 
   static String selectInvoiceForPost =
       'select id as android_payment_id, payment_user_id, payment_order_id, payment_invoice_id, payment_customer_id, payment_amount, payment_mode, payment_cheque_no, payment_clearing_date, payment_bank_name, date_added from paid_invoices ';

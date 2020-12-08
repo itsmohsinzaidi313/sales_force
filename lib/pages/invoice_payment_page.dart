@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sales_force/shared/app_theme.dart';
-import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/models/json_elements.dart';
 import 'package:sales_force/pages/invoice_payment_final_page.dart';
+import 'package:sales_force/shared/app_theme.dart';
+import 'package:sales_force/shared/library.dart';
 
 //region INVOICE LIST VIEW
 class InvoicePayment extends StatefulWidget {
@@ -311,14 +311,20 @@ class _CashPaymentState extends State<CashPayment> {
           verticalDirection: VerticalDirection.down,
           children: <Widget>[
             Container(
-              child: TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Amount',
-                ),
-                onSaved: (value) => amountReceived = value,
-                validator: (value) {
-                  return cashPaymentValidation(value);
-                },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Amount: ${this.invoice.totalAmount}'),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Amount',
+                    ),
+                    onSaved: (value) => amountReceived = value,
+                    validator: (value) {
+                      return cashPaymentValidation(value);
+                    },
+                  ),
+                ],
               ),
             ),
             Container(

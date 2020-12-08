@@ -1,15 +1,16 @@
 import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sales_force/models/user.dart';
 import 'package:sales_force/pages/settings_page.dart';
 import 'package:sales_force/pages_backend/dashboard_page_backend.dart';
 import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/shared/library.dart';
 import 'package:sales_force/sql/dal.dart';
-import 'package:sales_force/models/user.dart';
 
 class Dashboard extends StatefulWidget {
   final User _user;

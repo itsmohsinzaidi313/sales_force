@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:geolocator/geolocator.dart';
+import 'package:sales_force/services/common.dart';
 import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/shared/library.dart';
-import 'package:sales_force/services/common.dart';
 import 'package:sales_force/sql/dal.dart';
 
 class SPostLocation extends ServiceCommon {

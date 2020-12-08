@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sales_force/services/common.dart';
+import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/sql/dal.dart';
 
 class SettingsView extends StatefulWidget {
@@ -180,6 +182,9 @@ class _ServicesWidgetsState extends State<ServicesWidgets> {
 
   _ServicesWidgetsState({this.name});
 
+  final MethodChannel locationServiceChannel =
+      new MethodChannel('com.devaj.ddf/locationService');
+
   @override
   void initState() {
     super.initState();
@@ -196,7 +201,12 @@ class _ServicesWidgetsState extends State<ServicesWidgets> {
           icon: Icon((status) ? Icons.play_arrow : Icons.stop),
           onPressed: () {
             DAL.serviceCtrl.updateServiceStatus(name, !status);
-
+            if (status)
+              locationServiceChannel.invokeListMethod('start', {
+                'user_id': DAL.currentUser.user_id,
+                'trackingApi': Config.putTrackingAPILink
+              });
+            else if (!status) locationServiceChannel.invokeListMethod('stop');
             setState(() => status = DAL.serviceCtrl.serviceStatus(name));
           }),
     );

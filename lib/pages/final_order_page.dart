@@ -141,7 +141,7 @@ class _FinalOrderState extends State<FinalOrder> {
           title: AppTheme.text(text: widget.cart.products[index].product_title),
           subtitle: AppTheme.text(
               text:
-                  'Quantity: ${widget.cart.products[index].quantity}\nFOC Quantity: ${widget.cart.products[index].focQuantity}'),
+                  'Quantity: ${widget.cart.products[index].quantity}\nFOC Quantity: ${widget.cart.products[index].focQuantity ?? '0'}'),
           isThreeLine: true,
         ),
         Divider(),

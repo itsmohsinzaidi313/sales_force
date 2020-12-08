@@ -1,4 +1,5 @@
 import 'dart:core';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
@@ -13,10 +14,11 @@ import 'package:sales_force/models/product_foc.dart';
 import 'package:sales_force/models/product_prices.dart';
 import 'package:sales_force/models/user.dart';
 import 'package:sales_force/services/service_control.dart';
-import 'package:sales_force/sql/select_queries.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/shared/library.dart';
+import 'package:sales_force/sql/select_queries.dart';
+import 'package:sqflite/sqflite.dart';
+
 import 'insert_queries.dart';
 
 class DAL {
@@ -479,7 +481,7 @@ class DAL {
             product_title: e['product_title'],
             purchasedQuantity: e['order_product_total_packs'],
             product_pack_price: e['order_product_price_per_pack'],
-            focQuantity: int.parse(e['order_product_free_qty'])));
+            focQuantity: int.parse('0')));
       });
       //_log.v('DAL EXIT getDetailSalesRecord');
       return products;

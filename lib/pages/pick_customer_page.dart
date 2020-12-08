@@ -34,7 +34,7 @@ class _PickCustomerState extends State<PickCustomer> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Customers'),
+          title: Text('Shops'),
         ),
         body: Container(
           color: AppTheme.backgroundColor,
@@ -62,10 +62,16 @@ class _PickCustomerState extends State<PickCustomer> {
                   child: Column(children: <Widget>[
                 Row(children: <Widget>[
                   Text(
-                    value.getName(),
+                    '${value.shopName}',
                     style: AppTheme.textStyle(),
-                  )
-                ])
+                  ),
+                ]),
+                Row(children: <Widget>[
+                  Text(
+                    '(${value.getName()})',
+                    style: AppTheme.textStyle(fontSize: 15),
+                  ),
+                ]),
               ])),
               Column(children: layoutController(value)),
             ],

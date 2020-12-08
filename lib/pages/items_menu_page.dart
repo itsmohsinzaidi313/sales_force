@@ -1,18 +1,21 @@
 import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sales_force/models/cart.dart';
 import 'package:sales_force/models/customer.dart';
 import 'package:sales_force/models/menu_format.dart';
+import 'package:sales_force/models/product.dart';
+import 'package:sales_force/pages/final_order_page.dart';
 import 'package:sales_force/pages_backend/items_menu_page_backend.dart';
+import 'package:sales_force/shared/app_theme.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/widgets/thumbnail_listTile.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:sales_force/shared/app_theme.dart';
-import 'package:sales_force/pages/final_order_page.dart';
 
 class ItemsMenu extends StatefulWidget {
   MenuFormat format;
+
   ItemsMenu(String paymentMode, Customer customer) {
     format = new MenuFormat(paymentMode: paymentMode, customer: customer);
   }
@@ -28,15 +31,19 @@ class _StateItemsMenu extends State<ItemsMenu>
   ItemsMenuBackend _backend;
   bool _validateQuantity = false;
   bool _validateFoc = false;
+
   _StateItemsMenu({this.format}) {
     myCart = new Cart(format.customer);
   }
-  TextEditingController quantityController = new TextEditingController();
-  TextEditingController focController = new TextEditingController();
+
+  List<TextEditingController> listQuantityController = [];
+  List<TextEditingController> listFocController = [];
   TabController _tabController;
   List<Tab> tabs;
+
 //  List<Category> categories = [];
   List<String> categories = [];
+
 //  List<Product> products = [];
 //  List<ProductPrices> productPrices = [];
 //  List<ProductFoc> listProductFoc = [];
@@ -177,7 +184,6 @@ class _StateItemsMenu extends State<ItemsMenu>
                   color: Colors.white,
                   fontSize: 24),
             ),
-            //AppTheme.roundRaisedButton(text: 'Checkout', onPressed: () {}),
           ],
         ),
       ),
@@ -331,32 +337,22 @@ class _StateItemsMenu extends State<ItemsMenu>
                   color: Colors.white))),
       Expanded(
           child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(children: getCartItemsWidgets()),
-      )),
+              padding: const EdgeInsets.all(8.0),
+              child: ListView(children: getCartItemsWidgets()))),
       Container(
           color: Colors.blue[400],
           child: Row(children: <Widget>[
             Expanded(
                 child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: AppTheme.text(
-                  color: Colors.white,
-                  text: 'Total ${myCart.getAmountBeforeDiscount()}'),
-            )),
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppTheme.text(
+                        color: Colors.white,
+                        text: 'Total ${myCart.getAmountBeforeDiscount()}'))),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: AppTheme.roundRaisedButton(
                   text: 'Checkout',
                   onPressed: () {
-                    if (quantityController.text == null)
-                      _validateQuantity = false;
-                    else
-                      _validateQuantity = true;
-                    if (focController.text == null)
-                      _validateFoc = false;
-                    else
-                      _validateFoc = true;
                     double creditLimit =
                         double.parse(format.customer.creditLimit);
                     double orderAmount = myCart.getAmountAfterDiscount();
@@ -394,85 +390,44 @@ class _StateItemsMenu extends State<ItemsMenu>
             AppTheme.card(child: AppTheme.text(text: 'No Items In Your Cart')));
       });
     } else {
-      myCart.products.forEach((product) {
+      for (int i = 0; i < myCart.products.length; i++) {
+        Product product = new Product.withProduct(product: myCart.products[i]);
         if (!product.focOverride) {
           product.focQuantity = _backend.getFocQuantity(
               int.parse(product.product_id), product.quantity);
         }
+        listQuantityController.add(new TextEditingController());
+        listFocController.add(new TextEditingController());
         widgets.add(AppTheme.card(
             child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                  child: AppTheme.text(
-                text: 'ItemName:${product.product_title}\n'
-                    'Unit Price: ${product.product_pack_price}\n'
-                    'Quantity: ${product.quantity}\n'
-                    'FOC Qty: ${product.focQuantity}\n'
-                    'Amount: ${product.getPrice()}',
-              )),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 8.0),
-              //   child: Column(
-              //     children: <Widget>[
-              //       AppTheme.text(text: 'FOC'),
-              //       AppTheme.roundRaisedButton(
-              //           text: '+',
-              //           onPressed: () {
-              //             product.focOverride = true;
-              //             setState(() => product.focQuantity++);
-              //           }),
-              //       AppTheme.roundRaisedButton(
-              //           text: '-',
-              //           onPressed: () {
-              //             setState(() {
-              //               product.focOverride = true;
-              //               myCart.cleanCart();
-              //               if (product.focQuantity >= 1) product.focQuantity--;
-              //             });
-              //           })
-              //     ],
-              //   ),
-              // ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 8),
-              //   child: Column(
-              //     children: <Widget>[
-              //       AppTheme.text(text: 'Quantity'),
-              //       AppTheme.roundRaisedButton(
-              //           text: '+',
-              //           onPressed: () {
-              //             myCart.add(product, product.product_carton_price);
-              //             setState(() => null);
-              //           }),
-              //       AppTheme.roundRaisedButton(
-              //           text: '-',
-              //           onPressed: () {
-              //             myCart.less(product);
-              //             setState(() => myCart.cleanCart());
-              //           }),
-              //     ],
-              //   ),
-              // ),
-              Container(
-                padding: EdgeInsets.all(8.0),
-                margin: EdgeInsets.only(right: 8.0),
-                width: 80,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(style: BorderStyle.solid, width: 0.5)),
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  controller: focController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'FOC',
-                  ),
-                  onSubmitted: (value) => setState(() {
-                    myCart.setFOCQuantity(product, int.parse(value));
-                    product.focOverride = true;
-                  }),
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      child: AppTheme.text(
+                          text: 'ItemName:${product.product_title}\n'
+                              'Unit Price: ${product.product_pack_price}\n'
+                              'Quantity: ${product.quantity}\n'
+                              'FOC Qty: ${product.focQuantity}\n'
+                              'Amount: ${product.getPrice()}')),
+                  Container(
+                    padding: EdgeInsets.all(8.0),
+                    margin: EdgeInsets.only(right: 8.0),
+                    width: 80,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            style: BorderStyle.solid, width: 0.5)),
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      controller: listFocController[i],
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: 'FOC'),
+                      onSubmitted: (value) =>
+                          setState(() {
+                            myCart.setFOCQuantity(product, int.parse(value));
+                            product.focOverride = true;
+                          }),
                 ),
               ),
               Container(
@@ -484,7 +439,7 @@ class _StateItemsMenu extends State<ItemsMenu>
                 width: 80,
                 child: TextField(
                   textAlign: TextAlign.center,
-                  controller: quantityController,
+                  controller: listQuantityController[i],
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Quantity',
@@ -508,16 +463,95 @@ class _StateItemsMenu extends State<ItemsMenu>
                 onPressed: () {
                   myCart.remove(product);
                   setState(() {
-                    quantityController.clear();
-                    focController.clear();
+                    listQuantityController[i].clear();
+                    listFocController[i].clear();
                     myCart.cleanCart();
                   });
                 },
               ),
-            ],
-          ),
-        )));
-      });
+                ],
+              ),
+            )));
+      }
+      // myCart.products.forEach((product) {
+      //   if (!product.focOverride) {
+      //     product.focQuantity = _backend.getFocQuantity(
+      //         int.parse(product.product_id), product.quantity);
+      //   }
+      //
+      //   widgets.add(AppTheme.card(
+      //       child: Padding(
+      //     padding: const EdgeInsets.all(8.0),
+      //     child: Row(
+      //       children: <Widget>[
+      //         Expanded(
+      //             child: AppTheme.text(
+      //                 text: 'ItemName:${product.product_title}\n'
+      //                     'Unit Price: ${product.product_pack_price}\n'
+      //                     'Quantity: ${product.quantity}\n'
+      //                     'FOC Qty: ${product.focQuantity}\n'
+      //                     'Amount: ${product.getPrice()}')),
+      //         Container(
+      //           padding: EdgeInsets.all(8.0),
+      //           margin: EdgeInsets.only(right: 8.0),
+      //           width: 80,
+      //           decoration: BoxDecoration(
+      //               borderRadius: BorderRadius.circular(10),
+      //               border: Border.all(style: BorderStyle.solid, width: 0.5)),
+      //           child: TextField(
+      //             textAlign: TextAlign.center,
+      //             controller: focController,
+      //             keyboardType: TextInputType.number,
+      //             decoration: InputDecoration(labelText: 'FOC'),
+      //             onSubmitted: (value) => setState(() {
+      //               myCart.setFOCQuantity(product, int.parse(value));
+      //               product.focOverride = true;
+      //             }),
+      //           ),
+      //         ),
+      //         Container(
+      //           padding: EdgeInsets.all(8.0),
+      //           margin: EdgeInsets.only(right: 8.0),
+      //           decoration: BoxDecoration(
+      //               borderRadius: BorderRadius.circular(10),
+      //               border: Border.all(style: BorderStyle.solid, width: 0.5)),
+      //           width: 80,
+      //           child: TextField(
+      //             textAlign: TextAlign.center,
+      //             controller: quantityController,
+      //             keyboardType: TextInputType.number,
+      //             decoration: InputDecoration(
+      //               labelText: 'Quantity',
+      //             ),
+      //             onSubmitted: (value) {
+      //               setState(() {
+      //                 if (int.parse(value) > 0) {
+      //                   myCart.setQuantity(product, int.parse(value));
+      //                 } else {
+      //                   _validateQuantity = false;
+      //                 }
+      //               });
+      //             },
+      //           ),
+      //         ),
+      //         IconButton(
+      //           icon: Icon(
+      //             Icons.close,
+      //             color: Colors.blue,
+      //           ),
+      //           onPressed: () {
+      //             myCart.remove(product);
+      //             setState(() {
+      //               quantityController.clear();
+      //               focController.clear();
+      //               myCart.cleanCart();
+      //             });
+      //           },
+      //         ),
+      //       ],
+      //     ),
+      //   )));
+      // });
     }
     return widgets;
   }

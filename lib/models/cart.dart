@@ -83,7 +83,7 @@ class Cart {
   String getDiscountedAmount() {
     double beforeDiscount = getAmountBeforeDiscount();
     double afterDiscount = getAmountAfterDiscount();
-    _orderDiscount = (beforeDiscount - afterDiscount).toString();
+    _orderDiscount = (beforeDiscount - afterDiscount).toStringAsFixed(2);
     // double x = _spoDiscount == null ? 0.0 : double.parse(_spoDiscount);
     // x += double.parse(_orderDiscount);
     // _orderDiscount = x.toString();

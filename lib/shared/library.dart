@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +11,9 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:sales_force/Json_data_models/install_api.dart';
-import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/models/user.dart';
 import 'package:sales_force/pages/dashboard_page.dart';
+import 'package:sales_force/shared/config.dart';
 import 'package:sales_force/sql/dal.dart';
 import 'package:sales_force/sql/database.dart';
 import 'package:sales_force/sql/import_data.dart';
@@ -240,10 +241,7 @@ class Library {
       bool hasServerAccess = await Library.hasServerAccess();
       if (jsonString != null && hasServerAccess) {
         onPost = await post(url, headers: header, body: {'json': jsonString})
-            .timeout(
-              Duration(seconds: 5),
-              onTimeout: () => null,
-            )
+            .timeout(Duration(seconds: 5), onTimeout: () => null)
             .catchError(
                 (onError) => _log.e('ERROR ON uploadToServer', [onError]));
 
