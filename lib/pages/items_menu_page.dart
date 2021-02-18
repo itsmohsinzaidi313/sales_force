@@ -41,26 +41,19 @@ class _StateItemsMenu extends State<ItemsMenu>
   TabController _tabController;
   List<Tab> tabs;
 
-//  List<Category> categories = [];
   List<String> categories = [];
-
-//  List<Product> products = [];
-//  List<ProductPrices> productPrices = [];
-//  List<ProductFoc> listProductFoc = [];
+  List<Product> products = [];
+  List<Product> filteredItems = [];
+  bool isSearching = false;
+  TextEditingController textController;
 
   initTabs() {
     tabs = [];
     _backend = new ItemsMenuBackend(DAL.staticCategories, DAL.staticProducts,
         DAL.staticProductPrices, DAL.staticProductFoc, format);
-//    if (categories.length == 0) ;
-//    categories.addAll(DAL.staticCategories);
     DAL.staticCategories.forEach((element) {
       categories.add(element.product_category_title);
     });
-//    if (products.length == 0) products.addAll(DAL.staticProducts);
-//    if (productPrices.length == 0)
-//      productPrices.addAll(DAL.staticProductPrices);
-//    if (listProductFoc.length == 0) listProductFoc.addAll(DAL.staticProductFoc);
     for (String value1 in categories) {
       tabs.add(new Tab(
         text: value1.toUpperCase(),
@@ -72,35 +65,67 @@ class _StateItemsMenu extends State<ItemsMenu>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[],
-          bottom: TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            tabs: tabs,
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: !isSearching
+            ? Text('Products - ${format.paymentMode}')
+            : TextField(
+                onChanged: (value) {
+                  _filterItems(value, '');
+                },
+                style: TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    ),
+                    hintText: "Search Items Here",
+                    hintStyle: TextStyle(color: Colors.white)),
+              ),
+        actions: <Widget>[
+          isSearching
+              ? IconButton(
+                  icon: Icon(Icons.cancel),
+                  onPressed: () {
+                    setState(() {
+                      this.isSearching = false;
+                      filteredItems = _backend.products;
+                    });
+                  },
+                )
+              : IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      this.isSearching = true;
+                    });
+                  },
+                )
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          isScrollable: true,
+          tabs: tabs,
         ),
-        body: SlidingUpPanel(
-          minHeight: 60,
-          maxHeight: 500,
-          border: Border(top: BorderSide(color: Colors.blue)),
-          panel: slideUpPanelPanel(),
-          collapsed: slideUpPanelCollapsed(),
-          body: Container(
-            color: AppTheme.backgroundColor,
-            // decoration: BoxDecoration(
-            //     image: DecorationImage(
-            //         image: AssetImage(AppTheme.backgroundImage),
-            //         repeat: ImageRepeat.repeat)),
-            margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 200),
-            child: slideUpPanelBody(),
-          ),
-          onPanelClosed: () {
-            setState(() {
-              myCart.cleanCart();
-            });
-          },
-        ));
+      ),
+      body: SlidingUpPanel(
+        minHeight: 60,
+        maxHeight: 500,
+        border: Border(top: BorderSide(color: Colors.blue)),
+        panel: slideUpPanelPanel(),
+        collapsed: slideUpPanelCollapsed(),
+        body: Container(
+          color: AppTheme.backgroundColor,
+          margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 200),
+          child: slideUpPanelBody(),
+        ),
+        onPanelClosed: () {
+          setState(() {
+            myCart.cleanCart();
+          });
+        },
+      ),
+    );
   }
 
   List<Widget> productsGirdView(String tabTitle) {
@@ -194,7 +219,7 @@ class _StateItemsMenu extends State<ItemsMenu>
     return TabBarView(
       controller: _tabController,
       children: tabs.map((Tab tab) {
-        final String label = tab.text.toLowerCase();
+        final String label = tab.text == null ? '' : tab.text.toLowerCase();
         return layoutController(label);
       }).toList(),
     );
@@ -202,126 +227,44 @@ class _StateItemsMenu extends State<ItemsMenu>
 
   Widget layoutController(String label) {
     try {
-      // print(MediaQuery.of(context).size.height);
-      // print(MediaQuery.of(context).size.width);
-      // if (MediaQuery.of(context).size.height >= 912)
-      // return GridView.count(
-      //   crossAxisCount: 2,
-      //   children: productsGirdView(label),
+      // return ListView(
+      //   children: productsListView2(label),
       // );
-      // else
-      //   return ListView(
-      //     children: productsListView(label),
-      //   );
-      return ListView(
-        children: productsListView2(label),
+      _filterItems(searchValue, label);
+      // _getCategoryProducts(label);
+      return ListView.builder(
+        itemCount: filteredItems.length,
+        itemBuilder: (context, index) {
+          String unitPrice = _backend.getProductPrice(
+              format.customer.customerGroupId, filteredItems[index].product_id);
+          return Column(
+            children: [
+              CustomListItem(
+                thumbnail: GestureDetector(
+                  child: AppTheme.loadNetworkImage(
+                      url: filteredItems[index].getNetworkImage(),
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      boxFit: BoxFit.fill),
+                  onTap: () => setState(() {
+                    myCart.add(
+                        filteredItems[index],
+                        _backend.getProductPrice(
+                            format.customer.customerGroupId,
+                            filteredItems[index].product_id));
+                  }),
+                ),
+                title: filteredItems[index].product_title.toUpperCase(),
+                secondLine: 'RS: $unitPrice',
+              ),
+              Divider(),
+            ],
+          );
+        },
       );
     } catch (e) {
       print(e);
       return Text('No Widget');
     }
-  }
-
-  List<Widget> productsListView(String tabTitle) {
-    List<Widget> widgets = [];
-    for (int i = 0; i < _backend.products.length; i++) {
-      String unitPrice = _backend.getProductPrice(
-          format.customer.customerGroupId, _backend.products[i].product_id);
-      if (double.parse(unitPrice) >= 0.01) {
-        if (_backend.products[i].product_category_id ==
-            _backend.getCategoryId(tabTitle)) {
-          widgets.add(
-              //   ListTile(
-              //   leading: AppTheme.loadNetworkImage(
-              //       url: _backend.products[i].getNetworkImage(),
-              //       boxFit: BoxFit.cover),
-              //   title: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: <Widget>[
-              //       AppTheme.text(
-              //           text: _backend.products[i].product_title.toUpperCase(),
-              //           fontSize: 16,
-              //           fontWeight: FontWeight.bold),
-              //       AppTheme.text(
-              //           text: 'RS: $unitPrice',
-              //           fontSize: 16,
-              //           fontWeight: FontWeight.bold),
-              //     ],
-              //   ),
-              //   trailing: AppTheme.imageButton('images/shopping_cart.png', 30,
-              //       onPressed: () {
-              //     myCart.add(
-              //         _backend.products[i],
-              //         _backend.getProductPrice(format.customer.customerGroupId,
-              //             _backend.products[i].product_id));
-              //     setState(() {});
-              //   }),
-              // )
-              Row(
-            children: <Widget>[
-              Container(
-                child: AppTheme.loadNetworkImage(
-                    url: _backend.products[i].getNetworkImage(),
-                    boxFit: BoxFit.cover),
-              ),
-              Container(
-                child: Row(
-                  children: <Widget>[
-                    AppTheme.text(
-                        text: _backend.products[i].product_title.toUpperCase(),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                    AppTheme.text(
-                        text: 'RS: $unitPrice',
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ],
-                ),
-              )
-            ],
-          ));
-        }
-      }
-    }
-    return widgets;
-  }
-
-  List<Widget> productsListView2(String tabTitle) {
-    List<Widget> widgets = [];
-    for (int i = 0; i < _backend.products.length; i++) {
-      String unitPrice = _backend.getProductPrice(
-          format.customer.customerGroupId, _backend.products[i].product_id);
-      if (double.parse(unitPrice) >= 0.01) {
-        if (_backend.products[i].product_category_id ==
-            _backend.getCategoryId(tabTitle)) {
-          widgets.add(
-            Column(
-              children: [
-                CustomListItem(
-                  thumbnail: GestureDetector(
-                    child: AppTheme.loadNetworkImage(
-                        url: _backend.products[i].getNetworkImage(),
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        boxFit: BoxFit.fill),
-                    onTap: () => setState(() {
-                      myCart.add(
-                          _backend.products[i],
-                          _backend.getProductPrice(
-                              format.customer.customerGroupId,
-                              _backend.products[i].product_id));
-                    }),
-                  ),
-                  title: _backend.products[i].product_title.toUpperCase(),
-                  secondLine: 'RS: $unitPrice',
-                ),
-                Divider(),
-              ],
-            ),
-          );
-        }
-      }
-    }
-    return widgets;
   }
 
   slideUpPanelPanel() {
@@ -400,34 +343,32 @@ class _StateItemsMenu extends State<ItemsMenu>
         listFocController.add(new TextEditingController());
         widgets.add(AppTheme.card(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                      child: AppTheme.text(
-                          text: 'ItemName:${product.product_title}\n'
-                              'Unit Price: ${product.product_pack_price}\n'
-                              'Quantity: ${product.quantity}\n'
-                              'FOC Qty: ${product.focQuantity}\n'
-                              'Amount: ${product.getPrice()}')),
-                  Container(
-                    padding: EdgeInsets.all(8.0),
-                    margin: EdgeInsets.only(right: 8.0),
-                    width: 80,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            style: BorderStyle.solid, width: 0.5)),
-                    child: TextField(
-                      textAlign: TextAlign.center,
-                      controller: listFocController[i],
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: 'FOC'),
-                      onSubmitted: (value) =>
-                          setState(() {
-                            myCart.setFOCQuantity(product, int.parse(value));
-                            product.focOverride = true;
-                          }),
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                  child: AppTheme.text(
+                      text: 'ItemName:${product.product_title}\n'
+                          'Unit Price: ${product.product_pack_price}\n'
+                          'Quantity: ${product.quantity}\n'
+                          'FOC Qty: ${product.focQuantity}\n'
+                          'Amount: ${product.getPrice()}')),
+              Container(
+                padding: EdgeInsets.all(8.0),
+                margin: EdgeInsets.only(right: 8.0),
+                width: 80,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(style: BorderStyle.solid, width: 0.5)),
+                child: TextField(
+                  textAlign: TextAlign.center,
+                  controller: listFocController[i],
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: 'FOC'),
+                  onSubmitted: (value) => setState(() {
+                    myCart.setFOCQuantity(product, int.parse(value));
+                    product.focOverride = true;
+                  }),
                 ),
               ),
               Container(
@@ -469,89 +410,10 @@ class _StateItemsMenu extends State<ItemsMenu>
                   });
                 },
               ),
-                ],
-              ),
-            )));
+            ],
+          ),
+        )));
       }
-      // myCart.products.forEach((product) {
-      //   if (!product.focOverride) {
-      //     product.focQuantity = _backend.getFocQuantity(
-      //         int.parse(product.product_id), product.quantity);
-      //   }
-      //
-      //   widgets.add(AppTheme.card(
-      //       child: Padding(
-      //     padding: const EdgeInsets.all(8.0),
-      //     child: Row(
-      //       children: <Widget>[
-      //         Expanded(
-      //             child: AppTheme.text(
-      //                 text: 'ItemName:${product.product_title}\n'
-      //                     'Unit Price: ${product.product_pack_price}\n'
-      //                     'Quantity: ${product.quantity}\n'
-      //                     'FOC Qty: ${product.focQuantity}\n'
-      //                     'Amount: ${product.getPrice()}')),
-      //         Container(
-      //           padding: EdgeInsets.all(8.0),
-      //           margin: EdgeInsets.only(right: 8.0),
-      //           width: 80,
-      //           decoration: BoxDecoration(
-      //               borderRadius: BorderRadius.circular(10),
-      //               border: Border.all(style: BorderStyle.solid, width: 0.5)),
-      //           child: TextField(
-      //             textAlign: TextAlign.center,
-      //             controller: focController,
-      //             keyboardType: TextInputType.number,
-      //             decoration: InputDecoration(labelText: 'FOC'),
-      //             onSubmitted: (value) => setState(() {
-      //               myCart.setFOCQuantity(product, int.parse(value));
-      //               product.focOverride = true;
-      //             }),
-      //           ),
-      //         ),
-      //         Container(
-      //           padding: EdgeInsets.all(8.0),
-      //           margin: EdgeInsets.only(right: 8.0),
-      //           decoration: BoxDecoration(
-      //               borderRadius: BorderRadius.circular(10),
-      //               border: Border.all(style: BorderStyle.solid, width: 0.5)),
-      //           width: 80,
-      //           child: TextField(
-      //             textAlign: TextAlign.center,
-      //             controller: quantityController,
-      //             keyboardType: TextInputType.number,
-      //             decoration: InputDecoration(
-      //               labelText: 'Quantity',
-      //             ),
-      //             onSubmitted: (value) {
-      //               setState(() {
-      //                 if (int.parse(value) > 0) {
-      //                   myCart.setQuantity(product, int.parse(value));
-      //                 } else {
-      //                   _validateQuantity = false;
-      //                 }
-      //               });
-      //             },
-      //           ),
-      //         ),
-      //         IconButton(
-      //           icon: Icon(
-      //             Icons.close,
-      //             color: Colors.blue,
-      //           ),
-      //           onPressed: () {
-      //             myCart.remove(product);
-      //             setState(() {
-      //               quantityController.clear();
-      //               focController.clear();
-      //               myCart.cleanCart();
-      //             });
-      //           },
-      //         ),
-      //       ],
-      //     ),
-      //   )));
-      // });
     }
     return widgets;
   }
@@ -560,11 +422,34 @@ class _StateItemsMenu extends State<ItemsMenu>
   void initState() {
     super.initState();
     initTabs();
+    textController = TextEditingController();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  String title = '';
+  String searchValue = '';
+  void _filterItems(String value, String label) {
+    searchValue = value;
+    setState(() {
+      if (label != '') title = label;
+      products = _backend.products
+          .where((element) =>
+              _backend.getCategoryId(title).toLowerCase() ==
+              element.product_category_id.toLowerCase())
+          .toList();
+      if (searchValue == 'All Items' || searchValue == '')
+        filteredItems = products;
+      else
+        filteredItems = products
+            .where((element) => element.product_title
+                .toLowerCase()
+                .contains(searchValue.toLowerCase()))
+            .toList();
+    });
   }
 }

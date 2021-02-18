@@ -100,4 +100,14 @@ class ItemsMenuBackend {
     });
     return focQuantity;
   }
+
+  List<Product> searchProduct(String keyWord) {
+    if (keyWord == '') {
+      return _products;
+    } else {
+      return _products
+          .where((element) => element.product_title.contains(keyWord))
+          .toList();
+    }
+  }
 }

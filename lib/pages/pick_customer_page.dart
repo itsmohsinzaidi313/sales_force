@@ -25,61 +25,98 @@ class PickCustomer extends StatefulWidget {
 
 class _PickCustomerState extends State<PickCustomer> {
   List<Customer> customers = DAL.staticCustomers;
+  List<Customer> filteredCustomers = [];
   String loadFor;
   Logger _log = Config.log;
+  bool isSearching = false;
 
   _PickCustomerState({this.loadFor});
+
+  @override
+  void initState() {
+    super.initState();
+    filteredCustomers = customers;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Shops'),
-        ),
+            backgroundColor: Colors.blue,
+            title: !isSearching
+                ? Text('Shops')
+                : TextField(
+                    onChanged: (value) {
+                      _filterCustomers(value);
+                    },
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                        icon: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                        hintText: "Search Shops Here",
+                        hintStyle: TextStyle(color: Colors.white)),
+                  ),
+            actions: <Widget>[
+              isSearching
+                  ? IconButton(
+                      icon: Icon(Icons.cancel),
+                      onPressed: () {
+                        setState(() {
+                          this.isSearching = false;
+                        });
+                      },
+                    )
+                  : IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {
+                        setState(() {
+                          this.isSearching = true;
+                        });
+                      },
+                    )
+            ]),
         body: Container(
           color: AppTheme.backgroundColor,
-          // decoration: BoxDecoration(
-          //     image: DecorationImage(
-          //         image: AssetImage(AppTheme.backgroundImage),
-          //         repeat: ImageRepeat.repeat)),
           child: Padding(
-              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-              child: ListView(
-                children: getCustomersWidget(),
-              )),
-        ));
-  }
-
-  getCustomersWidget() {
-    List<Widget> widgets = [];
-    for (Customer value in customers) {
-      widgets.add(Card(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                  child: Column(children: <Widget>[
-                Row(children: <Widget>[
-                  Text(
-                    '${value.shopName}',
-                    style: AppTheme.textStyle(),
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            child: ListView.builder(
+              itemCount: filteredCustomers.length,
+              itemBuilder: (context, index) => Card(
+                child: Container(
+                  height: Config.deviceDisplayHeight(context) * 0.16,
+                  padding: const EdgeInsets.all(10.0),
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        top: 45,
+                        left: 10,
+                        child: Column(children: <Widget>[
+                          Text(
+                            '${filteredCustomers[index].shopName}',
+                            style: AppTheme.textStyle(),
+                          ),
+                          Text(
+                            '(${filteredCustomers[index].getName()})',
+                            style: AppTheme.textStyle(fontSize: 15),
+                          ),
+                        ]),
+                      ),
+                      Positioned(
+                        top: 15,
+                        right: 5,
+                        child: Column(
+                          children: layoutController(filteredCustomers[index]),
+                        ),
+                      )
+                    ],
                   ),
-                ]),
-                Row(children: <Widget>[
-                  Text(
-                    '(${value.getName()})',
-                    style: AppTheme.textStyle(fontSize: 15),
-                  ),
-                ]),
-              ])),
-              Column(children: layoutController(value)),
-            ],
+                ),
+              ),
+            ),
           ),
-        ),
-      ));
-    }
-    return widgets;
+        ));
   }
 
   List<Widget> layoutController(Customer value) {
@@ -206,5 +243,19 @@ class _PickCustomerState extends State<PickCustomer> {
         paidId = e['pair_id'];
     });
     return visits;
+  }
+
+  void _filterCustomers(String value) {
+    setState(() {
+      if (value == '')
+        filteredCustomers = customers;
+      else
+        filteredCustomers = customers
+            .where((element) => element.shopName
+                .toString()
+                .toLowerCase()
+                .contains(value.toLowerCase()))
+            .toList();
+    });
   }
 }

@@ -16,6 +16,9 @@ class Config {
   // ignore: non_constant_identifier_names
   static String DATABASE_PATH;
 
+  // static const String serverAddress = '72.52.142.19';
+  // static const String apiPrefix =
+  //     'http://$serverAddress/ddf-pvt-ltd/webservice/';
   static const String serverAddress = '72.52.142.19';
   static const String apiPrefix =
       'http://$serverAddress/ddf-pvt-ltd/webservice/';
