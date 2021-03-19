@@ -112,6 +112,7 @@ class SSyncService extends ServiceCommon {
           _log.w('NULL RESPONSE RECEIVED\nSYNC FAILED');
         }
       });
+      cycleComplete = true;
     } catch (e) {
       log.e('ERROR ON SYNC SERVICE syncData', [e]);
     } finally {
@@ -119,7 +120,7 @@ class SSyncService extends ServiceCommon {
     }
   }
 
-  getApis() async {
+  Future<List<SyncPacket>> getApis() async {
     List<SyncPacket> list = [];
 
     List<dynamic> dbData =

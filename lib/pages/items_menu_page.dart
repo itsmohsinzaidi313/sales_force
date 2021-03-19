@@ -71,7 +71,7 @@ class _StateItemsMenu extends State<ItemsMenu>
             ? Text('Products - ${format.paymentMode}')
             : TextField(
                 onChanged: (value) {
-                  _filterItems(value, '');
+                  // _filterItems(value, '');
                 },
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
@@ -133,7 +133,7 @@ class _StateItemsMenu extends State<ItemsMenu>
     for (int i = 0; i < _backend.products.length; i++) {
       String unitPrice = _backend.getProductPrice(
           format.customer.customerGroupId, _backend.products[i].product_id);
-      if (double.parse(unitPrice) >= 0.01) {
+      if (double.parse(unitPrice) > 0) {
         if (_backend.products[i].product_category_id ==
             _backend.getCategoryId(tabTitle))
           widgets.add(Card(
@@ -230,7 +230,7 @@ class _StateItemsMenu extends State<ItemsMenu>
       // return ListView(
       //   children: productsListView2(label),
       // );
-      _filterItems(searchValue, label);
+      // _filterItems(searchValue, label);
       // _getCategoryProducts(label);
       return ListView.builder(
         itemCount: filteredItems.length,
@@ -434,22 +434,29 @@ class _StateItemsMenu extends State<ItemsMenu>
   String title = '';
   String searchValue = '';
   void _filterItems(String value, String label) {
-    searchValue = value;
-    setState(() {
-      if (label != '') title = label;
-      products = _backend.products
-          .where((element) =>
-              _backend.getCategoryId(title).toLowerCase() ==
-              element.product_category_id.toLowerCase())
-          .toList();
-      if (searchValue == 'All Items' || searchValue == '')
-        filteredItems = products;
-      else
-        filteredItems = products
-            .where((element) => element.product_title
-                .toLowerCase()
-                .contains(searchValue.toLowerCase()))
-            .toList();
-    });
+    try {
+      searchValue = value;
+      setState(() {
+        if (label != '') title = label;
+        products = _backend.products.where((element) {
+          String catId = _backend.getCategoryId(title);
+          String prodCatId = element.product_category_id;
+          if (catId == prodCatId)
+            return true;
+          else
+            return false;
+        }).toList();
+        if (searchValue == 'All Items' || searchValue == '')
+          filteredItems = products;
+        else
+          filteredItems = products
+              .where((element) => element.product_title
+                  .toLowerCase()
+                  .contains(searchValue.toLowerCase()))
+              .toList();
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }

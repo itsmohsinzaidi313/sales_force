@@ -178,19 +178,6 @@ class _PickCustomerState extends State<PickCustomer> {
 
   List<Widget> registerVisit(Customer customer) {
     return <Widget>[
-      //TODO: ENABLE FOR CUSTOMER WISE VISIT VIEW
-      /*AppTheme.recRaisedButton(
-          text: 'View History',
-          onPressed: () {
-            getVisits(customer).then((value) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => new ViewVisits(
-                            visits: value,
-                          )));
-            });
-          }),*/
       AppTheme.recRaisedButton(
           text: 'Add Visit',
           onPressed: () async {
