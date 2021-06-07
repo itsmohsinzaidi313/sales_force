@@ -11,7 +11,7 @@ class ProductPrices {
         this.cash_price,
         this.credit_price});
 
-  getList() {
+  List<String> getList() {
     return [
       this.product_id,
       this.customer_group_id,

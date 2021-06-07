@@ -21,21 +21,21 @@ abstract class ServiceCommon {
 
   void stop() => active = false;
 
-  initiate() => _cycle();
+  void initiate() => _cycle();
 
-  forceCycle() => cycleComplete = true;
+  void forceCycle() => cycleComplete = true;
 
-  pauseDuration({int seconds = Config.serviceCycleDelay}) {
+  void pauseDuration({int seconds = Config.serviceCycleDelay}) {
     this.duration = seconds;
   }
 
-  _cycle() async =>
+  void _cycle() async =>
       Timer.periodic(Duration(seconds: duration), (Timer t) => _operation());
 
-  _operation() async {
+  void _operation() async {
     if (active && cycleComplete) {
       try {
-        await perform();
+        perform();
       } catch (e) {
         log.e('SERVICE $name CRASHED: $e');
       }

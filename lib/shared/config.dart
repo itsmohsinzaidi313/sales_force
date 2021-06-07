@@ -17,8 +17,7 @@ class Config {
   static String DATABASE_PATH;
 
   static const String serverAddress = '72.52.142.19';
-  static const String apiPrefix =
-      'http://$serverAddress/ddf-pvt-ltd/webservice/';
+  static const String apiPrefix = 'http://$serverAddress/sfms/jade/webservice/';
   static const String installAPILink = apiPrefix + 'api.php?action=install';
   static String putInvoiceAPILink = apiPrefix +
       'api.php?action=put&module=invoice_payment&user=${DAL.currentUser.user_id}';

@@ -85,7 +85,7 @@ class _PickCustomerState extends State<PickCustomer> {
               itemCount: filteredCustomers.length,
               itemBuilder: (context, index) => Card(
                 child: Container(
-                  height: Config.deviceDisplayHeight(context) * 0.16,
+                  height: Config.deviceDisplayHeight(context) * 0.20,
                   padding: const EdgeInsets.all(10.0),
                   child: Stack(
                     children: <Widget>[

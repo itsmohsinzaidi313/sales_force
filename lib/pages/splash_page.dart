@@ -38,16 +38,16 @@ class _SplashViewState extends State<SplashView> {
         children: [
           Positioned(
             child: Center(
-                heightFactor: 3.5, child: Image.asset('images/icon2.jpg')),
+                heightFactor: 3.5, child: Image.asset('images/devaj_logo_small.png')),
           ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Image.asset(
-              'images/devaj_logo_small.png',
-              scale: number,
-            ),
-          ),
+          // Positioned(
+          //   bottom: 0,
+          //   right: 0,
+          //   child: Image.asset(
+          //     'images/devaj_logo_small.png',
+          //     scale: number,
+          //   ),
+          // ),
           Positioned(
             // top: Config.deviceDisplayHeight(context) * 0.5,
             left: Config.deviceDisplayWidth(context) * 0.46,

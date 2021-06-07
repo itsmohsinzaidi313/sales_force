@@ -53,9 +53,9 @@ class ServiceControl {
       orderService.setStatus(status);
     else if (name == visitService.name)
       visitService.setStatus(status);
-    else if (name == syncService.name)
+    else if (name == syncService.name) {
       syncService.setStatus(status);
-    else if (name == invoiceService.name) invoiceService.setStatus(status);
+    } else if (name == invoiceService.name) invoiceService.setStatus(status);
   }
 
   getList() {

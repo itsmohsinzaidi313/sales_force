@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -194,19 +196,26 @@ class _ServicesWidgetsState extends State<ServicesWidgets> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(name),
+      title: Row(
+        children: [
+          Text(name),
+        ],
+      ),
       subtitle: Text((status) ? 'Running' : 'Stopped',
           style: TextStyle(color: (status) ? Colors.green : Colors.red)),
       trailing: IconButton(
           icon: Icon((status) ? Icons.play_arrow : Icons.stop),
           onPressed: () {
             DAL.serviceCtrl.updateServiceStatus(name, !status);
+            // FORGROUND SERVICE TESTING
             if (status)
               locationServiceChannel.invokeListMethod('start', {
                 'user_id': DAL.currentUser.user_id,
                 'trackingApi': Config.putTrackingAPILink
               });
             else if (!status) locationServiceChannel.invokeListMethod('stop');
+            //
+
             setState(() => status = DAL.serviceCtrl.serviceStatus(name));
           }),
     );

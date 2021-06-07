@@ -43,7 +43,6 @@ class _StateItemsMenu extends State<ItemsMenu>
 
   List<String> categories = [];
   List<Product> products = [];
-  List<Product> filteredItems = [];
   bool isSearching = false;
   TextEditingController textController;
 
@@ -70,7 +69,13 @@ class _StateItemsMenu extends State<ItemsMenu>
         title: !isSearching
             ? Text('Products - ${format.paymentMode}')
             : TextField(
+                controller: textController,
                 onChanged: (value) {
+                  setState(() {
+                    textController.text = value;
+                    textController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: textController.text.length));
+                  });
                   // _filterItems(value, '');
                 },
                 style: TextStyle(color: Colors.white),
@@ -89,7 +94,7 @@ class _StateItemsMenu extends State<ItemsMenu>
                   onPressed: () {
                     setState(() {
                       this.isSearching = false;
-                      filteredItems = _backend.products;
+                      // filteredItems = _backend.products;
                     });
                   },
                 )
@@ -132,7 +137,7 @@ class _StateItemsMenu extends State<ItemsMenu>
     List<Widget> widgets = [];
     for (int i = 0; i < _backend.products.length; i++) {
       String unitPrice = _backend.getProductPrice(
-          format.customer.customerGroupId, _backend.products[i].product_id);
+          format.customer.customerGroupId, _backend.products[i]);
       if (double.parse(unitPrice) > 0) {
         if (_backend.products[i].product_category_id ==
             _backend.getCategoryId(tabTitle))
@@ -161,7 +166,7 @@ class _StateItemsMenu extends State<ItemsMenu>
                             _backend.products[i],
                             _backend.getProductPrice(
                                 format.customer.customerGroupId,
-                                _backend.products[i].product_id));
+                                _backend.products[i]));
                         setState(() {
                           double _ = myCart.getAmountBeforeDiscount();
                         });
@@ -173,7 +178,7 @@ class _StateItemsMenu extends State<ItemsMenu>
                           _backend.products[i],
                           _backend.getProductPrice(
                               format.customer.customerGroupId,
-                              _backend.products[i].product_id));
+                              _backend.products[i]));
                       setState(() {});
                     }),
                   ],
@@ -227,16 +232,28 @@ class _StateItemsMenu extends State<ItemsMenu>
 
   Widget layoutController(String label) {
     try {
-      // return ListView(
-      //   children: productsListView2(label),
-      // );
-      // _filterItems(searchValue, label);
-      // _getCategoryProducts(label);
+      List<Product> filteredItems = _backend.products.where((element) {
+        String catId = _backend.getCategoryId(label);
+        String prodCatId = element.product_category_id;
+        if (catId == prodCatId)
+          return true;
+        else
+          return false;
+      }).toList();
+      if (isSearching) {
+        filteredItems = _backend.products
+            .where((element) =>
+                element.product_title
+                    .toLowerCase()
+                    .contains(textController.text.toLowerCase()) &&
+                _backend.getCategoryId(label) == element.product_category_id)
+            .toList();
+      }
       return ListView.builder(
         itemCount: filteredItems.length,
         itemBuilder: (context, index) {
           String unitPrice = _backend.getProductPrice(
-              format.customer.customerGroupId, filteredItems[index].product_id);
+              format.customer.customerGroupId, filteredItems[index]);
           return Column(
             children: [
               CustomListItem(
@@ -250,7 +267,7 @@ class _StateItemsMenu extends State<ItemsMenu>
                         filteredItems[index],
                         _backend.getProductPrice(
                             format.customer.customerGroupId,
-                            filteredItems[index].product_id));
+                            filteredItems[index]));
                   }),
                 ),
                 title: filteredItems[index].product_title.toUpperCase(),
@@ -429,34 +446,5 @@ class _StateItemsMenu extends State<ItemsMenu>
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  }
-
-  String title = '';
-  String searchValue = '';
-  void _filterItems(String value, String label) {
-    try {
-      searchValue = value;
-      setState(() {
-        if (label != '') title = label;
-        products = _backend.products.where((element) {
-          String catId = _backend.getCategoryId(title);
-          String prodCatId = element.product_category_id;
-          if (catId == prodCatId)
-            return true;
-          else
-            return false;
-        }).toList();
-        if (searchValue == 'All Items' || searchValue == '')
-          filteredItems = products;
-        else
-          filteredItems = products
-              .where((element) => element.product_title
-                  .toLowerCase()
-                  .contains(searchValue.toLowerCase()))
-              .toList();
-      });
-    } catch (e) {
-      print(e);
-    }
   }
 }

@@ -43,6 +43,8 @@ class SSyncService extends ServiceCommon {
 //        .catchError((onError) => print(onError));
     if (await Library.hasServerAccess()) {
       await syncData();
+    } else {
+      cycleComplete = true;
     }
   }
 
