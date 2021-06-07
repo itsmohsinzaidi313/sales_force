@@ -35,7 +35,7 @@ abstract class ServiceCommon {
   void _operation() async {
     if (active && cycleComplete) {
       try {
-        perform();
+        await perform();
       } catch (e) {
         log.e('SERVICE $name CRASHED: $e');
       }
